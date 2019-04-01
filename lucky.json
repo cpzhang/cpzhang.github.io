@@ -1,5 +1,6 @@
 {
   "com.happy.lucky": {
-    "backend": "http://222.186.134.157/backend/"
+    "_backend_": "http://222.186.134.157/backend/",
+    "backend": "http://localhost/backend/"
   }
 }
