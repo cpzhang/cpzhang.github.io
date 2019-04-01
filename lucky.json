@@ -1,7 +1,5 @@
 {
-  "node": [
-    "http://222.186.134.157/backend/"
-  ],
-  "number": 123,
-  "string": "Hello World"
+  "com.happy.lucky": {
+    "backend": "http://222.186.134.157/backend/"
+  }
 }
