@@ -4,6 +4,6 @@
     "backend_shatian": "http://192.168.1.6/backend/"
   },
   "com.happy.lucky.test": {
-    "backend": "http://192.168.42.244/backend/"
+    "backend": "http://192.168.42.171/backend/"
   }
 }
