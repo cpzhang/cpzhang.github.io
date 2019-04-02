@@ -1,6 +1,7 @@
 {
   "com.happy.lucky": {
     "_backend_": "http://222.186.134.157/backend/",
-    "backend": "http://192.168.1.6/backend/"
+    "backend": "http://192.168.42.182/backend/",
+    "backend_shatian": "http://192.168.1.6/backend/"
   }
 }
