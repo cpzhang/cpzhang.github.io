@@ -3,6 +3,9 @@
     "backend": "http://222.186.134.157/backend/",
     "backend_shatian": "http://192.168.1.6/backend/"
   },
+"com.happy.luckywheel": {
+    "backend": "http://222.186.134.157/backend/"
+  },
   "com.happy.lucky.test": {
     "backend": "http://192.168.42.183/backend/"
   }
