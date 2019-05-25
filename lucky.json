@@ -11,5 +11,8 @@
   },
   "com.happy.lucky.test": {
     "backend": "http://192.168.42.183/backend/"
+  },
+  "com.happy.luckywheel20190525": {
+    "backend": "http://222.186.134.157/backend/"
   }
 }
