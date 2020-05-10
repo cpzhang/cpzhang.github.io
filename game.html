@@ -23,6 +23,184 @@
 </head>
 <body>
     <p align="right">制心一处</p>
+
+    <hr /><h1>角色出生副本</h1>
+          <pre class="prettyprint linenums">
+bool CTerminalModule::Create()
+{
+	RegisterMessage(MSG_MODULEID_LOGIN, this);
+	return true;
+}
+void CTerminalModule::DispatchMessage(LPCSTR lpBuf, int nLen)
+{
+	static MsgHead head;
+	if (!head.ParseFromArray(lpBuf, nLen))
+	{
+		return;
+	}
+	WORD wModuleID = head.wkeymodule();
+	IMessageHandler* pMessageHandler = m_arrLpMessageHandler[wModuleID];
+	if (wModuleID == MSG_MODULEID_LOGIN)
+	{
+		pMessageHandler->OnMessage(NULL, head);
+	}
+}
+void CTerminalModule::OnMessage(IPlayer* pPlayer, const MsgHead& head)
+{
+	switch (head.wkeyaction())
+	{
+		case MSG_LOGIN_SELETEACTOR:
+			OnUserSelectActor(head);
+			break;
+	}
+}
+void CTerminalModule::OnUserSelectActor(const MsgHead& head)
+{
+	AS_Login_SeleteActor message;
+	if (!message.ParseFromString(head.body()))
+	{
+		_fileline();
+		return;
+	}
+	LPCSTR szActorName = message.actorname().c_str();
+
+	auto pTerminalTunnel = new CTerminalTunnel();
+	if (!pTerminalTunnel->Create(agentid, message.clientid(), message.actorid()))
+	{
+		_warn("角色-%s登录失败", szActorName);
+		pTerminalTunnel->Release();
+		pTerminalTunnel = NULL;
+		return;
+	}
+}
+bool CTerminalTunnel::Create(DWORD dwAgentID, DWORD dwClientID, DWORD dwActorID)
+{
+	DBINPUT_LOAD_ACTOR_COMMAND dbInputCommand;
+	dbInputCommand.dwActorID = m_dwActorID;
+	if (!CDBSinkSingleton::Instance().ExecuteSP(m_dwActorID, SPID_LOAD_ACTOR_COMMAND, (LPCSTR)&dbInputCommand, sizeof(dbInputCommand)))
+	{
+		_error("CTerminalStateLogin::OnEnter 请求角色常规数据失败，dwActorID=%d", m_dwActorID);
+		return false;
+	}
+	DBINPUT_LOAD_ACTOR_GOODS dbInputGoods;	
+	dbInputGoods.dwActorID = m_dwActorID;
+	if (!CDBSinkSingleton::Instance().ExecuteSP(m_dwActorID, SPID_LOAD_ACTOR_GOODS, (LPCSTR)&dbInputGoods, sizeof(dbInputGoods)))
+	{
+		_error("CTerminalStateLogin::OnEnter 请求角色物品数据失败，dwActorID=%d", m_dwActorID);
+		return false;
+	}
+	DBINPUT_LOAD_ACTOR_TASK dbInputTask;	
+	dbInputTask.dwActorID = m_dwActorID;
+	if (!CDBSinkSingleton::Instance().ExecuteSP(m_dwActorID, SPID_LOAD_ACTOR_TASK, (LPCSTR)&dbInputTask, sizeof(dbInputTask)))
+	{
+		_error("CTerminalStateLogin::OnEnter 请求角色任务数据失败，dwActorID=%d", m_dwActorID);
+		return false;
+	}
+}
+void CTerminalTunnel::OnReturn(DWORD dwSpID, int nRetCode, LPCSTR pOutData, int nOutLen)
+{
+	switch (dwSpID)
+	{
+	case SPID_LOAD_ACTOR_COMMAND:
+		{
+			m_lpCommandData = new char[nOutLen];
+			memcpy(m_lpCommandData, pOutData, nOutLen);
+			m_nCommandLen = nOutLen;
+		}
+		break;
+	case SPID_LOAD_ACTOR_GOODS:
+		{
+			m_lpGoodsData = new char[nOutLen];
+			memcpy(m_lpGoodsData, pOutData, nOutLen);
+			m_nGoodsLen = nOutLen;
+		}
+		break;
+	case SPID_LOAD_ACTOR_TASK:
+		{
+			m_lpTaskData = new char[nOutLen];
+			memcpy(m_lpTaskData, pOutData, nOutLen);
+			m_nTaskLen = nOutLen;
+		}
+		break;
+	default:
+		_error("角色在登录状态收到错误的数据库返回,dwSpID=%d", dwSpID);
+		break;
+	}
+	if (m_lpCommandData == NULL || m_nCommandLen == 0 
+		|| m_lpGoodsData == NULL || m_nGoodsLen == 0 
+		|| m_lpTaskData == NULL || m_nTaskLen == 0)
+	{
+		return;
+	}
+
+	SBuildPlayerDB sBuildPlayerDB;
+	sBuildPlayerDB.lpCommandData = m_lpCommandData;
+	sBuildPlayerDB.nCommandLen = m_nCommandLen;
+	sBuildPlayerDB.lpGoodsData = m_lpGoodsData;
+	sBuildPlayerDB.nGoodsLen = m_nGoodsLen;
+	sBuildPlayerDB.lpTaskData = m_lpTaskData;
+	sBuildPlayerDB.nTaskLen = m_nTaskLen;
+	pPlayer = (IPlayer*)GetEntityModule()->BuildEntityDB(ENTITY_CLASS_PLAYER, (LPCSTR)&sBuildPlayerDB, sizeof(sBuildPlayerDB));
+	if (pPlayer == NULL)
+	{
+		_error("CTerminalStateLogin::OnReturn 创建角色[%d]失败", m_dwActorID);
+		Kickout(RESULT_COMMON_ERROR);
+		return;
+	}
+	BindPlayer(pPlayer, false);
+}
+void CTerminalTunnel::BindPlayer(IPlayer* pPlayer, bool skipInit)
+{
+	IEventEngine* pEventEngine = Global->GetEventEngine();
+	if (pEventEngine != NULL)
+	{
+		pEventEngine->FireExecute(EVENT_PLAYER_LOGIN, SOURCE_TYPE_PLAYER, (DWORD)m_pPlayer, NULL, 0);
+	}
+}
+bool CLuaGameEvent::Create()
+{
+	IEventEngine* pEventEngine = Global->GetEventEngine();
+	pEventEngine->Subscibe(this, EVENT_PLAYER_LOGIN, SOURCE_TYPE_PLAYER, 0, "CLuaGameEvent::Create");
+	return true;
+}
+void CLuaGameEvent::OnExecute(WORD wEventID, BYTE bSrcType, DWORD dwSrcID, LPCSTR pszContext, int nLen)
+{
+	if (bSrcType == SOURCE_TYPE_PLAYER)
+	{
+		if (wEventID == EVENT_PLAYER_LOGIN)
+			OnPlayerLogin((IPlayer*)dwSrcID, pszContext, nLen);
+	}
+}
+
+void CLuaGameEvent::OnPlayerLogin(IPlayer* pPlayer, LPCSTR pszContext, int nLen)
+{
+	CLuaParam input[1];
+	input[0] = pPlayer->GetActorID();
+	GetLuaModule()->RunFunction("OnPlayerLogin", input, 1, NULL, 0);
+}
+
+function OnPlayerLogin(actorID)
+	-- 新手出生进副本
+	local actorLv = GetPlayerNumProp(actorID, CREATURE_FIELD_LEVEL)
+	if actorLv == 1 then
+		local ectypeID = Lua_GetConstValue(CONST_NEWBIEECTYPE_ID)
+		if ectypeID > 0 then
+			EnterEctype(actorID, ectypeID)
+		end
+	end
+end
+
+function EnterEctype(actorID, ectypeID)
+	local sceneID = Lua_CreateEctype(actorID, ectypeID)
+	if Lua_ChangeGameScene(actorID, sceneID) == false then
+		_warn("切换场景失败")
+		return RESULT_COMMON_FAILURE
+	end
+	return RESULT_COMMON_SUCCEED
+end
+</pre>
+
+
     <hr /><h1>客户端热更机制</h1>
     <pre class="prettyprint linenums">
 //Bootstrap.cs
@@ -568,6 +746,14 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1 id="AIEvent">AI</h1>
     AIEvent.csv
     <ul>
@@ -597,6 +783,14 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1 id="Creature">采集</h1>
     SCollecteCoor.csv
     SCollectPb.csv
@@ -618,6 +812,14 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1 id="Creature">生物表</h1>
     Creature.csv
     <ul>
@@ -628,6 +830,14 @@ end
     </ul>
 
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -662,6 +872,14 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1 id="GameScene">场景</h1>
     GameScene.csv
     <ul>
@@ -688,6 +906,14 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1 id="Sound">音效</h1>
     Sound.csv
     <ul>
@@ -707,6 +933,14 @@ end
         </li>
     </ul>
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -745,6 +979,14 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1>定时活动</h1>
     ActivityTime.csv
     <ul>
@@ -776,9 +1018,25 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1>押镖</h1>
 
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -902,9 +1160,25 @@ enum VIPID
 
 
 
+
+
+
+
+
+
+
+
     <h1 id="CountryFund">建国基金</h1>
 
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -1134,6 +1408,30 @@ enum CONST_VALUE
 };
 </pre>
     <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2089,6 +2387,7 @@ end
     </ul>
 
     <hr />
+
     <h1>任务</h1>
     Task.csv
     <ul>
@@ -2105,6 +2404,7 @@ end
     TaskBranch.csv
 
     <hr />
+
     <h1>副本</h1>
     Chapter.csv
     章节（包含N个同类型副本，例如坐骑副本，升星副本）
@@ -2158,6 +2458,14 @@ end
 
 
 
+
+
+
+
+
+
+
+
     <h1>物品-装备</h1>
     Equipment.csv
     <ul>
@@ -2180,6 +2488,14 @@ end
     </ul>
 
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -2683,6 +2999,7 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 </pre>
 
     <hr />
+
     <h1 id="ActivityGift">活动礼包</h1>
     ActivityGift.csv
     <ul>
@@ -2709,6 +3026,14 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
     </ul>
 
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -2782,6 +3107,14 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
     <li>忽视防御百分比</li>
     </ul>
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -2938,6 +3271,14 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
     <li>套装战力</li>
     </ul>
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -3423,6 +3764,134 @@ enum LOGIC_DATA
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <h1>流派</h1>
     <pre class="prettyprint">
 enum GENRE
@@ -3435,6 +3904,14 @@ enum GENRE
 </pre>
 
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -3528,6 +4005,14 @@ enum SKEPID
 
 
 
+
+
+
+
+
+
+
+
     <h2>技能等级配置</h2>
     <p>SkillEffect.csv</p>
     <ul>
@@ -3544,6 +4029,14 @@ enum SKEPID
     <li>Pierce 穿透</li>
     </ul>
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -3734,6 +4227,14 @@ enum SKEPID
 
 
 
+
+
+
+
+
+
+
+
     <h1>开服关服</h1>
     <p>开服   Bin/Cluster/开服.bat</p>
     <p>关服   Bin/Cluster/关服.bat</p>
@@ -3742,6 +4243,22 @@ enum SKEPID
     </p>
 
     <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3790,8 +4307,24 @@ enum SKEPID
 
 
 
+
+
+
+
+
+
+
+
     <h1>怪物</h1>
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -3802,6 +4335,14 @@ enum SKEPID
     <h1>AI</h1>
 
     <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -4006,6 +4547,22 @@ inline half3 LinearToGammaSpace (half3 linRGB)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <h3>Horizon Based Ambient Occlusion(HBAO)</h3>
 
     <h2>phon</h2>
@@ -4063,6 +4620,22 @@ end
     <h2>Quatation</h2>
     四元素
     <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4151,6 +4724,22 @@ void CLogicPart::SetLoginLogicData()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             297191409@qq.com.<br />
 
 
@@ -4167,7 +4756,39 @@ void CLogicPart::SetLoginLogicData()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             ShenZhen<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
