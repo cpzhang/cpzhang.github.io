@@ -23,6 +23,105 @@
 </head>
 <body>
     <p align="right">制心一处</p>
+    <hr /><h1>引导</h1>
+          <pre class="prettyprint">
+GuideManager.EventType =
+{
+	UpdateEvent             =           1,              --升级事件
+	EnterSceneEvent         =           2,              --进入场景事件
+	ReceiveTaskEvent        =           3,              --接受任务事件
+	FinishTaskEvent         =           4,              --完成任务事件
+	KillMonsterEvent        =           5,              --击杀怪物事件
+	OpenWindowEvent         =           6,              --打开窗口事件
+	FunctionOpenEvent       =           7,              --功能开启事件
+	NextEvent               =           8,              --引导触发
+	CampOpen                =           11,              --阵营选择事件
+	CameraShowOver          =           12,              --镜头播放完事件
+}
+
+function GuideManager.GuideEventStart(n)
+	curEventID= EntityModule.hero.logicLC:Get(LOGIC_DATA.DATA_GUIDELOG_EVENTID)   --引导事件ID
+	curEventID = curEventID + 1
+	eventItem = Schemes.GuideEvent.Get(curEventID)
+	curGuideID=eventItem.GuideID
+	if eventItem.Event == self.EventType.UpdateEvent then
+		self:CheckUpdateEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.EnterSceneEvent and n == 2 then
+		self:CheckEnterSceneEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.ReceiveTaskEvent and n ~= 5 then
+		self:CheckReceiveTaskEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.FinishTaskEvent and n ~= 5 and n ~= 7 and n~=3 then
+		self:CheckFinishTaskEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.KillMonsterEvent then
+		self:CheckKillMonsterEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.OpenWindowEvent and n~=2 then
+		self:CheckOpenWindowEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.FunctionOpenEvent and n == 7 then
+		self:CheckFunctionOpenEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.CampOpen and n == 11  then
+		self:CheckSelectCampEvent(eventItem,curEventID)
+	elseif eventItem.Event == self.EventType.CameraShowOver and n == 12 then
+		self.NavigationPause()
+		self:CheckCameraShowOverEvent(eventItem,curEventID)
+	end
+end
+
+--检测升级事件
+function GuideManager:CheckUpdateEvent(eventItem,eventID)
+	local playerLV = EntityModule.hero.propertyLC:GetProperty(CREATURE_FIELD.CREATURE_FIELD_LEVEL)
+	if playerLV >= eventItem.Parameter and (playerLV >= eventItem.LevelMin and playerLV <= eventItem.LevelMax) then
+		self.TriggerEvent(eventItem.GuideID,eventID)
+	end
+end
+
+--检测接受任务事件
+function GuideManager:CheckReceiveTaskEvent(eventItem,eventID)
+	local taskList = EntityModule.hero.heroTaskLC.taskStatusList[TASK_STATUS.TASK_STATUS_ACCEPTED]
+	local isFind = false
+	for _,v in ipairs(taskList) do
+		local key = v
+		local tID = math.floor(key / 256)
+		if tID == eventItem.Parameter then isFind = true end
+	end
+	local playerLV = EntityModule.hero.propertyLC:GetProperty(CREATURE_FIELD.CREATURE_FIELD_LEVEL)
+	if isFind and (playerLV >= eventItem.LevelMin and playerLV <= eventItem.LevelMax) then
+		self.TriggerEvent(eventItem.GuideID,eventID)
+	end
+end
+
+--检测打开窗口事件
+function GuideManager:CheckOpenWindowEvent(eventItem,eventID)
+	local playerLV = EntityModule.hero.propertyLC:GetProperty(CREATURE_FIELD.CREATURE_FIELD_LEVEL)
+	if UIManager.curWindowID == eventItem.Parameter and (playerLV >= eventItem.LevelMin and playerLV <= eventItem.LevelMax) then
+		self.TriggerEvent(eventItem.GuideID,eventID)
+	end
+end
+
+--检测功能开启事件
+function GuideManager:CheckFunctionOpenEvent(eventItem,eventID)
+	local playerLV = EntityModule.hero.propertyLC:GetProperty(CREATURE_FIELD.CREATURE_FIELD_LEVEL)
+	if FunctionOpenManager.serverRecordID == eventItem.Parameter and (playerLV >= eventItem.LevelMin and playerLV <= eventItem.LevelMax) then
+		self.TriggerEvent(eventItem.GuideID,eventID)
+	end
+end
+
+function GuideManager.CheckGuideEvent(n)
+	self.GuideEventStart(n)
+end
+
+
+function MainLandUI.Guide(n, param1, param2, param3 )
+	GuideManager.CheckGuideEvent(n)
+	FunctionOpenManager:CheckFunctionOpenEvent(n)
+end
+
+function MainLandUI.Awake()
+    EventManager.Subscribe(EventID.CheckGuideEvent, MainLandUI.Guide)
+end
+
+EventManager.Fire(EventID.CheckGuideEvent,5)
+
+</pre>
     <hr /><h1>NPC语音</h1>
     <pre class="prettyprint">
 NPCTaskTalkUI.Init = function (self, caller, task )
