@@ -23,9 +23,346 @@
 </head>
 <body>
     <p align="right">制心一处</p>
+    <hr /><h1>NPC语音</h1>
+    <pre class="prettyprint">
+NPCTaskTalkUI.Init = function (self, caller, task )
+	local npc = NPCManager.npcs[caller.npcScheme.ID]
+	local npcScheme = caller.npcScheme
+	-- 默认对话
+	local param = ProcessDialog(npcScheme.Talk)
+	local soundPath, volume = GetSoundPath(true, param.soundNum)
+	NPCTaskTalkUI.DefaultTalk(param.isNpc, soundPath, volume, param.str)
+end
 
+local function ProcessDialog( str )
+	return  {isNpc = isNpc, str = tempStr, soundNum = soundNum ,cameraID = cameraID}
+end
+
+NPCTaskTalkUI.DefaultTalk = function (isNpc, fileStr, volume, str )
+	NPCTaskTalkUI.HeroHead(isNpc, fileStr, volume, str)
+end
+
+function NPCTaskTalkUI.HeroHead( isNpc, fileStr, volume, str)
+	local function GetNPCSoundElement( ... )
+		local o = NGUITools.AddChild(UIManager.soundElementPivot)
+		o.name = 'npcsound'
+		return o:AddComponent(System.Type.GetType('UnityEngine.AudioSource, UnityEngine'))
+	end
+	NPCTaskTalkUI.audioComp = NPCTaskTalkUI.audioComp or GetNPCSoundElement()
+	local clip = HotResManager.ReadSound(fileStr)
+	NPCTaskTalkUI.audioComp.clip = clip
+	NPCTaskTalkUI.audioComp.volume = volume
+	NPCTaskTalkUI.audioComp:Play()
+end
+</pre>
+
+    <hr /><h1>概率</h1>
+    <hr /><h2>均匀概率</h2>
+    <hr /><h2>正态概率</h2>
+
+    <hr /><h1>主线任务</h1>
+    <pre class="prettyprint">
+bool CTaskPart::Create(IEntity* pMaster, LPCSTR pContext, int nLen)
+{
+	IEventEngine* pEventEngine = Global->GetEventEngine();
+	pEventEngine->Subscibe((IEventExecuteSink*)this, EVENT_PLAYER_LOGIN, SOURCE_TYPE_PLAYER, (DWORD)m_pMaster, "CTaskPart::Create");
+	pEventEngine->Subscibe((IEventExecuteSink*)this, EVENT_PLAYER_CREATECLIENT, SOURCE_TYPE_PLAYER, (DWORD)m_pMaster, "CTaskPart::Create");
+	pEventEngine->Subscibe((IEventExecuteSink*)this, EVENT_PLAYER_LOGOUT, SOURCE_TYPE_PLAYER, (DWORD)m_pMaster, "CTaskPart::Create");
+	return true;
+}
+
+void CTaskPart::OnExecute(WORD wEventID, BYTE bSrcType, DWORD dwSrcID, LPCSTR pszContext, int nLen)
+{
+	if(wEventID == EVENT_PLAYER_LOGIN && bSrcType == SOURCE_TYPE_PLAYER)
+	{
+		PlayerTaskLogin();
+	}
+	if (wEventID == EVENT_PLAYER_CREATECLIENT && bSrcType == SOURCE_TYPE_PLAYER)
+	{
+		SendTaskData();
+	}
+	if(wEventID == EVENT_PLAYER_LOGOUT && bSrcType == SOURCE_TYPE_PLAYER)
+	{
+		PlayerTaskLogout();
+	}
+}
+
+void CTaskPart::PlayerTaskLogin()
+{
+	Json::Value root;
+	TaskItemMap::iterator it = m_mapTaskItem.begin();
+	for (; it != m_mapTaskItem.end(); ++it)
+	{
+		STaskItem &task = it->second;
+		Json::Value info;
+		info["BranchID"] = (int)task.byBranchID;
+		info["TaskID"] = (int)task.dwTaskID;
+		info["Step"] = (int)task.byStep;
+		info["Round"] = (int)task.wRound;
+		root.append(info);
+	}
+	Json::FastWriter writer;
+	CLuaParam input[2];
+	input[0] = m_pMaster->GetActorID();
+	input[1] = writer.write(root).c_str();
+	if (!GetLuaModule()->RunFunction("PlayerTaskLogin", input, 2, NULL, 0))
+	{
+		_error("CTaskPart::PlayerTaskLogin run lua function false");
+	}
+}
+
+function PlayerTaskLogin(actorID, taskJson)
+	InitActorTask(actorID)
+	InitBranchTask(actorID)
+	local TTaskJson = json.decode(taskJson)
+	local taskNum = #TTaskJson
+	local serverTime = Lua_ServerTime()
+	for i = 1, taskNum do
+		local info = TTaskJson[i]
+		local branchID = info["BranchID"]
+		local taskID = info["TaskID"]
+		local step = info["Step"]
+		local count = info["Round"]
+		local schemeData = Schemes.Task.Get2( taskID, step)
+		local task = TaskFactory(actorID, branchID, taskID, step, schemeData, count )
+		local status = Lua_GetTaskStatus(actorID, branchID, taskID)
+		if status == TASK_STATUS_ACCEPTED then
+			AddActorTask(task)
+		end
+		if task.BranchID ~= 0 then
+			AddBranchTask(task)
+		end
+	end
+	GetPlayerDailyTasks(actorID)
+end
+
+function InitActorTask(actorID)
+	for taskType = (TaskType_Null + 1), (TaskType_MaxID - 1) do
+		local key = MAKELISTENERKEY(actorID, taskType)
+		TTaskList[key] = nil
+	end
+end
+
+function MAKELISTENERKEY(actorID, taskType)
+	return actorID * 256 + taskType
+end
+
+function InitBranchTask(actorID)
+	TActorBranchTaskList[actorID] = nil
+end
+
+//DgameEnum.h
+enum TaskType
+{
+	TaskType_Null = 0,
+	TaskType_KillTargetMonster,
+	TaskType_DramaEctype,
+	TaskType_DailyEctype,
+	TaskType_JoinActivity,
+	TaskType_KillLevelMonster,
+	TaskType_Talk,
+	TaskType_TimeTalk,
+	TaskType_TimePass,
+	TaskType_ActorLevel,
+	TaskType_FriendShip,
+	TaskType_KillPlayer,
+	TaskType_Escort,
+	TaskType_TalkEctype,
+	TaskType_CollectGood,
+	TaskType_TalkThenTransmit,
+	TaskType_UpGrade,
+	TaskType_DoDailyTask,
+	TaskType_OperateCollectGood,
+	TaskType_EveryDayUpGrade,
+	TaskType_EnterScene,
+	TaskType_NewbieTarget,
+	TaskType_LoginDay,
+	TaskType_BuyRechargeCard,
+	TaskType_MaxID,
+};
+
+function GetPlayerDailyTasks( actorID )
+	local actorGroupTaskList = GetActorGroupTaskList(actorID)
+	local vipLevel = GetPlayerNumProp(actorID, PLAYER_FIELD_VIPLEVEL)
+	for groupID, v in pairs(BranchGroup) do
+		local curGroupTask = actorGroupTaskList.TaskIDList[groupID]
+		-- 如果没有接受该任务组的任务
+		if not curGroupTask then
+			local groupTaskScheme = GetGroupTaskPlayerCanAccept(actorID, groupID)
+			if groupTaskScheme then
+				if groupTaskScheme.Refresh == 0 then
+					if groupTaskScheme.VIPLevel == 0 or groupTaskScheme.VIPLevel > vipLevel  then
+						local newTaskID = RandomGetBranchTaskID(actorID, groupTaskScheme)
+						NewBranchTask(actorID, newTaskID)
+					else
+						local newTaskID = RandomGetVIPBranchTaskID(actorID, groupTaskScheme)
+						NewBranchTask(actorID, newTaskID )
+					end
+				else
+					if groupTaskScheme.VIPLevel == 0 or groupTaskScheme.VIPLevel > vipLevel then
+						local newTaskID = GetBranchTaskID(actorID, groupTaskScheme, 1)
+						NewBranchTask(actorID, newTaskID)
+					else
+						local newTaskID = GetBranchVIPTaskID(actorID, groupTaskScheme, 1)
+						NewBranchTask(actorID, newTaskID)
+					end
+				end
+			end
+		end
+	end
+end
+
+function GetActorGroupTaskList(actorID)
+	local branchTaskList = TActorBranchTaskList[actorID]
+	if branchTaskList == nil then
+		branchTaskList = BranchTaskList:new()
+		branchTaskList.ActorID = actorID
+		TActorBranchTaskList[actorID] = branchTaskList
+	end
+	return branchTaskList
+end
+
+--- 对任务分组处理
+BranchGroup = {}
+local function GroupBranchTask()
+	for _, v in pairs( Schemes.TaskBranch.items ) do
+		if v and v.GroupID then
+			local groupID = v.GroupID
+			BranchGroup[groupID] = BranchGroup[groupID] or {}
+			table.insert(BranchGroup[groupID], v)
+		end
+	end
+end
+
+--- 获取该任务组中玩家可以接受的任务
+function GetGroupTaskPlayerCanAccept ( actorID, groupID )
+	local groupTaskList = BranchGroup[groupID]
+	local actorLevel = Lua_GetPlayerNumProp(actorID, CREATURE_FIELD_LEVEL)
+	for k,v in pairs( groupTaskList) do
+		if CanAcceptBranchTask(actorLevel, v.MinLevel, v.MaxLevel) then
+			return v
+		end
+	end
+	return nil
+end
+
+local function CanAcceptBranchTask( actorLevel, minLevel, maxLevel )
+	if actorLevel >= minLevel and actorLevel <= maxLevel then
+		return true
+	end
+	return false
+end
+
+function RandomGetBranchTaskID(actorID ,curTaskBranchScheme, taskQuality)
+	local taskIDs = RandomGetBranchTask(actorID, curTaskBranchScheme, taskQuality)
+	local countryID = GetPlayerNumProp(actorID, PLAYER_FIELD_COUNTRY)
+	if #taskIDs == 1 then
+		return taskIDs[1]
+	end
+	return taskIDs[countryID + 1]
+end
+
+function RandomGetBranchTask(actorID, taskBranchScheme, taskQuality)
+	local beginIndex = 1
+	if taskBranchScheme.Refresh == 2 then
+		beginIndex = taskQuality
+	end
+	local randMax = 0
+	for index = beginIndex, 5 do
+		local tmp = weightStr[index]
+		local tmpWeight = taskBranchScheme[tmp]
+		randMax = randMax + tmpWeight
+	end
+	local rdm = Lua_GetRandomInt(0, randMax - 1)
+	local taskWeightSum = 0
+	for index = beginIndex, 5 do
+		local tmp = weightStr[index]
+		local tmpWeight = taskBranchScheme[tmp]
+		taskWeightSum = taskWeightSum + tmpWeight
+		if rdm < taskWeightSum then
+			return taskBranchScheme[taskStr[index]]
+		end
+	end
+end
+
+local weightStr = { 'Weight1', 'Weight2', 'Weight3', 'Weight4', 'Weight5', }
+local taskStr = { 'Task1', 'Task2', 'Task3', 'Task4', 'Task5', }
+
+function RandomGetVIPBranchTaskID(actorID, taskBranchScheme, taskQuality)
+	local taskIDs = RandomGetVIPBranchTask(taskBranchScheme, taskQuality)
+	local countryID = GetPlayerNumProp(actorID, PLAYER_FIELD_COUNTRY)
+	if #taskIDs == 1 then
+		return taskIDs[1]
+	end
+	return taskIDs[countryID + 1]
+end
+
+function RandomGetVIPBranchTask(taskBranchScheme, taskQuality)
+	local beginIndex = 1
+	if taskBranchScheme.Refresh == 2 then
+		beginIndex = taskQuality - 2
+		if beginIndex < 1 then
+			beginIndex = 1
+		end
+	end
+	local randMax = 0
+	for index = beginIndex, 3 do
+		local tmp = vipWeightStr[index]
+		local tmpWeight = taskBranchScheme[tmp]
+		randMax = randMax + tmpWeight
+	end
+	local rdm = Lua_GetRandomInt(0, randMax - 1)
+	local taskWeightSum = 0
+	for index = beginIndex, 3 do
+		local tmp = vipWeightStr[index]
+		local tmpWeight = taskBranchScheme[tmp]
+		taskWeightSum = taskWeightSum + tmpWeight
+		if rdm < taskWeightSum then
+			return taskBranchScheme[vipTaskStr[index]]
+		end
+	end
+	return nil
+end
+
+local vipWeightStr = { 'VIPWeight1', 'VIPWeight2', 'VIPWeight3', }
+local vipTaskStr = { 'VIPTaskID1', 'VIPTaskID2', 'VIPTaskID3', }
+
+function GetBranchTaskID(actorID, taskBranchScheme, index )
+	local taskIDs = taskBranchScheme['Task'..index]
+	local countryID = GetPlayerNumProp(actorID, PLAYER_FIELD_COUNTRY)
+	if #taskIDs == 1 then
+		return taskIDs[1]
+	end
+	return taskIDs[countryID + 1]
+end
+
+function GetBranchVIPTaskID( actorID, taskBranchScheme, index )
+	local taskIDs = taskBranchScheme['VIPTaskID'..index]
+	local countryID = GetPlayerNumProp(actorID, PLAYER_FIELD_COUNTRY)
+	if #taskIDs == 1 then
+		return taskIDs[1]
+	end
+	return taskIDs[countryID + 1]
+end
+
+
+function NewBranchTask(actorID, newTaskID, newRound, newStep, notSync )
+	newStep = newStep or 1
+	local taskScheme = Schemes.Task.Get2(newTaskID, newStep)
+	local newTask = TaskFactory(actorID, 1, newTaskID, newStep, taskScheme, newRound )
+	local addResult = newTask:AddBranch(notSync)
+	AddActorTask(newTask)
+	AddBranchTask(newTask)
+	return newTask
+end
+
+</pre>
+    <hr /><h2>第一个主线任务</h2>
+    <pre class="prettyprint">
+
+</pre>
     <hr /><h1>角色出生副本</h1>
-          <pre class="prettyprint linenums">
+    <pre class="prettyprint linenums">
 bool CTerminalModule::Create()
 {
 	RegisterMessage(MSG_MODULEID_LOGIN, this);
@@ -199,7 +536,6 @@ function EnterEctype(actorID, ectypeID)
 	return RESULT_COMMON_SUCCEED
 end
 </pre>
-
 
     <hr /><h1>客户端热更机制</h1>
     <pre class="prettyprint linenums">
@@ -433,7 +769,6 @@ private void Go()
     gameObject.AddComponent<LuaMonoBehavior>().RunLuaFile("SceneManager");
 }
 </pre>
-
     <pre class="prettyprint">
 --main.lua
 json = require("json")
@@ -526,227 +861,198 @@ end
     物品（道具）对战斗数值的影响几何？进而可以换算为元宝！
     计划经济也！是否可以实行市场经济，物价几何，交由玩家决定？
     <ul>
-    <li>
+        <li>
             元宝
-    <p>基本单位，1</p>
+            <p>基本单位，1</p>
         </li>
-    <li>
+        <li>
             战力
-    <p>元宝战力比，可变，假设即可，例如1/6，即一元宝可以兑换6战力</p>
+            <p>元宝战力比，可变，假设即可，例如1/6，即一元宝可以兑换6战力</p>
         </li>
-    <li>
+        <li>
             绑定元宝
-    <p>可变，假设即可，例如0.5</p>
+            <p>可变，假设即可，例如0.5</p>
         </li>
-    <li>
+        <li>
             经验
-    <p>
+            <p>
                 经验满了可以升级，战力会提升，基于<a id="#PlayerBaseProp">PlayerBaseProp.csv</a>，随着等级的提升，
                 需要的经验越来越多，呈指数级上升，而每升一级提升的战力几乎不变，所以经验的价值呈对数级下降
             </p>
         </li>
-    <li>
+        <li>
             体力
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             银两
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             修为
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             帮贡
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             声望
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             升星石
-    <p>
+            <p>
                 升星石价值 = 每次升星增加的战力 x 概率 / 升星石数量 / 元宝战力比
             </p>
         </li>
-    <li>
+        <li>
             强化石
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             神兵升星石
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             神兵进阶石
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             洗练石
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             精炼石
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             精炼石
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             坐骑进阶丹
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             仙器进阶丹
-    <p>
-
+            <p>
             </p>
         </li>
-    <li>
+        <li>
             突破宝箱
-    <p>
-
+            <p>
             </p>
         </li>
     </ul>
-
     <h3>运营活动</h3>
-
     <hr /><h1 id="monster">摆怪</h1>
     monster/*.csv
     <ul>
-    <li>ID</li>
-    <li>MonsterID</li>
-    <li>Type</li>
-    <li>BirthDelay</li>
-    <li>BirthPositonX</li>
-    <li>BirthPositonY</li>
-    <li>BirthPositonZ</li>
-    <li>Face</li>
+        <li>ID</li>
+        <li>MonsterID</li>
+        <li>Type</li>
+        <li>BirthDelay</li>
+        <li>BirthPositonX</li>
+        <li>BirthPositonY</li>
+        <li>BirthPositonZ</li>
+        <li>Face</li>
     </ul>
-
     <hr /><h1 id="Skill">技能</h1>
     Skill.csv
     <ul>
-    <li>ID</li>
-    <li>Type</li>
-    <li>Name</li>
-    <li>Tips</li>
-    <li>AttackAnimation</li>
-    <li>BehitAnimation</li>
-    <li>ConditionParameter2</li>
-    <li>Probability</li>
-    <li>Frequency</li>
-    <li>Action</li>
+        <li>ID</li>
+        <li>Type</li>
+        <li>Name</li>
+        <li>Tips</li>
+        <li>AttackAnimation</li>
+        <li>BehitAnimation</li>
+        <li>ConditionParameter2</li>
+        <li>Probability</li>
+        <li>Frequency</li>
+        <li>Action</li>
     </ul>
-
     符文，加buff
     SkillRune.csv
     <ul>
-    <li>ID</li>
-    <li>Name</li>
-    <li>Tips</li>
-    <li>Level</li>
-    <li>BuffID</li>
-    <li>BuffLevel</li>
-    <li>BuffRate</li>
-    <li>LearnGoodsID</li>
-    <li>LearnGoodsNum</li>
+        <li>ID</li>
+        <li>Name</li>
+        <li>Tips</li>
+        <li>Level</li>
+        <li>BuffID</li>
+        <li>BuffLevel</li>
+        <li>BuffRate</li>
+        <li>LearnGoodsID</li>
+        <li>LearnGoodsNum</li>
     </ul>
-
     心法
     SkillPassive.csv
     <ul>
-    <li>ID</li>
-    <li>Type</li>
-    <li>Level</li>
-    <li>Tips</li>
-    <li>HP</li>
-    <li>Attack</li>
-    <li>Defense</li>
-    <li>PhysicsAttack</li>
-    <li>MagicAttack</li>
-    <li>PhysicsDefense	    </li>
-    <li>MagicDefense	    </li>
-    <li>CriticalStrike	    </li>
-    <li>AntiCriticalStrike	</li>
-    <li>Parry	            </li>
-    <li>AntiParry	        </li>
-    <li>Dodge	            </li>
-    <li>Hit	                </li>
-    <li>Armor	            </li>
-    <li>AntiArmor	        </li>
-    <li>DamageReduction	    </li>
-    <li>DamageAdd	        </li>
-    <li>MoveSpeed	        </li>
-    <li>AttackDefense       </li>
+        <li>ID</li>
+        <li>Type</li>
+        <li>Level</li>
+        <li>Tips</li>
+        <li>HP</li>
+        <li>Attack</li>
+        <li>Defense</li>
+        <li>PhysicsAttack</li>
+        <li>MagicAttack</li>
+        <li>PhysicsDefense	    </li>
+        <li>MagicDefense	    </li>
+        <li>CriticalStrike	    </li>
+        <li>AntiCriticalStrike	</li>
+        <li>Parry	            </li>
+        <li>AntiParry	        </li>
+        <li>Dodge	            </li>
+        <li>Hit	                </li>
+        <li>Armor	            </li>
+        <li>AntiArmor	        </li>
+        <li>DamageReduction	    </li>
+        <li>DamageAdd	        </li>
+        <li>MoveSpeed	        </li>
+        <li>AttackDefense       </li>
     </ul>
-
     天赋
     SkillTalent.csv
     <ul>
-    <li>ID</li>
-    <li>Type</li>
-    <li>Level</li>
-    <li>Tips</li>
-    <li>Name</li>
-    <li>HP</li>
-    <li>Attack</li>
-    <li>Defense</li>
-    <li>PhysicsAttack</li>
-    <li>MagicAttack</li>
-    <li>PhysicsDefense	    </li>
-    <li>MagicDefense	    </li>
-    <li>CriticalStrike	    </li>
-    <li>AntiCriticalStrike	</li>
-    <li>Parry	            </li>
-    <li>AntiParry	        </li>
-    <li>Dodge	            </li>
-    <li>Hit	                </li>
-    <li>Armor	            </li>
-    <li>AntiArmor	        </li>
-    <li>DamageReduction	    </li>
-    <li>DamageAdd	        </li>
-    <li>MoveSpeed	        </li>
-    <li>AttackDefense       </li>
+        <li>ID</li>
+        <li>Type</li>
+        <li>Level</li>
+        <li>Tips</li>
+        <li>Name</li>
+        <li>HP</li>
+        <li>Attack</li>
+        <li>Defense</li>
+        <li>PhysicsAttack</li>
+        <li>MagicAttack</li>
+        <li>PhysicsDefense	    </li>
+        <li>MagicDefense	    </li>
+        <li>CriticalStrike	    </li>
+        <li>AntiCriticalStrike	</li>
+        <li>Parry	            </li>
+        <li>AntiParry	        </li>
+        <li>Dodge	            </li>
+        <li>Hit	                </li>
+        <li>Armor	            </li>
+        <li>AntiArmor	        </li>
+        <li>DamageReduction	    </li>
+        <li>DamageAdd	        </li>
+        <li>MoveSpeed	        </li>
+        <li>AttackDefense       </li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -757,33 +1063,24 @@ end
     <h1 id="AIEvent">AI</h1>
     AIEvent.csv
     <ul>
-    <li>ID</li>
-    <li>Tips</li>
-    <li>Event</li>
-    <li>EventParameter</li>
-    <li>Condition</li>
-    <li>ConditionParameter1</li>
-    <li>ConditionParameter2</li>
-    <li>Probability</li>
-    <li>Frequency</li>
-    <li>Action</li>
+        <li>ID</li>
+        <li>Tips</li>
+        <li>Event</li>
+        <li>EventParameter</li>
+        <li>Condition</li>
+        <li>ConditionParameter1</li>
+        <li>ConditionParameter2</li>
+        <li>Probability</li>
+        <li>Frequency</li>
+        <li>Action</li>
     </ul>
-
     AIConfig.csv
     <ul>
-    <li>ID</li>
-    <li>Tips</li>
-    <li>Skillid</li>
+        <li>ID</li>
+        <li>Tips</li>
+        <li>Skillid</li>
     </ul>
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -798,21 +1095,12 @@ end
     ActivityCollect.csv
     EquipCollect.csv
     <ul>
-    <li>ID</li>
-    <li>Name</li>
-    <li>Prefab</li>
-    <li>Scale</li>
+        <li>ID</li>
+        <li>Name</li>
+        <li>Prefab</li>
+        <li>Scale</li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -823,21 +1111,12 @@ end
     <h1 id="Creature">生物表</h1>
     Creature.csv
     <ul>
-    <li>ID</li>
-    <li>Name</li>
-    <li>Prefab</li>
-    <li>Scale</li>
+        <li>ID</li>
+        <li>Name</li>
+        <li>Prefab</li>
+        <li>Scale</li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -848,31 +1127,22 @@ end
     <h1 id="SceneNpc">Npc</h1>
     SceneNpc.csv
     <ul>
-    <li>ID</li>
-    <li>Name</li>
-    <li>MapID</li>
-    <li>
+        <li>ID</li>
+        <li>Name</li>
+        <li>MapID</li>
+        <li>
             CreatureID
-    <a href="#Creature">
+            <a href="#Creature">
                 生物表Id
             </a>
         </li>
-    <li>PosX</li>
-    <li>PosY</li>
-    <li>PosZ</li>
-    <li>Angle</li>
-    <li>Talk</li>
+        <li>PosX</li>
+        <li>PosY</li>
+        <li>PosZ</li>
+        <li>Angle</li>
+        <li>Talk</li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -883,18 +1153,18 @@ end
     <h1 id="GameScene">场景</h1>
     GameScene.csv
     <ul>
-    <li>ID</li>
-    <li>MapName</li>
-    <li>
+        <li>ID</li>
+        <li>MapName</li>
+        <li>
             MapRes
-    <p>
+            <p>
                 Unity的场景文件
             </p>
         </li>
-    <li>
+        <li>
             MusicID
-    <p>
-    <a href="#Sound">音效</a>
+            <p>
+                <a href="#Sound">音效</a>
             </p>
         </li>
     </ul>
@@ -906,28 +1176,20 @@ end
 
 
 
-
-
-
-
-
-
-
-
     <h1 id="Sound">音效</h1>
     Sound.csv
     <ul>
-    <li>ID</li>
-    <li>
+        <li>ID</li>
+        <li>
             File
-    <p>
+            <p>
                 Unity的音效文件
             </p>
         </li>
-    <li>Tips</li>
-    <li>
+        <li>Tips</li>
+        <li>
             Volume
-    <p>
+            <p>
                 音量
             </p>
         </li>
@@ -940,46 +1202,29 @@ end
 
 
 
-
-
-
-
-
-
-
-
     <h1 id="BroadCast">广播</h1>
     BroadCast.csv
     <ul>
-    <li>
+        <li>
             BroadID
         </li>
-    <li>
+        <li>
             Tips
         </li>
-    <li>
+        <li>
             BroadcastTips
-    <p>
+            <p>
                 内容#!%UI界面ID;%等级设置;%mapID;%X坐标;%Y坐标;%Z坐标!#
             </p>
         </li>
-    <li>
+        <li>
             Channel
-    <p>
+            <p>
                 频道(0:无(系统);1:系统广播;2:系统;3:小喇叭;4:世界;5:帮会;6:阵营;7:队伍)
             </p>
         </li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -990,22 +1235,22 @@ end
     <h1>定时活动</h1>
     ActivityTime.csv
     <ul>
-    <li>
+        <li>
             ActvID
         </li>
-    <li>
+        <li>
             Name
         </li>
-    <li>
+        <li>
             LoopType
-    <p>
+            <p>
                 循环类型（0:手动开启;1:每天;2:每周;3:每月;4:指定日期;5:开服活动;6:开服第几天开本活动;7:合服第几天开本活动）
             </p>
         </li>
-    <li><a href="#BroadCast">Broadcast</a></li>
-    <li>
+        <li><a href="#BroadCast">Broadcast</a></li>
+        <li>
             ActType
-    <p>
+            <p>
                 活动类型(1:开服;2:合服;3:精彩活动;4:普通节日活动，5节日活动-国庆活动，6节日活动-圣诞活动，7全民冲榜，8元旦活动，9春节活动)
             </p>
         </li>
@@ -1018,25 +1263,8 @@ end
 
 
 
-
-
-
-
-
-
-
-
     <h1>押镖</h1>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -1053,14 +1281,12 @@ end
     diamond = \frac{rmb}{10}
     \]
     <p>充值并非一定会给元宝，也可以给物品，或者某个活动的参与权。</p>
-
     <h2>VIP积分</h2>
     充值获得VIP积分，换算比例
     \[
     vipscore = \frac{rmb}{10}
     \]
     <p>充值并非一定会给VIP积分，例如<a href="#CountryFund">建国基金</a>。</p>
-
     <h2>VIP等级</h2>
     由VIP积分确定，换算由表格 VipValue.csv 控制
     <pre class="prettyprint">
@@ -1151,16 +1377,7 @@ enum VIPID
 </pre>
     <h2>充值活动</h2>
     <p>充值增加VIP积分，VIP等级由VIP积分确定</p>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -1169,16 +1386,7 @@ enum VIPID
 
 
     <h1 id="CountryFund">建国基金</h1>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -1431,38 +1639,14 @@ enum CONST_VALUE
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <h1>装备升星</h1>
     装备的属性：quality[0] star[0,10]
     每升星到10，品质会升一级，然后star归零，犹如十进制的十位与个位的关系
 
     <ul>
-    <li>
+        <li>
             客户端请求 UIStarUp.lua
-    <pre class="prettyprint">
+            <pre class="prettyprint">
                 --升星按钮
                 self.upStarBtn = trans:Find("BtnStarUp").gameObject
                 ...
@@ -1496,9 +1680,9 @@ enum CONST_VALUE
                 end
             </pre>
         </li>
-    <li>
+        <li>
             服务器处理
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 --EquipForge.lua
 --------------------------------------------------------------------
 -- 玩家请求升星装备
@@ -1591,9 +1775,9 @@ end
     每升星到10，品质会升一级，然后star归零，犹如十进制的十位与个位的关系
 
     <ul>
-    <li>
+        <li>
             客户端请求
-    <pre class="prettyprint">
+            <pre class="prettyprint">
                 --UIStrength.lua
                 --强化按钮
                 self.strengthBtn = trans:Find("BtnStrength").gameObject
@@ -1630,9 +1814,9 @@ end
                 end
             </pre>
         </li>
-    <li>
+        <li>
             服务器处理
-    <pre class="prettyprint">
+            <pre class="prettyprint">
             --EquipSmelt.lua
 --------------------------------------------------------------------
 -- 玩家请求强化装备
@@ -1728,13 +1912,12 @@ end
             </pre>
         </li>
     </ul>
-
     <h1>装备开孔</h1>
     先开孔，后镶嵌
     <ul>
-    <li>
+        <li>
             客户端请求
-    <pre class="prettyprint">
+            <pre class="prettyprint">
     function UIInlay.SetStrengthItem(entity)
         UIInlay:Init(entity)
     end
@@ -1806,9 +1989,9 @@ end
                 end
             </pre>
         </li>
-    <li>
+        <li>
             服务器处理
-    <pre class="prettyprint">
+            <pre class="prettyprint">
             --GemLogic.lua
 --------------------------------------------------------------------
 -- 玩家请求激活宝石孔
@@ -1919,12 +2102,11 @@ BYTE CGemPart::GetEquipGemHoleNum(BYTE byEquipIndex, BYTE byHoleIndex)
             </pre>
         </li>
     </ul>
-
     <h1>装备镶嵌</h1>
     <ul>
-    <li>
+        <li>
             客户端请求
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 --UIInlay.lua
 --镶嵌按钮
 self.InlayBtn = trans:Find("Container/InlayBtn").gameObject
@@ -1936,9 +2118,9 @@ end
 
             </pre>
         </li>
-    <li>
+        <li>
             服务器处理
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 --GemLogic.lua
 --------------------------------------------------------------------
 -- 玩家请求镶嵌宝石
@@ -1971,12 +2153,11 @@ end
             </pre>
         </li>
     </ul>
-
     <h1>聊天</h1>
     <ul>
-    <li>
+        <li>
             客户端部分
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 Premier.Instance:RegisterLuaModule(MSG_MODULEID.MSG_MODULEID_CHAT, 'ChatModule.Handle')
 
 function ChatModule.SendChatMsg(channel, inputStr, chatType)
@@ -1993,9 +2174,9 @@ end
 
 </pre>
         </li>
-    <li>
+        <li>
             服务器部分
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 // 创建聊天模块
 MODULE_API IServerModule* CreateChatModule(IGlobalProvider* pGlobalProvider)
 {
@@ -2182,16 +2363,15 @@ void CTerminalTunnel::SendData(void* lpBuf, int nLen)
         </li>
     </ul>
 
-
     <h1>改名卡</h1>
     <ul>
-    <li>
+        <li>
             配置物品
-    <p>Medicament.csv</p>
+            <p>Medicament.csv</p>
         </li>
-    <li>
+        <li>
             C++请求DB修改名字
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 // 角色改名
 bool CPlayerManager::SetPlayerName(DWORD dwActorID, LPCSTR szName)
 {
@@ -2214,8 +2394,8 @@ bool CPlayerManager::SetPlayerName(DWORD dwActorID, LPCSTR szName)
                 </pre>
         </li>
         DB请求回调
-    <li>
-    <pre class="prettyprint">
+        <li>
+            <pre class="prettyprint">
 void CPlayerManager::OnReturn(DWORD dwSpID, int nRetCode, DBKey dbKey, LPCSTR pOutData, int nOutLen)
 {
 	switch (dwSpID)
@@ -2266,9 +2446,9 @@ void CPlayerManager::OnReturn(DWORD dwSpID, int nRetCode, DBKey dbKey, LPCSTR pO
 }
             </pre>
         </li>
-    <li>
+        <li>
             封装接口，供lua调用
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 //LuaGameAPI.cpp
 // 角色改名
 bool Lua_SetPlayerName(DWORD dwActorID, char *szName)
@@ -2278,8 +2458,8 @@ bool Lua_SetPlayerName(DWORD dwActorID, char *szName)
                 </pre>
         </li>
         服务器Lua处理客户端改名请求
-    <li>
-    <pre class="prettyprint">
+        <li>
+            <pre class="prettyprint">
 local playerChangeNameTime = {}
 --------------------------------------------------------------------
 -- 请求改名
@@ -2342,9 +2522,9 @@ function OnActorChangeNameReturn(actorID, result, newName)
 end
                 </pre>
         </li>
-    <li>
+        <li>
             客户端改名请求
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 --====================================改名对话框起始--=============================================
 function MixUICenter.ShowChangeActorNameBox()
 	local callback = function(info)
@@ -2385,80 +2565,66 @@ end
                 </pre>
         </li>
     </ul>
-
     <hr />
-
     <h1>任务</h1>
     Task.csv
     <ul>
-    <li>TaskID</li>
-    <li>Name</li>
-    <li>FollowTask</li>
-    <li>AcceptNPC</li>
-    <li>AcceptDialogue</li>
-    <li>GiveNPC</li>
-    <li>GiveDialogue</li>
-    <li>PrizeID</li>
-    <li>ChapterName</li>
+        <li>TaskID</li>
+        <li>Name</li>
+        <li>FollowTask</li>
+        <li>AcceptNPC</li>
+        <li>AcceptDialogue</li>
+        <li>GiveNPC</li>
+        <li>GiveDialogue</li>
+        <li>PrizeID</li>
+        <li>ChapterName</li>
     </ul>
     TaskBranch.csv
 
     <hr />
-
     <h1>副本</h1>
     Chapter.csv
     章节（包含N个同类型副本，例如坐骑副本，升星副本）
     <ul>
-    <li>ChapID</li>
-    <li>ChapName</li>
-    <li>ChapType</li>
-    <li>PrizeID</li>
+        <li>ChapID</li>
+        <li>ChapName</li>
+        <li>ChapType</li>
+        <li>PrizeID</li>
     </ul>
     副本
     <ul>
-    <li>EctypeID</li>
-    <li>MapID</li>
-    <li>EctypeTips</li>
-    <li>PrizeID</li>
-    <li>DropID</li>
-    <li>NeedLvMin</li>
-    <li>NeedLvMax</li>
+        <li>EctypeID</li>
+        <li>MapID</li>
+        <li>EctypeTips</li>
+        <li>PrizeID</li>
+        <li>DropID</li>
+        <li>NeedLvMin</li>
+        <li>NeedLvMax</li>
     </ul>
-
     <h1>副本奖励</h1>
     PrizeEctype.csv
     <ul>
-    <li>DropID</li>
-    <li>Desc</li>
-    <li>PrizeID</li>
+        <li>DropID</li>
+        <li>Desc</li>
+        <li>PrizeID</li>
     </ul>
-
     <h1>物品-常规</h1>
     Medicament.csv
     <ul>
-    <li>
+        <li>
             GoodsID
             物品ID
         </li>
-    <li>
+        <li>
             GroupID
             物品组ID
         </li>
-    <li>
+        <li>
             GoodsName
             物品名称
         </li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -2469,33 +2635,24 @@ end
     <h1>物品-装备</h1>
     Equipment.csv
     <ul>
-    <li>
+        <li>
             ID
-    <p>物品ID</p>
+            <p>物品ID</p>
         </li>
-    <li>
+        <li>
             GoodsName
-    <p>物品名字</p>
+            <p>物品名字</p>
         </li>
-    <li>
+        <li>
             PacketID
-    <p>可放入的<a href="#PacketPart">背包部件</a>ID</p>
+            <p>可放入的<a href="#PacketPart">背包部件</a>ID</p>
         </li>
-    <li>
+        <li>
             IconID
-    <p>物品图标</p>
+            <p>物品图标</p>
         </li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -2508,29 +2665,29 @@ end
     <h1>激活码</h1>
     <p></p>
     <ul>
-    <li>
+        <li>
             ActivitionCode
-    <p>激活码ID，唯一</p>
+            <p>激活码ID，唯一</p>
         </li>
-    <li>
+        <li>
             GiftID
-    <p>激活后，赠送的<a href="#ActivityGift">活动礼包</a>ID</p>
+            <p>激活后，赠送的<a href="#ActivityGift">活动礼包</a>ID</p>
         </li>
-    <li>
+        <li>
             Activity
-    <p>活动分类，每个活动分类里，一个角色只能领取一次礼包，或者是，只能成功激活一个激活码</p>
+            <p>活动分类，每个活动分类里，一个角色只能领取一次礼包，或者是，只能成功激活一个激活码</p>
         </li>
-    <li>
+        <li>
             ActorID
-    <p>成功激活这个激活码的玩家</p>
+            <p>成功激活这个激活码的玩家</p>
         </li>
-    <li>
+        <li>
             CrtTime
-    <p>激活码的创建时间</p>
+            <p>激活码的创建时间</p>
         </li>
-    <li>
+        <li>
             ExpireTime
-    <p>激活码的过期时间</p>
+            <p>激活码的过期时间</p>
         </li>
     </ul>
     <p>ActivitiesReward.lua</p>
@@ -2997,43 +3154,32 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 	pGoods->SetNumProp(GOODS_FIELD_PLACE, (int)nPlace);
 }
 </pre>
-
     <hr />
-
     <h1 id="ActivityGift">活动礼包</h1>
     ActivityGift.csv
     <ul>
-    <li>
+        <li>
             GiftID
-    <p>礼包ID</p>
+            <p>礼包ID</p>
         </li>
-    <li>
+        <li>
             GiftName
-    <p>礼包名字</p>
+            <p>礼包名字</p>
         </li>
-    <li>
+        <li>
             PrizeID
-    <p><a href="#PrizeTable">奖励</a>ID</p>
+            <p><a href="#PrizeTable">奖励</a>ID</p>
         </li>
-    <li>
+        <li>
             SaveBigID
-    <p>Logic部件的int</p>
+            <p>Logic部件的int</p>
         </li>
-    <li>
+        <li>
             SaveBitIndex
-    <p>Logic部件的int的bit</p>
+            <p>Logic部件的int的bit</p>
         </li>
     </ul>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -3044,77 +3190,67 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
     <h1 id="PrizeTable">奖励</h1>
     PrizeTable
     <ul>
-    <li>
+        <li>
             ID
-    <p>奖励ID</p>
+            <p>奖励ID</p>
         </li>
-    <li>
+        <li>
             Desc
-    <p>描述</p>
+            <p>描述</p>
         </li>
-    <li>
+        <li>
             Goods
-    <a href="#Prize">奖励</a>ID
+            <a href="#Prize">奖励</a>ID
         </li>
     </ul>
-
 
     <hr /><h1 id="PlayerBaseProp">角色等级基础属性</h1>
     PlayerBaseProp.csv
     <ul>
-    <li>Level</li>
-    <li>LevelExp</li>
-    <li>VIP</li>
-    <li>战斗力</li>
-    <li>经验</li>
+        <li>Level</li>
+        <li>LevelExp</li>
+        <li>VIP</li>
+        <li>战斗力</li>
+        <li>经验</li>
     </ul>
-
     <hr /><h1>角色属性</h1>
     <p>非战斗属性</p>
     <ul>
-    <li>国家</li>
-    <li>等级</li>
-    <li>VIP</li>
-    <li>战斗力</li>
-    <li>经验</li>
+        <li>国家</li>
+        <li>等级</li>
+        <li>VIP</li>
+        <li>战斗力</li>
+        <li>经验</li>
     </ul>
     <p>战斗属性</p>
     <ul>
-    <li>生命</li>
-    <li>攻击</li>
-    <li>防御</li>
-    <li>物攻</li>
-    <li>法攻</li>
-    <li>物防</li>
-    <li>法防</li>
-    <li>暴击</li>
-    <li>防爆</li>
-    <li>格挡</li>
-    <li>穿透</li>
-    <li>闪避</li>
-    <li>命中</li>
-    <li>破甲</li>
+        <li>生命</li>
+        <li>攻击</li>
+        <li>防御</li>
+        <li>物攻</li>
+        <li>法攻</li>
+        <li>物防</li>
+        <li>法防</li>
+        <li>暴击</li>
+        <li>防爆</li>
+        <li>格挡</li>
+        <li>穿透</li>
+        <li>闪避</li>
+        <li>命中</li>
+        <li>破甲</li>
         与伤害无关，用于击退
-    <li>护甲</li>
+        <li>护甲</li>
         与伤害无关，用于击退
-    <li>减伤</li>
-    <li>加伤</li>
-    <li>移动速度</li>
-    <li>攻防全属性</li>
-    <li>伤害点数</li>
-    <li>攻击百分比</li>
-    <li>忽视防御</li>
-    <li>忽视防御百分比</li>
+        <li>减伤</li>
+        <li>加伤</li>
+        <li>移动速度</li>
+        <li>攻防全属性</li>
+        <li>伤害点数</li>
+        <li>攻击百分比</li>
+        <li>忽视防御</li>
+        <li>忽视防御百分比</li>
     </ul>
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -3150,7 +3286,6 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
     };
     </pre>
 
-
     <h2>战力构成</h2>
     <p>由角色战斗属性乘以权重叠加而成</p>
     <pre class="prettyprint">
@@ -3164,9 +3299,9 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 	nPower += CalcSuitPower();
     </pre>
     <ul>
-    <li>
+        <li>
             等级战力
-    <pre class="prettyprint">
+            <pre class="prettyprint">
     m_nLevelPower =
 		( pBaseProp->dwBaseHP  * POWER_COEF_HP
 		+ pBaseProp->dwBasePATK * POWER_COEF_PATK
@@ -3186,9 +3321,9 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 		+ pBaseProp->dwMoveSpeed * POWER_COEF_SPD ) / POWER_COEF_RATE;
 </pre>
         </li>
-    <li>
+        <li>
             成就战力
-    <pre class="prettyprint">
+            <pre class="prettyprint">
     m_nEmblemPower =
 		(pAchieve->hp()  * POWER_COEF_HP
 		+ pAchieve->attack() * POWER_COEF_ATK
@@ -3211,9 +3346,9 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 		+ pAchieve->attackdefense() * POWER_COEF_ATK_DEF) / POWER_COEF_RATE;
 </pre>
         </li>
-    <li>
+        <li>
             军衔战力
-    <pre class="prettyprint">
+            <pre class="prettyprint">
     m_nMilitaryPower =
 		(pMilitary->hp()  * POWER_COEF_HP
 			+ pMilitary->attack() * POWER_COEF_ATK
@@ -3236,49 +3371,40 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 			+ pMilitary->attackdefense() * POWER_COEF_ATK_DEF) / POWER_COEF_RATE;
 </pre>
         </li>
-    <li>
+        <li>
             部件战力
-    <ul>
-    <li>背包部件    </li>
-    <li>装备技能部件</li>
-    <li>装备部件    </li>
-    <li>神兵部件    </li>
-    <li>逻辑部件    </li>
-    <li>副本部件    </li>
-    <li>技能部件    </li>
-    <li>商店部件    </li>
-    <li>帮会部件    </li>
-    <li>时装部件    </li>
-    <li>宝石部件    </li>
-    <li>任务部件    </li>
-    <li>仓库部件    </li>
-    <li>新神兵部件  </li>
-    <li>天赋部件    </li>
-    <li>结婚部件    </li>
-    <li>卡牌部件    </li>
-    <li>生活技能部件</li>
-    <li>坐骑部件    </li>
-    <li>翅膀部件    </li>
-    <li>buff部件   </li>
-    <li>称号部件    </li>
-    <li>特权卡部件  </li>
-    <li>新翅膀部件  </li>
-    <li>属性药部件  </li>
-    <li>属性激活部件</li>
+            <ul>
+                <li>背包部件    </li>
+                <li>装备技能部件</li>
+                <li>装备部件    </li>
+                <li>神兵部件    </li>
+                <li>逻辑部件    </li>
+                <li>副本部件    </li>
+                <li>技能部件    </li>
+                <li>商店部件    </li>
+                <li>帮会部件    </li>
+                <li>时装部件    </li>
+                <li>宝石部件    </li>
+                <li>任务部件    </li>
+                <li>仓库部件    </li>
+                <li>新神兵部件  </li>
+                <li>天赋部件    </li>
+                <li>结婚部件    </li>
+                <li>卡牌部件    </li>
+                <li>生活技能部件</li>
+                <li>坐骑部件    </li>
+                <li>翅膀部件    </li>
+                <li>buff部件   </li>
+                <li>称号部件    </li>
+                <li>特权卡部件  </li>
+                <li>新翅膀部件  </li>
+                <li>属性药部件  </li>
+                <li>属性激活部件</li>
             </ul>
         </li>
-
-    <li>套装战力</li>
+        <li>套装战力</li>
     </ul>
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -3331,7 +3457,6 @@ enum SKEP_ACCESS
 	SKEP_ACCESS_SELL = 0x0010,				// 出售权限
 };
     </pre>
-
     <h1>Logic部件</h1>
     <pre class="prettyprint">
 enum LOGIC_DATA
@@ -3635,136 +3760,7 @@ enum LOGIC_DATA
 	DATA_LOGICDATA_MAXID = 384,
 };
 </pre>
-
     <hr />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3902,16 +3898,7 @@ enum GENRE
 	GENRE_MAX,
 };
 </pre>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -3979,33 +3966,23 @@ enum SKEPID
 	SKEPID_MAXID,
 };
 </pre>
-
     <h1>技能</h1>
     <h2>技能基础配置</h2>
     <p>Skill.csv</p>
     <ul>
-    <li>ID 技能id</li>
-    <li>Hit 命中</li>
-    <li>AttackPoint 攻击点数</li>
-    <li>AttackPercentage 攻击百分比</li>
-    <li>IgnoreDefensePoint 忽视防御</li>
-    <li>IgnoreDefensePercentage 忽视防御百分比</li>
-    <li>DamagePoint 附加伤害</li>
-    <li>DamagePercentage 附加伤害百分比</li>
-    <li>CriticalPoint 暴击</li>
-    <li>Pierce 穿透</li>
-    <li>PhysicsOrMagic 1物攻 2法攻</li>
-
+        <li>ID 技能id</li>
+        <li>Hit 命中</li>
+        <li>AttackPoint 攻击点数</li>
+        <li>AttackPercentage 攻击百分比</li>
+        <li>IgnoreDefensePoint 忽视防御</li>
+        <li>IgnoreDefensePercentage 忽视防御百分比</li>
+        <li>DamagePoint 附加伤害</li>
+        <li>DamagePercentage 附加伤害百分比</li>
+        <li>CriticalPoint 暴击</li>
+        <li>Pierce 穿透</li>
+        <li>PhysicsOrMagic 1物攻 2法攻</li>
     </ul>
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -4016,27 +3993,19 @@ enum SKEPID
     <h2>技能等级配置</h2>
     <p>SkillEffect.csv</p>
     <ul>
-    <li>Level 等级</li>
-    <li>AttackPoint 攻击点数</li>
-    <li>AttackPercentage 攻击百分比</li>
-    <li>IgnoreDefensePoint 忽视防御</li>
-    <li>IgnoreDefensePercentage 忽视防御百分比</li>
-    <li>DamagePoint 附加伤害</li>
-    <li>DamagePercentage 附加伤害百分比</li>
-    <li>BreakPoint 破甲</li>
-    <li>CriticalPoint 暴击</li>
-    <li>Hit 命中</li>
-    <li>Pierce 穿透</li>
+        <li>Level 等级</li>
+        <li>AttackPoint 攻击点数</li>
+        <li>AttackPercentage 攻击百分比</li>
+        <li>IgnoreDefensePoint 忽视防御</li>
+        <li>IgnoreDefensePercentage 忽视防御百分比</li>
+        <li>DamagePoint 附加伤害</li>
+        <li>DamagePercentage 附加伤害百分比</li>
+        <li>BreakPoint 破甲</li>
+        <li>CriticalPoint 暴击</li>
+        <li>Hit 命中</li>
+        <li>Pierce 穿透</li>
     </ul>
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -4227,38 +4196,13 @@ enum SKEPID
 
 
 
-
-
-
-
-
-
-
-
     <h1>开服关服</h1>
     <p>开服   Bin/Cluster/开服.bat</p>
     <p>关服   Bin/Cluster/关服.bat</p>
     <p class="explain">
         * AgentServer是网关服，客户端通过tcp与之通信；DBServer是数据服，负责缓存数据，与数据库交互；SceneServer场景服，游戏的业务逻辑都在这里。CenterServer是中心服，负责服务器之间的消息中转。
     </p>
-
     <hr />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4280,34 +4224,21 @@ enum SKEPID
     <p class="explain">
         * 美术制作的场景地表，与策划期望的寻路地表是有差异的，所以用该插件来构建更合理的TerrainMesh
     </p>
-
     <p>在插件(NavMesh Exension) Bake NavMesh，会生成该场景的导航文件test/NavMesh.asset</p>
     <p class="explain">
         * 根据该TerrainMesh，生成Unity的导航网格，用于引擎寻路
     </p>
-
     <p>点击Unity菜单->Zen->同步导航网格文件到服务器</p>
     <p class="explain">
         * 怪物AI的寻路，需要在服务器完成，根据Untiy的NavMesh生成tiles，用于服务器A*寻路（todo 服务器也需要改成NavMesh寻路）
     </p>
-
     <p>该场景的导航网格制作流程完毕，重启服务器，测试完毕后可提交svn</p>
-
     <p class="explain">
         * 先根据策划构建的TerrainMesh拾取顶点A，再NavMesh.SamplePosition将A变换到Navmesh上的顶点B，B就是Navigation
         的Destination
     </p>
 
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -4324,25 +4255,8 @@ enum SKEPID
 
 
 
-
-
-
-
-
-
-
-
     <h1>AI</h1>
-
     <hr />
-
-
-
-
-
-
-
-
 
 
 
@@ -4354,7 +4268,6 @@ enum SKEPID
     <h2>3DMax</h2>
     <p>system unit metric -> meters，基本长度单位是米，例如角色身高两米</p>
     <p>骨骼动画的骨头(bone)尽可能的少</p>
-
 
     <h2>角色</h2>
     <p>纹理尺寸：512x512</p>
@@ -4369,23 +4282,23 @@ enum SKEPID
     场景添加灯光，烘焙之后，生成多张LightMap，场景里的GameObject的MeshRenderer组件包含Lighting Section，其属性Lightmap Static
     勾选，Lightmap Settings->Baked Lightmap
     <ul>
-    <li>
+        <li>
             Lightmap
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 class LightmapSettings{
 public static LightmapData[] lightmaps;
 }
 
 </pre>
-    <p>
+            <p>
                 一个场景里面，会有0-65533(0xFFFE)个Lightmap，可为场景里面的所有的GameObject的Renderer组件公用，
                 指定哪个Lightmap哪部分即可
             </p>
-    <p></p>
+            <p></p>
         </li>
-    <li>
+        <li>
             LightmapData
-    <pre class="prettyprint">
+            <pre class="prettyprint">
     public sealed class LightmapData
     {
         // Summary:
@@ -4401,10 +4314,10 @@ public static LightmapData[] lightmaps;
         public Texture2D shadowMask { get; set; }
     }
 </pre>
-    <p>
+            <p>
                 Lightmap存储了三张Texture，分别存储了光的颜色、方向、阴影遮罩信息
             </p>
-    <pre class="prettyprint">
+            <pre class="prettyprint">
 // Decodes HDR textures
 // handles dLDR, RGBM formats
 inline half3 DecodeHDR (half4 data, half4 decodeInstructions)
@@ -4493,12 +4406,12 @@ CBUFFER_END
 // Transforms 2D UV by scale/bias property
 #define TRANSFORM_TEX(tex,name) (tex.xy * name##_ST.xy + name##_ST.zw) 
 </pre>
-    <p></p>
+            <p></p>
         </li>
-    <li>
+        <li>
             Lightmap Index
-    <p>多张LIghtMap的索引，16位的整数，0-65533(0xFFFE)，-1 (0xFFFF)表示无</p>
-    <p>GameObject.GetComponent<MeshRenderer>().lightmapIndex</p>
+            <p>多张LIghtMap的索引，16位的整数，0-65533(0xFFFE)，-1 (0xFFFF)表示无</p>
+            <p>GameObject.GetComponent<MeshRenderer>().lightmapIndex</p>
         </li>
     </ul>
     <h2>颜色空间</h2>
@@ -4547,28 +4460,10 @@ inline half3 LinearToGammaSpace (half3 linRGB)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <h3>Horizon Based Ambient Occlusion(HBAO)</h3>
-
     <h2>phon</h2>
     <h2>blin-phon</h2>
     <h2>pbr</h2>
-
     <h2>贴花decal</h2>
     <h2>ICON</h2>
     <h2>宣传图</h2>
@@ -4620,22 +4515,6 @@ end
     <h2>Quatation</h2>
     四元素
     <hr />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4707,24 +4586,8 @@ void CLogicPart::SetLoginLogicData()
 }
 </pre>
     <footer>
-    <address>
+        <address>
             written by LaoZhang.<br />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4756,39 +4619,7 @@ void CLogicPart::SetLoginLogicData()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             ShenZhen<br />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4807,6 +4638,5 @@ void CLogicPart::SetLoginLogicData()
             China
         </address>
     </footer>
-
 </body>
 </html>
