@@ -359,6 +359,121 @@ end
 </pre>
     <hr /><h2>第一个主线任务</h2>
     <pre class="prettyprint">
+function EntityModule.Handle(action, data)
+    if action == EntityMessage_pb.MSG_ENTITY_SYNCTASKITEM then
+		    local m = EntityMessage_pb.SC_Entity_SyncTaskItem()
+		    m:ParseFromString(data)
+		    EntityModule.SC_Entity_SyncTaskItem(m)
+    end
+end
+
+function EntityModule.SC_Entity_SyncTaskItem(m)
+	EntityModule.hero.heroTaskLC.Update(m)
+end
+
+function o.Update( message )
+	--找下一个主线任务的ID
+	local taskSerial = EntityModule.hero.logicLC:Get( LOGIC_DATA.DATA_TRUNK_TASK_CUR_SERIAL)
+	local nextTaskID = 0
+	if taskSerial == 0 then
+		nextTaskID = 1
+	end
+    local taskScheme = Schemes.Task.Get(nextTaskID, 1)
+    o.UpdateData({BranchID = 0, TaskID = nextTaskID, Step = 1,AcceptTime = 0,Status = TASK_STATUS.TASK_STATUS_NULL,
+    Round = 0,Score = 0,Change = 1})
+end
+
+function o.UpdateData(value  )
+    local data = NewTaskItem()
+    data.branchID = value.BranchID
+    data.taskID = value.TaskID
+    data.step = value.Step or 1
+    data.acceptTime = value.AcceptTime or 0
+    data.status = value.Status or TASK_STATUS.TASK_STATUS_NULL
+    data.round = value.Round or 0
+    data.score = value.Score or 0
+    data.change = value.Change or 1
+
+    local taskScheme = Schemes.Task.Get(data.taskID, data.step)
+    data.taskScheme = taskScheme
+    o.UpdateTask(data)
+end
+
+function o.UpdateTask( taskItem )
+	local key  = taskItem.taskID * 256 + taskItem.branchID
+		
+	--加入新的数据
+	o.idToItem[key] = TaskFactory(taskItem.taskScheme.Type,
+		taskItem.branchID,
+		taskItem.taskID,
+		taskItem.step,
+		taskItem.acceptTime,
+		taskItem.status,
+		taskItem.round,
+		taskItem.score,
+		taskItem.taskScheme)
+end
+
+--玩家模型加载回调
+function EntityModule.OnHeroModelLoaded(obj, uidParam, fileName)
+	local o = EntityModule.entities[tostring(uidParam)]
+    --处理新建角色的第一个主线任务
+	if o.heroTaskLC then
+		local task = o.heroTaskLC.idToItem[256]
+		if task and task:GetClientStatus() == ECTaskStatus.CanAccept then
+			task:WantToAccept()
+		end
+	end
+end
+
+local TalkTask = {
+	GetClientStatus = function (self, ignoreBranchType)
+		return CommonGetClientStatus(self, ignoreBranchType)
+	end,
+	CanAccept = function (self, checkDistance)
+		return CommonCanAcceptTask(self, checkDistance)
+	end,
+}
+
+local function CommonGetClientStatus( task, ignoreBranchType)
+	local self = task
+	if self.status == TASK_STATUS.TASK_STATUS_COMPLETED then 
+		return ECTaskStatus.Completed
+	end
+	if self.branchID == 1 then
+		local branchScheme = GetThisTaskBranchScheme(task)
+		if not branchScheme or self.round == branchScheme.GroupCount then
+			return ECTaskStatus.Completed 
+		end
+	end
+	if self.status == TASK_STATUS.TASK_STATUS_ACCEPTED and self:CanComplete() then
+		return ECTaskStatus.CanComplete 
+	end
+	if self.status == TASK_STATUS.TASK_STATUS_ACCEPTED then
+		return ECTaskStatus.Doing 
+	end
+	if self.status == TASK_STATUS.TASK_STATUS_NULL or
+		self.status == TASK_STATUS.TASK_STATUS_BRANCH or
+		self.status == TASK_STATUS.TASK_STATUS_ROUND then
+		local canAccept, resultCode = self:CanAccept()
+		if canAccept then
+			return ECTaskStatus.CanAccept
+		end
+	end
+	return ECTaskStatus.Null
+end
+
+local function CommonWantToAccept( task )
+	EntityModule.hero.heroTaskLC.SetFocusTask(task)
+	local acceptNPC,_,_ = CommonGetTaskNPC(task)
+    --有npc则去找npc接任务
+	if acceptNPC ~= 0 then
+		EntityModule.hero.navigationLG:NavigateToNPC(acceptNPC)
+	else
+    --没有npc，直接去服务器请求接任务
+		EntityModule.hero.heroTaskLC.SendLuaAcceptTask(task.branchID,task.taskID, task.step)
+	end
+end
 
 </pre>
     <hr /><h1>角色出生副本</h1>
