@@ -23,6 +23,165 @@
 </head>
 <body>
     <p align="right">制心一处</p>
+	<hr /><h1>任务栏</h1>
+          <pre class="prettyprint linenums">
+--UITaskShowItem.lua
+o.OnClickContentObj = function ( go1 )
+		local clientStatus = self.taskItem.GetClientStatus and self.taskItem:GetClientStatus() or ECTaskStatus.Null
+		if clientStatus == ECTaskStatus.CanComplete then
+			self.taskItem:WantToTurnInTask()
+        end
+end
+
+--Task.lua
+WantToTurnInTask = function ( self )
+		CommonWantToTurnIn(self)
+end
+
+local function CommonWantToTurnIn( task )
+		local _,_,giveNPC  = CommonGetTaskNPC(task)
+		if giveNPC ~= 0 then
+			EntityModule.hero.navigationLG:NavigateToNPC(giveNPC)
+		else
+			EntityModule.hero:SetWorldDestination(
+					tagMapID,
+					HelperL.PBString2Vector3(task.GivePoint),
+					false)
+		end
+end
+
+--- 寻路到npc的位置
+function navigationLG:NavigateToNPC( npcID, onHeroReached, isNext, isFollow )
+	local npcScheme = Schemes.SceneNpc.Get(npcID)
+	local targetMapID = npcScheme.MapID
+	local tarPos = Vector3(npcScheme.PosX, npcScheme.PosY, npcScheme.PosZ)
+	local naviInfo = NavigationInfo.New('npc',
+		tarPos,
+		targetMapID,
+		searchNPC,
+		npcID)
+	self:SetFinalPos(naviInfo)
+	self:StartNavigation()
+end
+
+function navigationLG:StartNavigation()
+	HeroController:MoveToPos( navigationInfo.point, navigationInfo.potType == 'npc' and 3 or 0.1, false)
+end
+
+-- 要求寻路
+function HeroController:MoveToPos(targetPos, distance, clearCmd)
+    local moveCmdInfo = { cmdType = CMD_TYPE_MOVE, begin = false, target = targetPos, stopDistance = distance }
+    self:AddCmd(moveCmdInfo)
+end
+
+-- 每帧调用函数
+function Main_Update()
+    HeroController:Update()
+end
+
+-- 检查命令列表
+function HeroController:Update()
+    -- 正在执行中检测是否结束
+    if self.cmdList[1].begin then
+        if CheckCmdEnd(self.cmdList[1]) then
+            OnCmdEnd(self.cmdList[1])
+            table.remove(self.cmdList, 1)
+        end
+    end
+end
+
+-- 检查命令是否结束
+local function CheckCmdEnd(cmdInfo)
+    if cmdInfo.cmdType == CMD_TYPE_MOVE then
+        if hero.navComp.HasDestination then
+            return false
+        end
+        if EntityModule.hero.navigationLG.isInNavigation then
+            EntityModule.hero.navigationLG.AfterHeroStop()
+        end
+        return true
+    end
+    return true
+end
+
+function navigationLG.AfterHeroStop(  )
+		local navigationInfo = navigationLG.finalPos
+		navigationLG.ReachPosition(navigationInfo, true)
+end
+
+function navigationLG.ReachPosition( naviInfo , isFinal)
+	if naviInfo.potType == 'npc' then
+		naviInfo.afterStopFunc(naviInfo.npcID)
+	end
+end
+
+local searchNPC = function ( id )
+	if NPCManager.npcs[id] then
+		local npc= NPCManager.npcs[id]
+		npc.npcComp:TriggerEvent(true)
+	end
+end
+
+function TaskNPC:TriggerEvent()
+	if GuideManager.isRunning then return end--引导过程禁止任务对话
+	if NPCFunManager.funHandle[self.npcScheme.ID] ~= nil then
+		if chuSocietyEscortItem and (self.npcScheme.ID == chuSocietyEscortItem.FinishNpcID or self.npcScheme.ID == hanSocietyEscortItem.FinishNpcID) then  
+			NPCFunManager.funHandle[self.npcScheme.ID](self.npcScheme.ID,self)		
+		else
+			NPCFunManager.funHandle[self.npcScheme.ID](self.npcScheme.ID,self)
+			return
+		end
+	end
+	if CheckNPCHeroDistance(self.npcScheme.ID) then
+		NPCManager.lastTrigNpcID = self.npcScheme.ID
+		if self.dataItem and
+			self.dataItem.taskScheme.Type == TaskType.TaskType_TimeTalk and
+		    self.dataItem.taskScheme.Parameter3 == 1 and
+			self.dataItem:GetClientStatus() == ECTaskStatus.Doing then
+				EntityModule.ForceSyn()
+				self:AfterTimeProgress()
+				--[[
+				-- 读条机制正规化，这里稳定后可删
+				UIManager.AddATimeProgress(self.dataItem.taskScheme.Parameter4,
+											self.dataItem.taskScheme.Parameter1,
+											function()
+												self:AfterTimeProgress()
+											end)
+				]]
+		else
+			local heroTaskLC = EntityModule.hero.heroTaskLC
+			local curFocusTask = heroTaskLC.curFocusTask
+			if curFocusTask then
+				local key = curFocusTask.taskID * 256 + curFocusTask.branchID
+				local status = curFocusTask:GetClientStatus()
+				if heroTaskLC.idToItem[key] and status ~= ECTaskStatus.Completed then
+					local acceptNPC, doNPC, turnInNPC = CommonGetTaskNPC(curFocusTask)
+					if acceptNPC == self.npcScheme.ID or
+						doNPC == self.npcScheme.ID or 
+						turnInNPC == self.npcScheme.ID then
+						self.dataItem = curFocusTask
+						NPCTaskTalkUI:Init(self,self.dataItem)
+						return
+					end
+				end
+			end
+			self:InitStatus()
+			if self.taskQueue then
+				if self.taskQueue:Count() > 1 then
+					NPCMutiTasksUI:Init(self)
+				elseif self.taskQueue:Count() == 1 then
+
+					local task =self.taskQueue:peekFirst()
+					NPCTaskTalkUI:Init(self,task)
+				end
+			else
+				NPCTaskTalkUI:Init(self)
+			end
+		end
+	end
+end
+</pre>
+
     <hr /><h1>引导</h1>
           <pre class="prettyprint">
 GuideManager.EventType =
