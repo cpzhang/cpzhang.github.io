@@ -21,8 +21,91 @@
 	  }
 	</style>
   </head>
+
   <body>
 	<p align="right">制心一处</p>
+	<hr /><h1>apk修改packagename</h1>
+	<ol>
+		<li>apktool</li>
+		https://ibotpeaches.github.io/Apktool/install/
+		
+		<li>解apk</li>
+		java -jar apktool.jar d 仙境苍穹.apk -o huawei 
+
+		<li>打apk</li>
+		java -jar apktool.jar b huawei -o ./仙境苍穹huawei.apk 
+
+		<li>生成key</li>
+		./keytool.exe -genkey
+		密码 euler2019
+		名字 euler
+
+		<li>查看alias</li>
+		./keytool.exe -keystore euler.keystore -list -v
+		
+		<li>签名</li>
+		.\jarsigner.exe -verbose -keystore euler.keystore -signedjar 仙境苍穹huawei_s.apk 仙境苍穹huawei.apk mykey
+	</ol>
+	<hr /><h1>部署DB服务器</h1>
+	<ol>
+	<li>复制并安装SQLServer2016</li>
+	en_sql_server_2016_enterprise_with_service_pack_1_x64_dvd_9542382.iso
+	设置sa密码Euler2019
+	修改端口为38065
+	red gate sql compare 同步数据库
+	web 全局配置
+	collation Chinese_PRC_CI_AS
+	
+	gd 策划配置
+	
+	ds 玩家数据
+	
+	dslog 玩家日志
+	
+	gm 运维后台
+	
+	
+	<li>TotalCommander</li>
+	<li>BeyondCompare</li>
+	<li>Server Manager - Add roles and features - Web Server(IIS)</li>
+	<li>Install the .NET Core Hosting Bundle</li>
+	dotnet-hosting-2.2.6-win.exe，安装成功之后，IIS的modules里，可以看到AspNetCoreModule
+	以及AspNetCoreModuleV2
+	<li>TortoiseSVN</li>
+	release
+	release
+	https://59.111.63.232/svn/deerdev/Web/bin
+	拉取游戏的web服务
+	<li>挨个配置Web服务，测试URL，如有报错，查看logs是否有日志输出</li>
+	monitor读取本机进程需要权限设置,IIS - Application Pools - Identity设置为LocalSystem
+	
+	</ol>
+		<hr /><h1>svn提交注释字数限制</h1>
+	<pre class="prettyprint">
+@echo off  
+::      
+:: Stops commits that have empty log messages.  
+::  
+  
+@echo off  
+  
+setlocal  
+  
+rem Subversion sends through the path to the repository and transaction id  
+set REPOS=%1  
+set TXN=%2  
+  
+rem check for an empty log message, at least 6 characters
+svnlook log %REPOS% -t %TXN% | findstr "......" > nul
+if %errorlevel% gtr 0  (goto err) else exit 0  
+  
+:err  
+echo. 1>&2  
+echo 抱歉,由于您没有正确填写Log或者Log字数过少,系统拒绝提交！ 1>&2   
+exit 1	
+</pre>
+	
+
 	<hr /><h1>创建角色的人声</h1>
 	<pre class="prettyprint linenums">
 function UIActor:ShowModel(actorData)
