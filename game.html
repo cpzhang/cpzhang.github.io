@@ -36,15 +36,24 @@
 		java -jar apktool.jar b huawei -o ./仙境苍穹huawei.apk 
 
 		<li>生成key</li>
+		uc huawei oppo vivo 可以采用以下key
 		./keytool.exe -genkey
 		密码 euler2019
 		名字 euler
+		
+		应用宝需要以下key
+		./keytool.exe -genkey -alias myaliassha1 -sigalg SHA1withRSA -keyalg RSA
+		
 
 		<li>查看alias</li>
 		./keytool.exe -keystore euler.keystore -list -v
 		
 		<li>签名</li>
+		uc huawei oppo vivo
 		.\jarsigner.exe -verbose -keystore euler.keystore -signedjar 仙境苍穹huawei_s.apk 仙境苍穹huawei.apk mykey
+		
+		应用宝
+		.\jarsigner.exe -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore euler2.keystore -storepass euler2019 tencent.apk myaliassha1
 	</ol>
 	<hr /><h1>部署DB服务器</h1>
 	<ol>
