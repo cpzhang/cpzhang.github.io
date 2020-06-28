@@ -24,6 +24,43 @@
 
   <body>
 	<p align="right">制心一处</p>
+	<hr /><h1>WebAssembly</h1>
+	<ol>
+		<li>https: Hyper Text Transfer Protocol over SecureSocket Layer</li>
+		<li>TLS(Transport Layer Security)/SSL(Secure Socket Layer)</li>
+		<li>申请SSL证书，有免费和收费的两种，小公司用免费的即可</li>
+	</ol>
+	
+	<hr /><h1>IIS下部署https</h1>
+	<ol>
+		<li>https: Hyper Text Transfer Protocol over SecureSocket Layer</li>
+		<li>TLS(Transport Layer Security)/SSL(Secure Socket Layer)</li>
+		<li>申请SSL证书，有免费和收费的两种，小公司用免费的即可</li>
+		本次在<a href="https://www.ucloud.cn/">uclound</a>申请免费ssl
+		<li>在<a href="https://myssl.com/cert_convert.html">转换页面</a>，导入公钥、私钥，格式从PEM转换为PKCS12，得到pfx后缀文件</li>
+		<li>web服务器，复制pfx文件到本地，命令行输入mmc，File菜单Add or Remove Snap-ins，左侧选择Certificates，点击Add，Computer account</li>
+		<li>左侧树形菜单，Certificates->Personal->Certificates，右键菜单 All Tasks->Import</li>
+	</ol>
+
+	<hr /><h1>加密算法-对称加密</h1>
+	加密和解密，都是用的同一个密钥。
+	<ol>
+		<li>DES</li>
+		Data Encryption Standard
+		<li>AES</li>
+		<li>IDEA</li>
+	</ol>
+	
+	<hr /><h1>加密算法-非对称加密</h1>
+	加密和解密，需要用不同的密钥：公钥和私钥，二把钥匙都可以用于加密或者解密。
+	<ol>
+		<li>RSA</li>
+		<li>DSA</li>
+	</ol>
+
+	<hr /><h1>硬盘性能量化-Windows System Assessment Tool</h1>
+	winsat disk -drive d
+	
 	<hr /><h1>apk修改packagename</h1>
 	<ol>
 		<li>apktool</li>
