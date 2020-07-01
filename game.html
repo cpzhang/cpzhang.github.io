@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+
+<head>
 	<title>游戏设计</title>
 	<meta charset="utf-8" />
 	<meta name="description" content="游戏设计 tutorials">
@@ -9,29 +10,326 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="styles.css" />
 	<script type="text/javascript" async
-			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-	</script>
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+		</script>
 	<script type="text/javascript" async
-			src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js">
-	</script>
+		src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js">
+		</script>
 	<style>
-	  li.L0, li.L1, li.L2, li.L3,
-	  li.L5, li.L6, li.L7, li.L8 {
-		  list-style-type: decimal !important;
-	  }
+		li.L0,
+		li.L1,
+		li.L2,
+		li.L3,
+		li.L5,
+		li.L6,
+		li.L7,
+		li.L8 {
+			list-style-type: decimal !important;
+		}
 	</style>
-  </head>
+</head>
 
-  <body>
+<body>
+
 	<p align="right">制心一处</p>
-	<hr /><h1>WebAssembly</h1>
-	<ol>
-		<li>https: Hyper Text Transfer Protocol over SecureSocket Layer</li>
-		<li>TLS(Transport Layer Security)/SSL(Secure Socket Layer)</li>
-		<li>申请SSL证书，有免费和收费的两种，小公司用免费的即可</li>
-	</ol>
+	<hr />
+
+	<h1>进程</h1>
+<ol>
+	<li>process search</li>
+	ps aux | grep 'redis'
+</ol>
+
+<h1>StackExchange.Redis</h1>
+<ol>
+	<li>connect & get</li>
+	<pre class="prettyprint">
+var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379");
+IDatabase db = redis.GetDatabase();
+string value = db.StringGet("name");
+Console.WriteLine(value);
+	</pre>
+
+	<li>pub/sub message</li>
+	<pre class="prettyprint">
+var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379");
+ISubscriber sub = redis.GetSubscriber();
+sub.Subscribe("messages", (channel, message) =>
+{
+	Console.WriteLine($"{channel}:{message}");
+});
+// Synchronous handler
+sub.Subscribe("messages").OnMessage(channelMessage =>
+{
+	Console.WriteLine($"1:{channelMessage.Message}");
+});
+// Asynchronous handler
+sub.Subscribe("messages").OnMessage(async channelMessage =>
+{
+	await Task.Delay(1000);
+	Console.WriteLine($"2:{channelMessage.Message}");
+});
+	</pre>
+</ol>
+
+	<h1>redis</h1>
+	REmote DIctionary Server
+<ol>
+	<li>install</li>
+	sudo apt install redis
 	
-	<hr /><h1>IIS下部署https</h1>
+	<li><a href="https://www.learn2torials.com/a/how-to-uninstall-redis-server-from-ubuntu">uninstall</a></li>
+	<li>check version</li>
+	redis-cli --version
+
+	<li>check status</li>
+	sudo systemctl status redis
+
+	q键退出
+	<li>start</li>
+	sudo systemctl start redis-server
+
+	<li>stop</li>
+	sudo systemctl stop redis
+
+	<li>redis-cli</li>
+	redis-cli -h localhost -p 6379
+	set name euler
+	get name
+
+	<li>stop</li>
+	redis-cli shutdown nosave
+
+	<li>message broker</li>
+	send: rpush 
+	receive: blpop
+
+</ol>
+
+	<hr />
+	<h1>tmux</h1>
+<ol>
+	<li>install</li>
+	sudo apt install tmux
+</ol>
+
+<hr />
+	<h1>fish</h1>
+<ol>
+	<li>install</li>
+	sudo apt install fish
+	<li>auto suggestion</li>
+	accept all: right arrow
+	accept one word: ctrl + right arrow
+</ol>
+
+	<hr />
+	<h1>ubuntu</h1>
+	龙归大海，最终还是步入linux，原因很现实：运维便利、节省成本
+	<ol>
+		<li>打开防火墙端口1022</li>
+		iptables -I INPUT -p tcp --dport 1022 -j ACCEP
+
+		<li>升级ubuntu版本</li>
+		sudo apt update & sudo apt upgrade & sudo do-release-upgrade
+
+		<li>sql server</li>
+		<a href="https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-linux-ver15">sql server on linux</a>
+		
+		<li>migrate sql server from windows to linux</li>
+		first, install sql server tools
+		curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+		curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+		sudo apt-get update 
+		sudo apt-get install mssql-tools unixodbc-dev
+		sudo apt-get update 
+		sudo apt-get install mssql-tools
+		echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+		echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+		source ~/.bashrc
+		
+		second, restore
+		sqlcmd -S localhost -U SA
+
+		--逐行复制，甚不便
+		RESTORE DATABASE Web
+		FROM DISK = '/var/opt/mssql/backup/Web.bak'
+		WITH MOVE 'Web' TO '/var/opt/mssql/data/Web.mdf',
+		MOVE 'Web_Log' TO '/var/opt/mssql/data/Web_Log.ldf'
+		GO
+
+		RESTORE DATABASE DS
+		FROM DISK = '/var/opt/mssql/backup/DS.bak'
+		WITH MOVE 'DS' TO '/var/opt/mssql/data/DS.mdf',
+		MOVE 'DS_Log' TO '/var/opt/mssql/data/DS_Log.ldf'
+		GO
+
+		RESTORE DATABASE DSLog
+		FROM DISK = '/var/opt/mssql/backup/DSLog.bak'
+		WITH MOVE 'DSLog' TO '/var/opt/mssql/data/DSLog.mdf',
+		MOVE 'DSLog_Log' TO '/var/opt/mssql/data/DSLog_Log.ldf'
+		GO
+		<li>删除文件</li>
+		rm test.txt
+
+		<li>删除文件夹</li>
+		sudo rm -r -f testdir
+
+		<li>移动文件夹or重命名文件夹</li>
+		mv euler happy
+
+		<li>跨操作系统共享目录</li>
+		samba
+		sudo apt update
+		sudo apt install samba
+
+		sudo ufw allow samba
+
+		设置密码，用户必须是系统用户名，密码与系统用户名登录密码不同
+		sudo smbpasswd -a username
+		sudo vim /etc/samba/smb.conf
+
+
+		sudo service smbd restart
+
+		<li><a href="https://www.vim.org/">vim编辑器</a></li>
+
+		<li>sql server </li>
+		SQL Server 2019
+Enterprise：HMWJ3-KY3J2-NMVD7-KG4JR-X2G8G
+Enterprise Core：2C9JR-K3RNG-QD4M4-JQ2HR-8468J
+Strandard：PMBDC-FXVM3-T777P-N4FY8-PKFF4
+Web：33QQK-WWQNB-G6T46-C86YB-TX2PH
+
+
+SQL Server 2017
+Enterprise：TDKQD-PKV44-PJT4N-TCJG2-3YJ6B
+Enterprise Core：6GPYM-VHN83-PHDM2-Q9T2R-KBV83
+Strandard：PHDV4-3VJWD-N7JVP-FGPKY-XBV89
+Web：WV79P-7K6YG-T7QFN-M3WHF-37BXC
+
+
+SQL Server 2016
+Enterprise：MDCJV-3YX8N-WG89M-KV443-G8249
+Enterprise Core：TBR8B-BXC4Y-298NV-PYTBY-G3BCP
+Standard：B9GQY-GBG4J-282NY-QRG4X-KQBCR
+Web：BXJTY-X3GNH-WHTHG-8V3XK-T8243
+	</ol>
+
+	<hr />
+	<h1>dotnet core 的Task</h1>
+	<ol>
+		<li>异步特性：Task在线程池异步执行，而非主线程，这样就不会造成主线程阻塞</li>
+		<li>适用场合：I/O密集型、UI操作、CPU密集型</li>
+		<li>自实现Task方法</li>
+		<pre class="prettyprint">
+public static Task<int> ReadTask(this Stream stream, byte[] buffer, int offset, int count, object state)
+{
+	var tcs = new TaskCompletionSource<int>();
+	stream.BeginRead(buffer, offset, count, ar =>
+	{
+		try { tcs.SetResult(stream.EndRead(ar)); }
+		catch (Exception exc) { tcs.SetException(exc); }
+	}, state);
+	return tcs.Task;
+}
+		</pre>
+		<li>Task.Run cpu密集型</li>
+		<pre class="prettyprint">
+internal Task<Bitmap> RenderAsync(ImageData data, CancellationToken cancellationToken)
+{
+	  return Task.Run(() =>
+	  {
+		  var bmp = new Bitmap(data.Width, data.Height);
+		  for(int y=0; y < data.Height; y++)
+		  {
+			  cancellationToken.ThrowIfCancellationRequested();
+			  for(int x=0; x < data.Width; x++)
+			  {
+				  //render pixel [x,y] into bmp
+			  }
+		  }
+		  return bmp;
+	  }, cancellationToken);
+}
+</pre>
+		<li>I/O-bound tasks</li>
+		<pre class="prettyprint">
+public static Task<DateTimeOffset> Delay(int millisecondsTimeout)
+{
+	TaskCompletionSource<DateTimeOffset> tcs = null;
+	Timer timer = null;
+
+	timer = new Timer(delegate
+	{
+		timer.Dispose();
+		tcs.TrySetResult(DateTimeOffset.UtcNow);
+	}, null, Timeout.Infinite, Timeout.Infinite);
+
+	tcs = new TaskCompletionSource<DateTimeOffset>(timer);
+	timer.Change(millisecondsTimeout, Timeout.Infinite);
+	return tcs.Task;
+}
+
+public static async Task Poll(Uri url, CancellationToken cancellationToken, IProgress<bool> progress)
+{
+    while(true)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
+        bool success = false;
+        try
+        {
+            await DownloadStringAsync(url);
+            success = true;
+        }
+        catch { /* ignore errors */ }
+        progress.Report(success);
+    }
+}
+</pre>
+
+		<li>cpu-bound: Task.Run 利用多核</li>
+		<pre class="prettyprint">
+			//This method is CPU-bound.
+			void DoWork();	
+
+			//You would call using Task.Run:
+			await Task.Run(() => DoWork());		
+		</pre>
+		<li>i/o-bound: await 避免主线程阻塞等待</li>
+	</ol>
+
+	<hr />
+	<h1>dotnet core 生成 windows service</h1>
+	适用于各种开机自启动服务进程
+	<ol>
+		<li>dotnet publish -c Release</li>
+		<li>sc.exe create servicecenter binPath=C:\servicecenter.exe</li>
+		<li>sc.exe start servicecenter</li>
+		<li>sc.exe stop servicecenter</li>
+		<li>sc.exe delete servicecenter</li>
+		<li>sc.exe query servicecenter</li>
+	</ol>
+	<hr />
+	<h1>重构服务器</h1>
+	主体思想：c++切换为c#；lib切换为进程；服务为所有区共享。
+	<ol>
+		<li>中心服，负责消息转发</li>
+		<li>网关服，负责客户端socket连接</li>
+		<li>聊天服</li>
+		<li>排行榜</li>
+		<li>日志服</li>
+		<li>邮件服</li>
+		<li>场景服</li>
+		<li>好友服</li>
+		<li>商店服</li>
+		<li>活动服</li>
+		<li>结婚服</li>
+		<li>组队服</li>
+		<li>数据服</li>
+	</ol>
+	<hr />
+	<h1>IIS下部署https</h1>
 	<ol>
 		<li>https: Hyper Text Transfer Protocol over SecureSocket Layer</li>
 		<li>TLS(Transport Layer Security)/SSL(Secure Socket Layer)</li>
@@ -39,10 +337,14 @@
 		本次在<a href="https://www.ucloud.cn/">uclound</a>申请免费ssl
 		<li>在<a href="https://myssl.com/cert_convert.html">转换页面</a>，导入公钥、私钥，格式从PEM转换为PKCS12，得到pfx后缀文件</li>
 		<li>web服务器，复制pfx文件到本地，命令行输入mmc，File菜单Add or Remove Snap-ins，左侧选择Certificates，点击Add，Computer account</li>
-		<li>左侧树形菜单，Certificates->Personal->Certificates，右键菜单 All Tasks->Import</li>
+		<li>左侧树形菜单，Certificates->Personal->Certificates，右键菜单 All Tasks->Import，选择pfx文件，password未填写，一路默认</li>
+		<li>IIS Manager -> 右键 Site -> Edit Bindings -> Add -> Type 选择https -> ssl certificates 选择上面安装的证书</li>
+		<li>记得开放https的端口，默认443，如同http的默认端口80</li>
+		<li>打开浏览器测试</li>
 	</ol>
 
-	<hr /><h1>加密算法-对称加密</h1>
+	<hr />
+	<h1>加密算法-对称加密</h1>
 	加密和解密，都是用的同一个密钥。
 	<ol>
 		<li>DES</li>
@@ -50,83 +352,89 @@
 		<li>AES</li>
 		<li>IDEA</li>
 	</ol>
-	
-	<hr /><h1>加密算法-非对称加密</h1>
+
+	<hr />
+	<h1>加密算法-非对称加密</h1>
 	加密和解密，需要用不同的密钥：公钥和私钥，二把钥匙都可以用于加密或者解密。
 	<ol>
 		<li>RSA</li>
 		<li>DSA</li>
 	</ol>
 
-	<hr /><h1>硬盘性能量化-Windows System Assessment Tool</h1>
+	<hr />
+	<h1>硬盘性能量化-Windows System Assessment Tool</h1>
 	winsat disk -drive d
-	
-	<hr /><h1>apk修改packagename</h1>
+
+	<hr />
+	<h1>apk修改packagename</h1>
 	<ol>
 		<li>apktool</li>
 		https://ibotpeaches.github.io/Apktool/install/
-		
+
 		<li>解apk</li>
-		java -jar apktool.jar d 仙境苍穹.apk -o huawei 
+		java -jar apktool.jar d 仙境苍穹.apk -o huawei
 
 		<li>打apk</li>
-		java -jar apktool.jar b huawei -o ./仙境苍穹huawei.apk 
+		java -jar apktool.jar b huawei -o ./仙境苍穹huawei.apk
 
 		<li>生成key</li>
 		uc huawei oppo vivo 可以采用以下key
 		./keytool.exe -genkey
 		密码 euler2019
 		名字 euler
-		
+
 		应用宝需要以下key
 		./keytool.exe -genkey -alias myaliassha1 -sigalg SHA1withRSA -keyalg RSA
-		
+
 
 		<li>查看alias</li>
 		./keytool.exe -keystore euler.keystore -list -v
-		
+
 		<li>签名</li>
 		uc huawei oppo vivo
 		.\jarsigner.exe -verbose -keystore euler.keystore -signedjar 仙境苍穹huawei_s.apk 仙境苍穹huawei.apk mykey
-		
+
 		应用宝
-		.\jarsigner.exe -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore euler2.keystore -storepass euler2019 tencent.apk myaliassha1
+		.\jarsigner.exe -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore euler2.keystore -storepass euler2019
+		tencent.apk myaliassha1
 	</ol>
-	<hr /><h1>部署DB服务器</h1>
+	<hr />
+	<h1>部署DB服务器</h1>
 	<ol>
-	<li>复制并安装SQLServer2016</li>
-	en_sql_server_2016_enterprise_with_service_pack_1_x64_dvd_9542382.iso
-	设置sa密码Euler2019
-	修改端口为38065
-	red gate sql compare 同步数据库
-	web 全局配置
-	collation Chinese_PRC_CI_AS
-	
-	gd 策划配置
-	
-	ds 玩家数据
-	
-	dslog 玩家日志
-	
-	gm 运维后台
-	
-	
-	<li>TotalCommander</li>
-	<li>BeyondCompare</li>
-	<li>Server Manager - Add roles and features - Web Server(IIS)</li>
-	<li>Install the .NET Core Hosting Bundle</li>
-	dotnet-hosting-2.2.6-win.exe，安装成功之后，IIS的modules里，可以看到AspNetCoreModule
-	以及AspNetCoreModuleV2
-	<li>TortoiseSVN</li>
-	release
-	release
-	https://59.111.63.232/svn/deerdev/Web/bin
-	拉取游戏的web服务
-	<li>挨个配置Web服务，测试URL，如有报错，查看logs是否有日志输出</li>
-	monitor读取本机进程需要权限设置,IIS - Application Pools - Identity设置为LocalSystem
-	
+		<li>复制并安装SQLServer2016</li>
+		en_sql_server_2016_enterprise_with_service_pack_1_x64_dvd_9542382.iso
+		设置sa密码Euler2019
+		修改端口为38065
+		red gate sql compare 同步数据库
+		web 全局配置
+		collation Chinese_PRC_CI_AS
+
+		gd 策划配置
+
+		ds 玩家数据
+
+		dslog 玩家日志
+
+		gm 运维后台
+
+
+		<li>TotalCommander</li>
+		<li>BeyondCompare</li>
+		<li>Server Manager - Add roles and features - Web Server(IIS)</li>
+		<li>Install the .NET Core Hosting Bundle</li>
+		dotnet-hosting-2.2.6-win.exe，安装成功之后，IIS的modules里，可以看到AspNetCoreModule
+		以及AspNetCoreModuleV2
+		<li>TortoiseSVN</li>
+		release
+		release
+		https://59.111.63.232/svn/deerdev/Web/bin
+		拉取游戏的web服务
+		<li>挨个配置Web服务，测试URL，如有报错，查看logs是否有日志输出</li>
+		monitor读取本机进程需要权限设置,IIS - Application Pools - Identity设置为LocalSystem
+
 	</ol>
-		<hr /><h1>svn提交注释字数限制</h1>
+	<hr />
+	<h1>svn提交注释字数限制</h1>
 	<pre class="prettyprint">
 @echo off  
 ::      
@@ -150,9 +458,10 @@ echo. 1>&2
 echo 抱歉,由于您没有正确填写Log或者Log字数过少,系统拒绝提交！ 1>&2   
 exit 1	
 </pre>
-	
 
-	<hr /><h1>创建角色的人声</h1>
+
+	<hr />
+	<h1>创建角色的人声</h1>
 	<pre class="prettyprint linenums">
 function UIActor:ShowModel(actorData)
 	local vocation = (UIActor.createActor.curVocation - 1) * 2 + UIActor.createActor.curSex
@@ -165,8 +474,9 @@ end
 
 	</pre>
 
-	<hr /><h1>任务栏</h1>
-		  <pre class="prettyprint linenums">
+	<hr />
+	<h1>任务栏</h1>
+	<pre class="prettyprint linenums">
 --UITaskShowItem.lua
 o.OnClickContentObj = function ( go1 )
 	local clientStatus = self.taskItem.GetClientStatus and self.taskItem:GetClientStatus() or ECTaskStatus.Null
@@ -324,8 +634,9 @@ function TaskNPC:TriggerEvent()
 end
 </pre>
 
-	<hr /><h1>引导</h1>
-		  <pre class="prettyprint">
+	<hr />
+	<h1>引导</h1>
+	<pre class="prettyprint">
 GuideManager.EventType =
 {
 	UpdateEvent             =           1,              --升级事件
@@ -423,7 +734,8 @@ end
 EventManager.Fire(EventID.CheckGuideEvent,5)
 
 </pre>
-	<hr /><h1>NPC语音</h1>
+	<hr />
+	<h1>NPC语音</h1>
 	<pre class="prettyprint">
 NPCTaskTalkUI.Init = function (self, caller, task )
 	local npc = NPCManager.npcs[caller.npcScheme.ID]
@@ -456,11 +768,15 @@ function NPCTaskTalkUI.HeroHead( isNpc, fileStr, volume, str)
 end
 </pre>
 
-	<hr /><h1>概率</h1>
-	<hr /><h2>均匀概率</h2>
-	<hr /><h2>正态概率</h2>
+	<hr />
+	<h1>概率</h1>
+	<hr />
+	<h2>均匀概率</h2>
+	<hr />
+	<h2>正态概率</h2>
 
-	<hr /><h1>主线任务</h1>
+	<hr />
+	<h1>主线任务</h1>
 	<pre class="prettyprint">
 bool CTaskPart::Create(IEntity* pMaster, LPCSTR pContext, int nLen)
 {
@@ -757,7 +1073,8 @@ function NewBranchTask(actorID, newTaskID, newRound, newStep, notSync )
 end
 
 </pre>
-	<hr /><h2>第一个主线任务</h2>
+	<hr />
+	<h2>第一个主线任务</h2>
 	<pre class="prettyprint">
 function EntityModule.Handle(action, data)
 	if action == EntityMessage_pb.MSG_ENTITY_SYNCTASKITEM then
@@ -876,7 +1193,8 @@ local function CommonWantToAccept( task )
 end
 
 </pre>
-	<hr /><h1>角色出生副本</h1>
+	<hr />
+	<h1>角色出生副本</h1>
 	<pre class="prettyprint linenums">
 bool CTerminalModule::Create()
 {
@@ -1052,7 +1370,8 @@ function EnterEctype(actorID, ectypeID)
 end
 </pre>
 
-	<hr /><h1>客户端热更机制</h1>
+	<hr />
+	<h1>客户端热更机制</h1>
 	<pre class="prettyprint linenums">
 //Bootstrap.cs
 public class Bootstrap : MonoBehaviour
@@ -1345,7 +1664,8 @@ function SceneManager.Awake()
 	end
 end
 </pre>
-	<hr /><h1>运营</h1>
+	<hr />
+	<h1>运营</h1>
 	素材
 	icon
 	loading
@@ -1355,7 +1675,8 @@ end
 	系统UI截图 例如 升星 坐骑 羽翼 宠物 等
 	特色截图 例如 国战 帮战 副本 boss战
 
-	<hr /><h1 id="monster">数值</h1>
+	<hr />
+	<h1 id="monster">数值</h1>
 	mmorpg的玩家追求的是价值，而非玩法
 	参考 张五常的《经济解释》，有假设，有验证，都归依于简单的假设
 	统一度量衡，以元宝diamond核算价值（物品，技能，玩法，活动）
@@ -1473,7 +1794,8 @@ end
 		</li>
 	</ul>
 	<h3>运营活动</h3>
-	<hr /><h1 id="monster">摆怪</h1>
+	<hr />
+	<h1 id="monster">摆怪</h1>
 	monster/*.csv
 	<ul>
 		<li>ID</li>
@@ -1485,7 +1807,8 @@ end
 		<li>BirthPositonZ</li>
 		<li>Face</li>
 	</ul>
-	<hr /><h1 id="Skill">技能</h1>
+	<hr />
+	<h1 id="Skill">技能</h1>
 	Skill.csv
 	<ul>
 		<li>ID</li>
@@ -1524,20 +1847,20 @@ end
 		<li>Defense</li>
 		<li>PhysicsAttack</li>
 		<li>MagicAttack</li>
-		<li>PhysicsDefense	    </li>
-		<li>MagicDefense	    </li>
-		<li>CriticalStrike	    </li>
-		<li>AntiCriticalStrike	</li>
-		<li>Parry	            </li>
-		<li>AntiParry	        </li>
-		<li>Dodge	            </li>
-		<li>Hit	                </li>
-		<li>Armor	            </li>
-		<li>AntiArmor	        </li>
-		<li>DamageReduction	    </li>
-		<li>DamageAdd	        </li>
-		<li>MoveSpeed	        </li>
-		<li>AttackDefense       </li>
+		<li>PhysicsDefense </li>
+		<li>MagicDefense </li>
+		<li>CriticalStrike </li>
+		<li>AntiCriticalStrike </li>
+		<li>Parry </li>
+		<li>AntiParry </li>
+		<li>Dodge </li>
+		<li>Hit </li>
+		<li>Armor </li>
+		<li>AntiArmor </li>
+		<li>DamageReduction </li>
+		<li>DamageAdd </li>
+		<li>MoveSpeed </li>
+		<li>AttackDefense </li>
 	</ul>
 	天赋
 	SkillTalent.csv
@@ -1552,20 +1875,20 @@ end
 		<li>Defense</li>
 		<li>PhysicsAttack</li>
 		<li>MagicAttack</li>
-		<li>PhysicsDefense	    </li>
-		<li>MagicDefense	    </li>
-		<li>CriticalStrike	    </li>
-		<li>AntiCriticalStrike	</li>
-		<li>Parry	            </li>
-		<li>AntiParry	        </li>
-		<li>Dodge	            </li>
-		<li>Hit	                </li>
-		<li>Armor	            </li>
-		<li>AntiArmor	        </li>
-		<li>DamageReduction	    </li>
-		<li>DamageAdd	        </li>
-		<li>MoveSpeed	        </li>
-		<li>AttackDefense       </li>
+		<li>PhysicsDefense </li>
+		<li>MagicDefense </li>
+		<li>CriticalStrike </li>
+		<li>AntiCriticalStrike </li>
+		<li>Parry </li>
+		<li>AntiParry </li>
+		<li>Dodge </li>
+		<li>Hit </li>
+		<li>Armor </li>
+		<li>AntiArmor </li>
+		<li>DamageReduction </li>
+		<li>DamageAdd </li>
+		<li>MoveSpeed </li>
+		<li>AttackDefense </li>
 	</ul>
 	<hr />
 
@@ -3719,7 +4042,8 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 		</li>
 	</ul>
 
-	<hr /><h1 id="PlayerBaseProp">角色等级基础属性</h1>
+	<hr />
+	<h1 id="PlayerBaseProp">角色等级基础属性</h1>
 	PlayerBaseProp.csv
 	<ul>
 		<li>Level</li>
@@ -3728,7 +4052,8 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 		<li>战斗力</li>
 		<li>经验</li>
 	</ul>
-	<hr /><h1>角色属性</h1>
+	<hr />
+	<h1>角色属性</h1>
 	<p>非战斗属性</p>
 	<ul>
 		<li>国家</li>
@@ -3889,31 +4214,31 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 		<li>
 			部件战力
 			<ul>
-				<li>背包部件    </li>
+				<li>背包部件 </li>
 				<li>装备技能部件</li>
-				<li>装备部件    </li>
-				<li>神兵部件    </li>
-				<li>逻辑部件    </li>
-				<li>副本部件    </li>
-				<li>技能部件    </li>
-				<li>商店部件    </li>
-				<li>帮会部件    </li>
-				<li>时装部件    </li>
-				<li>宝石部件    </li>
-				<li>任务部件    </li>
-				<li>仓库部件    </li>
-				<li>新神兵部件  </li>
-				<li>天赋部件    </li>
-				<li>结婚部件    </li>
-				<li>卡牌部件    </li>
+				<li>装备部件 </li>
+				<li>神兵部件 </li>
+				<li>逻辑部件 </li>
+				<li>副本部件 </li>
+				<li>技能部件 </li>
+				<li>商店部件 </li>
+				<li>帮会部件 </li>
+				<li>时装部件 </li>
+				<li>宝石部件 </li>
+				<li>任务部件 </li>
+				<li>仓库部件 </li>
+				<li>新神兵部件 </li>
+				<li>天赋部件 </li>
+				<li>结婚部件 </li>
+				<li>卡牌部件 </li>
 				<li>生活技能部件</li>
-				<li>坐骑部件    </li>
-				<li>翅膀部件    </li>
-				<li>buff部件   </li>
-				<li>称号部件    </li>
-				<li>特权卡部件  </li>
-				<li>新翅膀部件  </li>
-				<li>属性药部件  </li>
+				<li>坐骑部件 </li>
+				<li>翅膀部件 </li>
+				<li>buff部件 </li>
+				<li>称号部件 </li>
+				<li>特权卡部件 </li>
+				<li>新翅膀部件 </li>
+				<li>属性药部件 </li>
 				<li>属性激活部件</li>
 			</ul>
 		</li>
@@ -4557,7 +4882,8 @@ enum SKEPID
 	a.MagicAttack, & \quad \text{others}
 	\end{cases}\\
 
-	\text{let} \quad A = (a1 + Skill.AttackPoint \times SkillEffect.AttackPoint \times csMillionRev) \times (1 + Skill.AttackPercentage \times SkillEffect.AttackPercentage \times csMillionRev^2)\\
+	\text{let} \quad A = (a1 + Skill.AttackPoint \times SkillEffect.AttackPoint \times csMillionRev) \times (1 +
+	Skill.AttackPercentage \times SkillEffect.AttackPercentage \times csMillionRev^2)\\
 	\]
 
 	<p>目标防御</p>
@@ -4568,7 +4894,8 @@ enum SKEPID
 	b.MagicDefense, & \quad \text{others}
 	\end{cases}\\
 
-	\text{let} \quad B = b1 \times (1 - Skill.IgnoreDefensePercentage \times SkillEffect.IgnoreDefensePercentage \times csMillionRev)
+	\text{let} \quad B = b1 \times (1 - Skill.IgnoreDefensePercentage \times SkillEffect.IgnoreDefensePercentage \times
+	csMillionRev)
 	- Skill.IgnoreDefensePoint \times SkillEffect.IgnoreDefensePoint \times csMillionRev\\
 
 	B = \max(0, B)
@@ -4578,8 +4905,9 @@ enum SKEPID
 	\[
 	\text{let} \quad y5=
 	\begin{cases}
-	\frac{Skill.DamagePercentage \times SkillEffect.DamagePercentage}{csMillionRev^2} , & \quad Skill.DamagePercentage \gt 0\\
-	(Skill.DamagePercentage + SkillEffect.DamagePercentage) \times  csMillionRev, & \quad \text{others}
+	\frac{Skill.DamagePercentage \times SkillEffect.DamagePercentage}{csMillionRev^2} , & \quad Skill.DamagePercentage
+	\gt 0\\
+	(Skill.DamagePercentage + SkillEffect.DamagePercentage) \times csMillionRev, & \quad \text{others}
 	\end{cases}\\
 
 	\text{let} \quad C = y5 + a.DamageAdd \times csMillionRev + y5\\
@@ -4712,10 +5040,11 @@ enum SKEPID
 
 
 	<h1>开服关服</h1>
-	<p>开服   Bin/Cluster/开服.bat</p>
-	<p>关服   Bin/Cluster/关服.bat</p>
+	<p>开服 Bin/Cluster/开服.bat</p>
+	<p>关服 Bin/Cluster/关服.bat</p>
 	<p class="explain">
-		* AgentServer是网关服，客户端通过tcp与之通信；DBServer是数据服，负责缓存数据，与数据库交互；SceneServer场景服，游戏的业务逻辑都在这里。CenterServer是中心服，负责服务器之间的消息中转。
+		*
+		AgentServer是网关服，客户端通过tcp与之通信；DBServer是数据服，负责缓存数据，与数据库交互；SceneServer场景服，游戏的业务逻辑都在这里。CenterServer是中心服，负责服务器之间的消息中转。
 	</p>
 	<hr />
 
@@ -5080,4 +5409,5 @@ void CLogicPart::SetLoginLogicData()
 		</address>
 	</footer>
 </body>
+
 </html>
