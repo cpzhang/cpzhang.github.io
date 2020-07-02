@@ -34,25 +34,66 @@
 	<p align="right">制心一处</p>
 	<hr />
 
-	<h1>进程</h1>
-<ol>
-	<li>process search</li>
-	ps aux | grep 'redis'
-</ol>
+	<h1>nginx</h1>
+	<ol>
+		<li>process search</li>
+		ps aux | grep 'redis'
+	</ol>
 
-<h1>StackExchange.Redis</h1>
-<ol>
-	<li>connect & get</li>
-	<pre class="prettyprint">
-var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379");
+	<h1>进程</h1>
+	<ol>
+		<li>process search</li>
+		ps aux | grep 'redis'
+		<li>所有进程内存、cpu使用情况</li>
+		top
+		htop
+		退出：q
+		帮助: h
+	</ol>
+
+	<h1>内存</h1>
+	RAM: Random Access Memory
+	<ol>
+		<li>总体内存使用情况</li>
+		free -m
+		<li>swamp space</li>
+		vmstat
+		<li></li>
+		less /proc/meminfo
+		less /proc/cpuinfo
+	</ol>
+
+	<h1>硬盘</h1>
+	
+	<ol>
+		<li>disk free</li>
+		// 默认block单位K
+		df
+		// block 单位G
+		df -BG
+		// human readable
+		df -h
+
+		<li>swamp space</li>
+		vmstat
+		<li></li>
+		less /proc/meminfo
+		less /proc/cpuinfo
+	</ol>
+
+	<h1>StackExchange.Redis</h1>
+	<ol>
+		<li>connect & get</li>
+		<pre class="prettyprint">
+var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379,password=Euler2019");
 IDatabase db = redis.GetDatabase();
 string value = db.StringGet("name");
 Console.WriteLine(value);
 	</pre>
 
-	<li>pub/sub message</li>
-	<pre class="prettyprint">
-var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379");
+		<li>pub/sub message</li>
+		<pre class="prettyprint">
+var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379,password=Euler2019");
 ISubscriber sub = redis.GetSubscriber();
 sub.Subscribe("messages", (channel, message) =>
 {
@@ -69,64 +110,156 @@ sub.Subscribe("messages").OnMessage(async channelMessage =>
 	await Task.Delay(1000);
 	Console.WriteLine($"2:{channelMessage.Message}");
 });
+sub.Publish("messages", "hello");
 	</pre>
-</ol>
+		<li>await</li>
+		<pre class="prettyprint">
+string value = "abcdefg";
+await db.StringSetAsync("mykey", value);
+...
+string value = await db.StringGetAsync("mykey");
+Console.WriteLine(value); // writes: "abcdefg"
+	</pre>
+
+		<li>fire-and-forgot</li>
+		<pre class="prettyprint">
+db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
+	</pre>
+	</ol>
 
 	<h1>redis</h1>
 	REmote DIctionary Server
-<ol>
-	<li>install</li>
-	sudo apt install redis
-	
-	<li><a href="https://www.learn2torials.com/a/how-to-uninstall-redis-server-from-ubuntu">uninstall</a></li>
-	<li>check version</li>
-	redis-cli --version
+	<ol>
+		<li>install</li>
+		sudo apt install redis
 
-	<li>check status</li>
-	sudo systemctl status redis
+		<li><a href="https://www.learn2torials.com/a/how-to-uninstall-redis-server-from-ubuntu">uninstall</a></li>
+		<li>check version</li>
+		redis-cli --version
 
-	q键退出
-	<li>start</li>
-	sudo systemctl start redis-server
+		<li>check status</li>
+		sudo systemctl status redis
 
-	<li>stop</li>
-	sudo systemctl stop redis
+		q键退出
+		<li>start</li>
+		sudo systemctl start redis-server
 
-	<li>redis-cli</li>
-	redis-cli -h localhost -p 6379
-	set name euler
-	get name
+		<li>stop</li>
+		sudo systemctl stop redis
 
-	<li>stop</li>
-	redis-cli shutdown nosave
+		<li>redis-cli</li>
+		redis-cli -h localhost -p 6379 -a 'Euler2019'
+		set name euler
+		get name
 
-	<li>message broker</li>
-	send: rpush 
-	receive: blpop
+		<li>stop</li>
+		redis-cli shutdown nosave
 
-</ol>
+		<li>message broker</li>
+		send: rpush
+		receive: blpop
+
+		<li>password</li>
+		requirepass Euler2019
+	</ol>
 
 	<hr />
 	<h1>tmux</h1>
-<ol>
-	<li>install</li>
-	sudo apt install tmux
-</ol>
+	<ol>
+		<li>install</li>
+		sudo apt install tmux
 
-<hr />
+		<li>new unnamed session</li>
+		tmux
+
+		<li>new named session</li>
+		tmux new -s GameServer
+
+		<li>create new window</li>
+		ctrl+b c
+
+		<li>list all sessions</li>
+		//tmux session模式内
+		ctrl+b s
+		//不在tmux session模式内
+		tmux ls
+
+		<li>list all windows of all sessions</li>
+		ctrl+b w
+
+		<li>不同的用户，登录同一个session的同一个window，可以同步屏幕</li>		
+
+		<li>detach session</li>
+		ctrl+b d
+
+		<li>attach session</li>
+		tmux attach-session -t mysessionname
+
+		// attach last session
+		tmux a
+
+		<li>kill session</li>
+		tmux kill-session
+
+		<li>panel：切割window</li>
+		ctrl+b %
+		ctrl+b "
+		// flash panel number
+		ctrl+b q
+	</ol>
+
+	<hr />
 	<h1>fish</h1>
-<ol>
-	<li>install</li>
-	sudo apt install fish
-	<li>auto suggestion</li>
-	accept all: right arrow
-	accept one word: ctrl + right arrow
-</ol>
+	<ol>
+		<li>install</li>
+		sudo apt install fish
+		<li>auto suggestion</li>
+		accept all: right arrow
+		accept one word: ctrl + right arrow
+	</ol>
 
 	<hr />
 	<h1>ubuntu</h1>
 	龙归大海，最终还是步入linux，原因很现实：运维便利、节省成本
 	<ol>
+		<li>权限控制</li>
+		chmod
+		三大权限:Read、Write、eXcute
+		三类用户:owner、group、others
+		
+		<li>copy file</li>
+		cp
+
+		<li>move/rename file/directory</li>
+		mv
+
+		<li>print system information</li>
+		uname
+
+		<li>create directory</li>
+		mkdir
+
+		<li>creae a file</li>
+		touch test.txt
+
+		<li>帮助文档</li>
+		man ls
+		// search key word
+		man -k fuck
+
+		<li>list content of the directory</li>
+		ls -l
+		// including hiden files
+		ls -a
+		<li>see file is a file or a directory</li>
+		file filename
+		<li>linux is case sensitive</li>
+		<li>pwd</li>
+		print work directory
+
+		<li>hiden file</li>
+		.XXX
+
 		<li>打开防火墙端口1022</li>
 		iptables -I INPUT -p tcp --dport 1022 -j ACCEP
 
@@ -134,20 +267,22 @@ sub.Subscribe("messages").OnMessage(async channelMessage =>
 		sudo apt update & sudo apt upgrade & sudo do-release-upgrade
 
 		<li>sql server</li>
-		<a href="https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-linux-ver15">sql server on linux</a>
-		
+		<a
+			href="https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-linux-ver15">sql
+			server on linux</a>
+
 		<li>migrate sql server from windows to linux</li>
 		first, install sql server tools
 		curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 		curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
-		sudo apt-get update 
+		sudo apt-get update
 		sudo apt-get install mssql-tools unixodbc-dev
-		sudo apt-get update 
+		sudo apt-get update
 		sudo apt-get install mssql-tools
 		echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
 		echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
 		source ~/.bashrc
-		
+
 		second, restore
 		sqlcmd -S localhost -U SA
 
@@ -196,24 +331,24 @@ sub.Subscribe("messages").OnMessage(async channelMessage =>
 
 		<li>sql server </li>
 		SQL Server 2019
-Enterprise：HMWJ3-KY3J2-NMVD7-KG4JR-X2G8G
-Enterprise Core：2C9JR-K3RNG-QD4M4-JQ2HR-8468J
-Strandard：PMBDC-FXVM3-T777P-N4FY8-PKFF4
-Web：33QQK-WWQNB-G6T46-C86YB-TX2PH
+		Enterprise：HMWJ3-KY3J2-NMVD7-KG4JR-X2G8G
+		Enterprise Core：2C9JR-K3RNG-QD4M4-JQ2HR-8468J
+		Strandard：PMBDC-FXVM3-T777P-N4FY8-PKFF4
+		Web：33QQK-WWQNB-G6T46-C86YB-TX2PH
 
 
-SQL Server 2017
-Enterprise：TDKQD-PKV44-PJT4N-TCJG2-3YJ6B
-Enterprise Core：6GPYM-VHN83-PHDM2-Q9T2R-KBV83
-Strandard：PHDV4-3VJWD-N7JVP-FGPKY-XBV89
-Web：WV79P-7K6YG-T7QFN-M3WHF-37BXC
+		SQL Server 2017
+		Enterprise：TDKQD-PKV44-PJT4N-TCJG2-3YJ6B
+		Enterprise Core：6GPYM-VHN83-PHDM2-Q9T2R-KBV83
+		Strandard：PHDV4-3VJWD-N7JVP-FGPKY-XBV89
+		Web：WV79P-7K6YG-T7QFN-M3WHF-37BXC
 
 
-SQL Server 2016
-Enterprise：MDCJV-3YX8N-WG89M-KV443-G8249
-Enterprise Core：TBR8B-BXC4Y-298NV-PYTBY-G3BCP
-Standard：B9GQY-GBG4J-282NY-QRG4X-KQBCR
-Web：BXJTY-X3GNH-WHTHG-8V3XK-T8243
+		SQL Server 2016
+		Enterprise：MDCJV-3YX8N-WG89M-KV443-G8249
+		Enterprise Core：TBR8B-BXC4Y-298NV-PYTBY-G3BCP
+		Standard：B9GQY-GBG4J-282NY-QRG4X-KQBCR
+		Web：BXJTY-X3GNH-WHTHG-8V3XK-T8243
 	</ol>
 
 	<hr />
