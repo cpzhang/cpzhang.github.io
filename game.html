@@ -33,11 +33,51 @@
 
 	<p align="right">制心一处</p>
 	<hr />
+	<h1>deplay dotnet core on Linux</h1>
+		<ol>
+		<li>sudo apt install aspnetcore-runtime-3.1</li>
+		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+		<li>解压</li>
+		<li>复制到PATH</li>
+		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+		<li>测试</li>
+		cheat tar
+	</ol>
+
+
+	<h1>cheat</h1>
+		<ol>
+		<li>下载</li>
+		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+		<li>解压</li>
+		<li>复制到PATH</li>
+		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+		<li>测试</li>
+		cheat tar
+	</ol>
+	
+	<h1>网络</h1>
+	<ol>
+		<li>netstat</li>
+		sudo netstat -tulpn
+		<li>端口占用</li>
+		sudo netstat -tunlp | grep 80
+	</ol>
 
 	<h1>nginx</h1>
 	<ol>
-		<li>process search</li>
-		ps aux | grep 'redis'
+		<li>install</li>
+		sudo apt install nginx
+		<li>start</li>
+		sudo systemctl start nginx
+		<li>stop</li>
+		sudo systemctl stop nginx
+		<li>restart</li>
+		sudo systemctl restart nginx
+		<li>status</li>
+		sudo systemctl status nginx
+		<li>reload</li>
+		sudo systemctl reload nginx
 	</ol>
 
 	<h1>进程</h1>
@@ -49,6 +89,8 @@
 		htop
 		退出：q
 		帮助: h
+		<li>kill</li>
+		sudo kill 643
 	</ol>
 
 	<h1>内存</h1>
@@ -222,11 +264,14 @@ db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
 	<h1>ubuntu</h1>
 	龙归大海，最终还是步入linux，原因很现实：运维便利、节省成本
 	<ol>
+		<li>下载</li>
+		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+
 		<li>权限控制</li>
 		chmod
 		三大权限:Read、Write、eXcute
 		三类用户:owner、group、others
-		
+
 		<li>copy file</li>
 		cp
 
@@ -247,6 +292,10 @@ db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
 		// search key word
 		man -k fuck
 
+		//
+		whatis ls
+		//
+		whereis ls
 		<li>list content of the directory</li>
 		ls -l
 		// including hiden files
