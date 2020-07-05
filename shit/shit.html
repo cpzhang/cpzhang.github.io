@@ -5,12 +5,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <title>沙田信鸿蔚蓝海岸小区业主关于玻璃自爆问题的抗议书</title>
 </head>
 
-<body onload="load()">
+<body onload="loadsign()">
     <h2 style="text-align:center">沙田信鸿蔚蓝海岸小区业主关于玻璃自爆问题的抗议书</h2>
     沙田信鸿蔚蓝海岸小区自2019年交楼以来，玻璃自爆并从高空坠落的事故发生多起，现列举部分事故如下：
     <ol>
@@ -90,65 +88,46 @@
         <div style="text-align:left">
             <p>业主签名处</p>
             <table id="stable">
-                <tr>
-                    <td valign="center" align="center">
-                        <img src="s3-1204.png" width="300" height="80">
-                    </td>
-                    <td valign="center" align="center">
-                        <img src="s3-3205.png" width="300" height="80">
-                    </td>
-                    <td valign="center" align="center">
-                        <img src="s3-1405.png" width="300" height="80">
-                    </td>
-                </tr>
             </table>
         </div>
     </footer>
 
 </body>
 <script>
-    function UrlExists(url) {
-        var xmlhttp;
-        if (window.XMLHttpRequest)
-        {
-            xmlhttp = new XMLHttpRequest(); //其他浏览器    
-        } else if (window.ActiveXObject)
-        {
-            try {
-                xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); //旧版IE    
-            } catch (e) {}
-            try {
-                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); //新版IE    
-            } catch (e) {}
-            if (!xmlhttp) {
-                window.alert("不能创建XMLHttpRequest对象");
-            }
-        }
-        xmlhttp.open("GET", url, false);
-        xmlhttp.send();
-        if (xmlhttp.readyState == 4) {
-            if (xmlhttp.status == 200)
-                return true;
-            else
-                return false;     
-        }
-    }
+    let fruits = ['s1-1102.png', 's1-1305.png', 's1-201.png', 's1-2303.png', 's1-2403.png', 's1-2605.png',
+        's1-2705.png', 's1-2803.png', 's1-2804.png', 's1-2806.png', 's1-505.png', 's3-1204.png', 's3-1205.png',
+        's3-1402.png', 's3-1405.png', 's3-1603.png', 's3-1804.png', 's3-2003.png', 's3-2101.png', 's3-2201.png',
+        's3-2401.png', 's3-2605.png', 's3-2804.png', 's3-2805.png', 's3-3003.png', 's3-3103.png', 's3-3205.png',
+        's3-903.png', 's4-1002.png', 's4-1101.png', 's4-1301.png', 's4-1703.png', 's4-1802.png', 's4-2504.png',
+        's4-2703.png', 's4-601.png', 's4-904.png', 's5-1203.png', 's5-1204.png', 's5-1902.png', 's5-203.png',
+        's5-2503.png', 's5-2601.png', 's5-2701.png', 's5-2901.png', 's5-903.png', 's6-1004.png', 's6-1205.png',
+        's6-1505.png', 's6-1603.png', 's6-1803.png', 's6-1902.png', 's6-2602.png', 's6-3202.png', 's6-3204.png',
+        's6-502.png', 's6-505.png', 's6-602.png', 's6-701.png', 's6-704.png', 's6-803.png', 's6-902.png',
+        's6-903.png'
+    ]
 
-    function load() {
+    function loadsign() {
         var myTableDiv = document.getElementById("stable");
-        for (let index = 1; index <= 6; index++) {
-            for (let level = 2; level <= 32; level++) {
-                for (let num = 1; num <= 5; num++) {
-                    let name = 's' + index + '-' + level + '0' + num + '.png'
-
-                    // See if the file exists
-                    if (UrlExists(name)) {
-                        console.log(name + ' exists');
-                    }
+        var tableBody = document.createElement('TBODY');
+        myTableDiv.appendChild(tableBody);
+        var count=0;
+        for (let r = 0;r < 100; r++) {
+            var tr = document.createElement('TR');
+            tableBody.appendChild(tr);
+            for (let d = 0; d < 3; d++) {
+                count++
+                if(count > fruits.length){
+                    return
                 }
+                var td = document.createElement('TD');
+                var i = document.createElement("img");
+                i.src=fruits[count-1];
+                i.width=300;
+                i.height=80;
+                td.appendChild(i);
+                tr.appendChild(td);
             }
         }
-        console.log("Page load finished");
     }
 </script>
 
