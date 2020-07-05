@@ -108,11 +108,30 @@
 </body>
 <script>
     function UrlExists(url) {
-        $('<img src="' + url + '">').load(function () {
-            return true;
-        }).bind('error', function () {
-            return false;
-        });
+        var xmlhttp;
+        if (window.XMLHttpRequest)
+        {
+            xmlhttp = new XMLHttpRequest(); //其他浏览器    
+        } else if (window.ActiveXObject)
+        {
+            try {
+                xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); //旧版IE    
+            } catch (e) {}
+            try {
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); //新版IE    
+            } catch (e) {}
+            if (!xmlhttp) {
+                window.alert("不能创建XMLHttpRequest对象");
+            }
+        }
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send();
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200)
+                return true;
+            else
+                return false;     
+        }
     }
 
     function load() {
@@ -124,8 +143,8 @@
 
                     // See if the file exists
                     if (UrlExists(name)) {
-                        console.log( name + ' exists');
-                    } 
+                        console.log(name + ' exists');
+                    }
                 }
             }
         }
