@@ -1,4 +1,4 @@
-Get-ChildItem -Path s*.png -Name | Out-File -FilePath s.txt
+Get-ChildItem -Path s*.png -Name | Sort {$_.Substring(1,1)*10000 + $_.Substring(3,$_.Length-7)}  | Out-File -FilePath s.txt
 $s = ''
 foreach ($line in Get-Content .\s.txt) {
     $s = $s + "'" + $line + "',"       
