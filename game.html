@@ -33,8 +33,43 @@
 
 	<p align="right">制心一处</p>
 	<hr />
+
+	<h1>vscode</h1>
+	<ol>
+		<li>install-package</li>
+		dotnet add package Newtonsoft.Json
+	</ol>
+	<h1>vim</h1>
+	<ol>
+		<li>copy the whole line</li>
+		yy
+
+		<li>past</li>
+		p
+
+		<li>open file/directory</li>
+		:e file/directory name
+
+		<li>enter insert mode</li>
+		i
+
+		<li>switch insert model to normal mode</li>
+		esc
+
+		<li>split screen</li>
+		:vs filename
+		:sp filename
+		switch cursor: ctrl+w w
+
+		<li>多文件切换</li>
+		:bn
+		:bp
+
+
+	</ol>
+
 	<h1>deplay dotnet core on Linux</h1>
-		<ol>
+	<ol>
 		<li>sudo apt install aspnetcore-runtime-3.1</li>
 		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
 		<li>解压</li>
@@ -44,9 +79,8 @@
 		cheat tar
 	</ol>
 
-
 	<h1>cheat</h1>
-		<ol>
+	<ol>
 		<li>下载</li>
 		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
 		<li>解压</li>
@@ -55,11 +89,12 @@
 		<li>测试</li>
 		cheat tar
 	</ol>
-	
+
 	<h1>网络</h1>
 	<ol>
 		<li>netstat</li>
 		sudo netstat -tulpn
+
 		<li>端口占用</li>
 		sudo netstat -tunlp | grep 80
 	</ol>
@@ -78,6 +113,29 @@
 		sudo systemctl status nginx
 		<li>reload</li>
 		sudo systemctl reload nginx
+
+		<li>master进程 & worker进程</li>
+		1个master进程，N个worker进程
+		nginx -s signal
+		stop — fast shutdown
+		quit — graceful shutdown
+		reload — reloading the configuration file
+		reopen — reopening the log files
+
+		<li>/var/etc/nginx/nginx.conf</li>
+		http{
+			server{
+				listen 80;
+
+				location / {
+					/var/www/html
+				}
+			}
+		}
+
+		<li>日志</li>
+		access.log and error.log 
+		/usr/local/nginx/logs or /var/log/nginx
 	</ol>
 
 	<h1>进程</h1>
@@ -106,7 +164,7 @@
 	</ol>
 
 	<h1>硬盘</h1>
-	
+
 	<ol>
 		<li>disk free</li>
 		// 默认block单位K
@@ -229,7 +287,7 @@ db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
 		<li>list all windows of all sessions</li>
 		ctrl+b w
 
-		<li>不同的用户，登录同一个session的同一个window，可以同步屏幕</li>		
+		<li>不同的用户，登录同一个session的同一个window，可以同步屏幕</li>
 
 		<li>detach session</li>
 		ctrl+b d
@@ -264,6 +322,9 @@ db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
 	<h1>ubuntu</h1>
 	龙归大海，最终还是步入linux，原因很现实：运维便利、节省成本
 	<ol>
+		<li>cpu core查询</li>
+		lscpu | less
+
 		<li>下载</li>
 		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
 
