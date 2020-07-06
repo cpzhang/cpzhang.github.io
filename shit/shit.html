@@ -26,7 +26,7 @@
 
         <li>2020年4月18日，6栋1901，发生玻璃自爆事故</li>
         <img src="61901.jpg" width="200" height="300">
-        
+
         <li>2020年3月11日，5栋3101，发生玻璃自爆事故</li>
 
         <li>2020年3月8日，1栋7楼某户，发生玻璃自爆并从高空坠落事故，玻璃碎片掉落到小区唯一的人行入口通道</li>
@@ -35,21 +35,21 @@
 
         <li>2020年1月2日，6栋7楼某户，发生玻璃自爆事故</li>
         <img src="c.jpg" width="200" height="300">
-        
+
         <li>2020年x月x日，3栋402，发生玻璃自爆事故</li>
         <li>2020年x月x日，4栋2702，发生玻璃自爆事故</li>
         <li>2020年x月x日，4栋3103，发生玻璃自爆事故</li>
         <li>2020年x月x日，6栋1603，发生玻璃自爆事故</li>
-        
+
         <li>2020年x月x日，6栋3001，发生玻璃自爆事故</li>
         <img src="63001.jpg" width="200" height="300">
 
-        
+
         <li>2020年x月x日，3栋2405，发生玻璃自爆事故</li>
         <img src="32405.jpg" width="200" height="300">
 
         <li>2020年x月x日，1栋10楼某户，发生玻璃自爆事故</li>
-        
+
         <li>2019年11月28日，6栋1001，发生玻璃自爆事故</li>
 
         <li>2019年9月15日，5栋201，发生玻璃自爆事故</li>
@@ -98,36 +98,27 @@
 
 </body>
 <script>
-    let fruits = ['s1-1102.png', 's1-1305.png', 's1-201.png', 's1-2303.png', 's1-2403.png', 's1-2605.png',
-        's1-2705.png', 's1-2803.png', 's1-2804.png', 's1-2806.png', 's1-505.png', 's3-1204.png', 's3-1205.png',
-        's3-1402.png', 's3-1405.png', 's3-1603.png', 's3-1804.png', 's3-2003.png', 's3-2101.png', 's3-2201.png',
-        's3-2401.png', 's3-2605.png', 's3-2804.png', 's3-2805.png', 's3-3003.png', 's3-3103.png', 's3-3205.png',
-        's3-903.png', 's4-1002.png', 's4-1101.png', 's4-1301.png', 's4-1703.png', 's4-1802.png', 's4-2504.png',
-        's4-2703.png', 's4-601.png', 's4-904.png', 's5-1203.png', 's5-1204.png', 's5-1902.png', 's5-203.png',
-        's5-2503.png', 's5-2601.png', 's5-2701.png', 's5-2901.png', 's5-903.png', 's6-1004.png', 's6-1205.png',
-        's6-1505.png', 's6-1603.png', 's6-1803.png', 's6-1902.png', 's6-2602.png', 's6-3202.png', 's6-3204.png',
-        's6-502.png', 's6-505.png', 's6-602.png', 's6-701.png', 's6-704.png', 's6-803.png', 's6-902.png',
-        's6-903.png'
-    ]
+    let fruits = ['s1-1102.png','s1-1305.png','s1-1501.png','s1-2301.png','s1-2303.png','s1-2305.png','s1-2403.png','s1-2504.png','s1-2602.png','s1-2605.png','s1-2705.png','s1-2803.png','s1-2804.png','s1-2806.png','s1-402.png','s1-505.png','s3-1204.png','s3-1205.png','s3-1402.png','s3-1405.png','s3-1603.png','s3-1804.png','s3-1904.png','s3-2003.png','s3-204.png','s3-2101.png','s3-2201.png','s3-2202.png','s3-2302.png','s3-2401.png','s3-2501.png','s3-2605.png','s3-2804.png','s3-2805.png','s3-3003.png','s3-3005.png','s3-3103.png','s3-3205.png','s3-801.png','s3-903.png','s4-1002.png','s4-1101.png','s4-1102.png','s4-1301.png','s4-1703.png','s4-1802.png','s4-2504.png','s4-2703.png','s4-601.png','s4-902.png','s4-904.png','s5-1201.png','s5-1203.png','s5-1204.png','s5-1902.png','s5-203.png','s5-2503.png','s5-2601.png','s5-2701.png','s5-2803.png','s5-2901.png','s5-903.png','s6-1004.png','s6-1205.png','s6-1504.png','s6-1505.png','s6-1603.png','s6-1803.png','s6-1902.png','s6-2202.png','s6-2602.png','s6-3202.png','s6-3204.png','s6-502.png','s6-505.png','s6-602.png','s6-701.png','s6-704.png','s6-803.png','s6-902.png','s6-903.png'
+]
 
     function loadsign() {
         var myTableDiv = document.getElementById("stable");
         var tableBody = document.createElement('TBODY');
         myTableDiv.appendChild(tableBody);
-        var count=0;
-        for (let r = 0;r < 100; r++) {
+        var count = 0;
+        for (let r = 0; r < 100; r++) {
             var tr = document.createElement('TR');
             tableBody.appendChild(tr);
             for (let d = 0; d < 1; d++) {
                 count++
-                if(count > fruits.length){
+                if (count > fruits.length) {
                     return
                 }
                 var td = document.createElement('TD');
                 var i = document.createElement("img");
-                i.src=fruits[count-1];
-                i.width=300;
-                i.height=80;
+                i.src = fruits[count - 1];
+                i.width = 300;
+                i.height = 80;
                 td.appendChild(i);
                 tr.appendChild(td);
             }
