@@ -34,6 +34,21 @@
 	<p align="right">制心一处</p>
 	<hr />
 
+<h1>ufw</h1>
+<ol>
+	<li>ufw status verbose</li>
+	<li>ufw enable</li>
+	<li>ufw disable</li>
+	<li>ufw allow 5000</li>
+	ufw allow 5000:5010/tcp
+
+	ufw allow from 10.0.0.1 to any port 22
+
+	<li>delete</li>
+	ufw status numbered
+
+	ufw delete [that number]
+</ol>
 
 	<h1>vscode</h1>
 	<ol>
@@ -93,8 +108,8 @@
 	<h1>deplay dotnet core on Linux</h1>
 	<ol>
 		<li>sudo apt install aspnetcore-runtime-3.1</li>
-		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
-		<li>解压</li>
+		
+		<li>dotnet Login.dll --urls=http:[::]:5001</li>
 		<li>复制到PATH</li>
 		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
 		<li>测试</li>
@@ -328,6 +343,10 @@ db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
 		ctrl+b "
 		// flash panel number
 		ctrl+b q
+
+		<li>rename session</li>
+		tmux rename-session login
+		ctrl+b $
 	</ol>
 
 	<hr />
