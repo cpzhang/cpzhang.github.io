@@ -33,7 +33,35 @@
 
 	<p align="right">制心一处</p>
 	<hr />
+	<h1>deplay dotnet core on Linux</h1>
+		<ol>
+		<li>sudo apt install aspnetcore-runtime-3.1</li>
+		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+		<li>解压</li>
+		<li>复制到PATH</li>
+		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+		<li>测试</li>
+		cheat tar
+	</ol>
 
+	<h1>cheat</h1>
+		<ol>
+		<li>下载</li>
+		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+		<li>解压</li>
+		<li>复制到PATH</li>
+		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+		<li>测试</li>
+		cheat tar
+	</ol>
+	
+	<h1>网络</h1>
+	<ol>
+		<li>netstat</li>
+		sudo netstat -tulpn
+		<li>端口占用</li>
+		sudo netstat -tunlp | grep 80
+	</ol>
 <h1>ufw</h1>
 <ol>
 	<li>ufw status verbose</li>
@@ -150,7 +178,9 @@
 		sudo systemctl status nginx
 		<li>reload</li>
 		sudo systemctl reload nginx
-
+		<li>process search</li>
+		ps aux | grep 'redis'
+		
 		<li>master进程 & worker进程</li>
 		1个master进程，N个worker进程
 		nginx -s signal
