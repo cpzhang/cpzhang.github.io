@@ -11,10 +11,10 @@
 	<link rel="stylesheet" href="styles.css" />
 	<script type="text/javascript" async
 		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-	</script>
+		</script>
 	<script type="text/javascript" async
 		src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js">
-	</script>
+		</script>
 	<style>
 		li.L0,
 		li.L1,
@@ -33,22 +33,50 @@
 
 	<p align="right">制心一处</p>
 	<hr />
+	<h1>deplay dotnet core on Linux</h1>
+	<ol>
+		<li>sudo apt install aspnetcore-runtime-3.1</li>
+		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+		<li>解压</li>
+		<li>复制到PATH</li>
+		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+		<li>测试</li>
+		cheat tar
+	</ol>
 
-<h1>ufw</h1>
-<ol>
-	<li>ufw status verbose</li>
-	<li>ufw enable</li>
-	<li>ufw disable</li>
-	<li>ufw allow 5000</li>
-	ufw allow 5000:5010/tcp
+	<h1>cheat</h1>
+	<ol>
+		<li>下载</li>
+		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+		<li>解压</li>
+		<li>复制到PATH</li>
+		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+		<li>测试</li>
+		cheat tar
+	</ol>
 
-	ufw allow from 10.0.0.1 to any port 22
+	<h1>网络</h1>
+	<ol>
+		<li>netstat</li>
+		sudo netstat -tulpn
+		<li>端口占用</li>
+		sudo netstat -tunlp | grep 80
+	</ol>
+	<h1>ufw</h1>
+	<ol>
+		<li>ufw status verbose</li>
+		<li>ufw enable</li>
+		<li>ufw disable</li>
+		<li>ufw allow 5000</li>
+		ufw allow 5000:5010/tcp
 
-	<li>delete</li>
-	ufw status numbered
+		ufw allow from 10.0.0.1 to any port 22
 
-	ufw delete [that number]
-</ol>
+		<li>delete</li>
+		ufw status numbered
+
+		ufw delete [that number]
+	</ol>
 
 	<h1>vscode</h1>
 	<ol>
@@ -84,152 +112,154 @@
 
 
 
-	<h1>如何在家里ssh远程访问公司局域网内电脑</h1>
-	<ol>
-		<ul>
-			<li>A机公司局域网</li>
-			<li>B机公网linux主机</li>
-			<li>C机家里的notebook</li>
-		</ul>
-		<li>A机</li>
-		luther@gliethttp:~$ ssh -CfNg -R 7001:localhost:22     用户名@B机
-		
-		<li>C机</li>
-		luther@gliethttp:~$ ssh -CfNg -L 7000:localhost:7001   用户名@B机
+		<h1>如何在家里ssh远程访问公司局域网内电脑</h1>
+		<ol>
+			<ul>
+				<li>A机公司局域网</li>
+				<li>B机公网linux主机</li>
+				<li>C机家里的notebook</li>
+			</ul>
+			<li>A机</li>
+			luther@gliethttp:~$ ssh -CfNg -R 7001:localhost:22 用户名@B机
 
-		<li>C机</li>
-		luther@gliethttp:~$ ssh -p 7000 A机用户名@localhost    就可以登录公司的A机了
+			<li>C机</li>
+			luther@gliethttp:~$ ssh -CfNg -L 7000:localhost:7001 用户名@B机
 
-		<li>C机</li>
-		luther@gliethttp:~$ ssh -X -p 7000 A机用户名@localhost 就可以执行A机上的图形程序了,比如nautilus .
+			<li>C机</li>
+			luther@gliethttp:~$ ssh -p 7000 A机用户名@localhost 就可以登录公司的A机了
 
-	</ol>
+			<li>C机</li>
+			luther@gliethttp:~$ ssh -X -p 7000 A机用户名@localhost 就可以执行A机上的图形程序了,比如nautilus .
 
-	<h1>deplay dotnet core on Linux</h1>
-	<ol>
-		<li>sudo apt install aspnetcore-runtime-3.1</li>
-		
-		<li>dotnet Login.dll --urls=http:[::]:5001</li>
-		<li>复制到PATH</li>
-		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
-		<li>测试</li>
-		cheat tar
-	</ol>
+		</ol>
 
-	<h1>cheat</h1>
-	<ol>
-		<li>下载</li>
-		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
-		<li>解压</li>
-		<li>复制到PATH</li>
-		sudo mv cheat-linux-amd64.gz /usr/bin/cheat
-		<li>测试</li>
-		cheat tar
-	</ol>
+		<h1>deplay dotnet core on Linux</h1>
+		<ol>
+			<li>sudo apt install aspnetcore-runtime-3.1</li>
 
-	<h1>网络</h1>
-	<ol>
-		<li>netstat</li>
-		sudo netstat -tulpn
+			<li>dotnet Login.dll --urls=http:[::]:5001</li>
+			<li>复制到PATH</li>
+			sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+			<li>测试</li>
+			cheat tar
+		</ol>
 
-		<li>端口占用</li>
-		sudo netstat -tunlp | grep 80
-	</ol>
+		<h1>cheat</h1>
+		<ol>
+			<li>下载</li>
+			wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+			<li>解压</li>
+			<li>复制到PATH</li>
+			sudo mv cheat-linux-amd64.gz /usr/bin/cheat
+			<li>测试</li>
+			cheat tar
+		</ol>
 
-	<h1>nginx</h1>
-	<ol>
-		<li>install</li>
-		sudo apt install nginx
-		<li>start</li>
-		sudo systemctl start nginx
-		<li>stop</li>
-		sudo systemctl stop nginx
-		<li>restart</li>
-		sudo systemctl restart nginx
-		<li>status</li>
-		sudo systemctl status nginx
-		<li>reload</li>
-		sudo systemctl reload nginx
+		<h1>网络</h1>
+		<ol>
+			<li>netstat</li>
+			sudo netstat -tulpn
 
-		<li>master进程 & worker进程</li>
-		1个master进程，N个worker进程
-		nginx -s signal
-		stop — fast shutdown
-		quit — graceful shutdown
-		reload — reloading the configuration file
-		reopen — reopening the log files
+			<li>端口占用</li>
+			sudo netstat -tunlp | grep 80
+		</ol>
 
-		<li>/var/etc/nginx/nginx.conf</li>
-		http{
+		<h1>nginx</h1>
+		<ol>
+			<li>install</li>
+			sudo apt install nginx
+			<li>start</li>
+			sudo systemctl start nginx
+			<li>stop</li>
+			sudo systemctl stop nginx
+			<li>restart</li>
+			sudo systemctl restart nginx
+			<li>status</li>
+			sudo systemctl status nginx
+			<li>reload</li>
+			sudo systemctl reload nginx
+			<li>process search</li>
+			ps aux | grep 'redis'
+
+			<li>master进程 & worker进程</li>
+			1个master进程，N个worker进程
+			nginx -s signal
+			stop — fast shutdown
+			quit — graceful shutdown
+			reload — reloading the configuration file
+			reopen — reopening the log files
+
+			<li>/var/etc/nginx/nginx.conf</li>
+			http{
 			server{
-				listen 80;
+			listen 80;
 
-				location / {
-					/var/www/html
-				}
+			location / {
+			/var/www/html
 			}
-		}
+			}
+			}
 
-		<li>日志</li>
-		access.log and error.log 
-		/usr/local/nginx/logs or /var/log/nginx
-	</ol>
+			<li>日志</li>
+			access.log and error.log
+			/usr/local/nginx/logs or /var/log/nginx
+		</ol>
 
-	<h1>进程</h1>
-	<ol>
-		<li>process search</li>
-		ps aux | grep 'redis'
-		<li>所有进程内存、cpu使用情况</li>
-		top
-		htop
-		退出：q
-		帮助: h
-		<li>kill</li>
-		sudo kill 643
-	</ol>
+		<h1>进程</h1>
+		<ol>
+			<li>process search</li>
+			ps aux | grep 'redis'
+			<li>所有进程内存、cpu使用情况</li>
+			top
+			htop
+			退出：q
+			帮助: h
+			<li>kill</li>
+			sudo kill 643
+		</ol>
 
-	<h1>内存</h1>
-	RAM: Random Access Memory
-	<ol>
-		<li>总体内存使用情况</li>
-		free -m
-		<li>swamp space</li>
-		vmstat
-		<li></li>
-		less /proc/meminfo
-		less /proc/cpuinfo
-	</ol>
+		<h1>内存</h1>
+		RAM: Random Access Memory
+		<ol>
+			<li>总体内存使用情况</li>
+			free -m
+			<li>swamp space</li>
+			vmstat
+			<li></li>
+			less /proc/meminfo
+			less /proc/cpuinfo
+		</ol>
 
-	<h1>硬盘</h1>
+		<h1>硬盘</h1>
 
-	<ol>
-		<li>disk free</li>
-		// 默认block单位K
-		df
-		// block 单位G
-		df -BG
-		// human readable
-		df -h
+		<ol>
+			<li>disk free</li>
+			// 默认block单位K
+			df
+			// block 单位G
+			df -BG
+			// human readable
+			df -h
 
-		<li>swamp space</li>
-		vmstat
-		<li></li>
-		less /proc/meminfo
-		less /proc/cpuinfo
-	</ol>
+			<li>swamp space</li>
+			vmstat
+			<li></li>
+			less /proc/meminfo
+			less /proc/cpuinfo
+		</ol>
 
-	<h1>StackExchange.Redis</h1>
-	<ol>
-		<li>connect & get</li>
-		<pre class="prettyprint">
+		<h1>StackExchange.Redis</h1>
+		<ol>
+			<li>connect & get</li>
+			<pre class="prettyprint">
 var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379,password=Euler2019");
 IDatabase db = redis.GetDatabase();
 string value = db.StringGet("name");
 Console.WriteLine(value);
 	</pre>
 
-		<li>pub/sub message</li>
-		<pre class="prettyprint">
+			<li>pub/sub message</li>
+			<pre class="prettyprint">
 var redis = ConnectionMultiplexer.Connect("172.18.0.3:6379,password=Euler2019");
 ISubscriber sub = redis.GetSubscriber();
 sub.Subscribe("messages", (channel, message) =>
@@ -249,8 +279,8 @@ sub.Subscribe("messages").OnMessage(async channelMessage =>
 });
 sub.Publish("messages", "hello");
 	</pre>
-		<li>await</li>
-		<pre class="prettyprint">
+			<li>await</li>
+			<pre class="prettyprint">
 string value = "abcdefg";
 await db.StringSetAsync("mykey", value);
 ...
@@ -258,169 +288,169 @@ string value = await db.StringGetAsync("mykey");
 Console.WriteLine(value); // writes: "abcdefg"
 	</pre>
 
-		<li>fire-and-forgot</li>
-		<pre class="prettyprint">
+			<li>fire-and-forgot</li>
+			<pre class="prettyprint">
 db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
 	</pre>
-	</ol>
+		</ol>
 
-	<h1>redis</h1>
-	REmote DIctionary Server
-	<ol>
-		<li>install</li>
-		sudo apt install redis
+		<h1>redis</h1>
+		REmote DIctionary Server
+		<ol>
+			<li>install</li>
+			sudo apt install redis
 
-		<li><a href="https://www.learn2torials.com/a/how-to-uninstall-redis-server-from-ubuntu">uninstall</a></li>
-		<li>check version</li>
-		redis-cli --version
+			<li><a href="https://www.learn2torials.com/a/how-to-uninstall-redis-server-from-ubuntu">uninstall</a></li>
+			<li>check version</li>
+			redis-cli --version
 
-		<li>check status</li>
-		sudo systemctl status redis
+			<li>check status</li>
+			sudo systemctl status redis
 
-		q键退出
-		<li>start</li>
-		sudo systemctl start redis-server
+			q键退出
+			<li>start</li>
+			sudo systemctl start redis-server
 
-		<li>stop</li>
-		sudo systemctl stop redis
+			<li>stop</li>
+			sudo systemctl stop redis
 
-		<li>redis-cli</li>
-		redis-cli -h localhost -p 6379 -a 'Euler2019'
-		set name euler
-		get name
+			<li>redis-cli</li>
+			redis-cli -h localhost -p 6379 -a 'Euler2019'
+			set name euler
+			get name
 
-		<li>stop</li>
-		redis-cli shutdown nosave
+			<li>stop</li>
+			redis-cli shutdown nosave
 
-		<li>message broker</li>
-		send: rpush
-		receive: blpop
+			<li>message broker</li>
+			send: rpush
+			receive: blpop
 
-		<li>password</li>
-		requirepass Euler2019
-	</ol>
+			<li>password</li>
+			requirepass Euler2019
+		</ol>
 
-	<hr />
-	<h1>tmux</h1>
-	<ol>
-		<li>install</li>
-		sudo apt install tmux
+		<hr />
+		<h1>tmux</h1>
+		<ol>
+			<li>install</li>
+			sudo apt install tmux
 
-		<li>new unnamed session</li>
-		tmux
+			<li>new unnamed session</li>
+			tmux
 
-		<li>new named session</li>
-		tmux new -s GameServer
+			<li>new named session</li>
+			tmux new -s GameServer
 
-		<li>create new window</li>
-		ctrl+b c
+			<li>create new window</li>
+			ctrl+b c
 
-		<li>list all sessions</li>
-		//tmux session模式内
-		ctrl+b s
-		//不在tmux session模式内
-		tmux ls
+			<li>list all sessions</li>
+			//tmux session模式内
+			ctrl+b s
+			//不在tmux session模式内
+			tmux ls
 
-		<li>list all windows of all sessions</li>
-		ctrl+b w
+			<li>list all windows of all sessions</li>
+			ctrl+b w
 
-		<li>不同的用户，登录同一个session的同一个window，可以同步屏幕</li>
+			<li>不同的用户，登录同一个session的同一个window，可以同步屏幕</li>
 
-		<li>detach session</li>
-		ctrl+b d
+			<li>detach session</li>
+			ctrl+b d
 
-		<li>attach session</li>
-		tmux attach-session -t mysessionname
+			<li>attach session</li>
+			tmux attach-session -t mysessionname
 
-		// attach last session
-		tmux a
+			// attach last session
+			tmux a
 
-		<li>kill session</li>
-		tmux kill-session
+			<li>kill session</li>
+			tmux kill-session
 
-		<li>panel：切割window</li>
-		ctrl+b %
-		ctrl+b "
-		// flash panel number
-		ctrl+b q
+			<li>panel：切割window</li>
+			ctrl+b %
+			ctrl+b "
+			// flash panel number
+			ctrl+b q
 
-		<li>rename session</li>
-		tmux rename-session login
-		ctrl+b $
-	</ol>
+			<li>rename session</li>
+			tmux rename-session login
+			ctrl+b $
+		</ol>
 
-	<hr />
-	<h1>fish</h1>
-	<ol>
-		<li>install</li>
-		sudo apt install fish
-		<li>auto suggestion</li>
-		accept all: right arrow
-		accept one word: ctrl + right arrow
-	</ol>
+		<hr />
+		<h1>fish</h1>
+		<ol>
+			<li>install</li>
+			sudo apt install fish
+			<li>auto suggestion</li>
+			accept all: right arrow
+			accept one word: ctrl + right arrow
+		</ol>
 
-	<hr />
-	<h1>ubuntu</h1>
-	龙归大海，最终还是步入linux，原因很现实：运维便利、节省成本
-	<ol>
-		<li>cpu core查询</li>
-		lscpu | less
+		<hr />
+		<h1>ubuntu</h1>
+		龙归大海，最终还是步入linux，原因很现实：运维便利、节省成本
+		<ol>
+			<li>cpu core查询</li>
+			lscpu | less
 
-		<li>下载</li>
-		wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
+			<li>下载</li>
+			wget https://github.com/cheat/cheat/releases/download/4.0.1/cheat-linux-amd64.gz
 
-		<li>权限控制</li>
-		chmod
-		三大权限:Read、Write、eXcute
-		三类用户:owner、group、others
+			<li>权限控制</li>
+			chmod
+			三大权限:Read、Write、eXcute
+			三类用户:owner、group、others
 
-		<li>copy file</li>
-		cp
+			<li>copy file</li>
+			cp
 
-		<li>move/rename file/directory</li>
-		mv
+			<li>move/rename file/directory</li>
+			mv
 
-		<li>print system information</li>
-		uname
+			<li>print system information</li>
+			uname
 
-		<li>create directory</li>
-		mkdir
+			<li>create directory</li>
+			mkdir
 
-		<li>creae a file</li>
-		touch test.txt
+			<li>creae a file</li>
+			touch test.txt
 
-		<li>帮助文档</li>
-		man ls
-		// search key word
-		man -k fuck
+			<li>帮助文档</li>
+			man ls
+			// search key word
+			man -k fuck
 
-		//
-		whatis ls
-		//
-		whereis ls
-		<li>list content of the directory</li>
-		ls -l
-		// including hiden files
-		ls -a
-		<li>see file is a file or a directory</li>
-		file filename
-		<li>linux is case sensitive</li>
-		<li>pwd</li>
-		print work directory
+			//
+			whatis ls
+			//
+			whereis ls
+			<li>list content of the directory</li>
+			ls -l
+			// including hiden files
+			ls -a
+			<li>see file is a file or a directory</li>
+			file filename
+			<li>linux is case sensitive</li>
+			<li>pwd</li>
+			print work directory
 
-		<li>hiden file</li>
-		.XXX
+			<li>hiden file</li>
+			.XXX
 
-		<li>打开防火墙端口1022</li>
-		iptables -I INPUT -p tcp --dport 1022 -j ACCEP
+			<li>打开防火墙端口1022</li>
+			iptables -I INPUT -p tcp --dport 1022 -j ACCEP
 
-		<li>升级ubuntu版本</li>
-		sudo apt update & sudo apt upgrade & sudo do-release-upgrade
+			<li>升级ubuntu版本</li>
+			sudo apt update & sudo apt upgrade & sudo do-release-upgrade
 
-		<li>sql server</li>
-		<a
-			href="https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-linux-ver15">sql
-			server on linux</a>
+			<li>sql server</li>
+			<a
+				href="https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-linux-ver15">sql
+				server on linux</a>
 
 		<li>migrate sql server from windows to linux</li>
 		first, install sql server tools
@@ -429,86 +459,86 @@ db.StringIncrement(pageKey, flags: CommandFlags.FireAndForget);
 		sudo apt-get update
 		sudo apt-get install mssql-tools unixodbc-dev
 		sudo apt-get update
-		sudo apt-get install mssql-tools
-		echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
-		echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
-		source ~/.bashrc
+			sudo apt-get install mssql-tools
+			echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+			echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+			source ~/.bashrc
 
-		second, restore
-		sqlcmd -S localhost -U SA
+			second, restore
+			sqlcmd -S localhost -U SA
 
-		--逐行复制，甚不便
-		RESTORE DATABASE Web
-		FROM DISK = '/var/opt/mssql/backup/Web.bak'
-		WITH MOVE 'Web' TO '/var/opt/mssql/data/Web.mdf',
-		MOVE 'Web_Log' TO '/var/opt/mssql/data/Web_Log.ldf'
-		GO
+			--逐行复制，甚不便
+			RESTORE DATABASE Web
+			FROM DISK = '/var/opt/mssql/backup/Web.bak'
+			WITH MOVE 'Web' TO '/var/opt/mssql/data/Web.mdf',
+			MOVE 'Web_Log' TO '/var/opt/mssql/data/Web_Log.ldf'
+			GO
 
-		RESTORE DATABASE DS
-		FROM DISK = '/var/opt/mssql/backup/DS.bak'
-		WITH MOVE 'DS' TO '/var/opt/mssql/data/DS.mdf',
-		MOVE 'DS_Log' TO '/var/opt/mssql/data/DS_Log.ldf'
-		GO
+			RESTORE DATABASE DS
+			FROM DISK = '/var/opt/mssql/backup/DS.bak'
+			WITH MOVE 'DS' TO '/var/opt/mssql/data/DS.mdf',
+			MOVE 'DS_Log' TO '/var/opt/mssql/data/DS_Log.ldf'
+			GO
 
-		RESTORE DATABASE DSLog
-		FROM DISK = '/var/opt/mssql/backup/DSLog.bak'
-		WITH MOVE 'DSLog' TO '/var/opt/mssql/data/DSLog.mdf',
-		MOVE 'DSLog_Log' TO '/var/opt/mssql/data/DSLog_Log.ldf'
-		GO
-		<li>删除文件</li>
-		rm test.txt
+			RESTORE DATABASE DSLog
+			FROM DISK = '/var/opt/mssql/backup/DSLog.bak'
+			WITH MOVE 'DSLog' TO '/var/opt/mssql/data/DSLog.mdf',
+			MOVE 'DSLog_Log' TO '/var/opt/mssql/data/DSLog_Log.ldf'
+			GO
+			<li>删除文件</li>
+			rm test.txt
 
-		<li>删除文件夹</li>
-		sudo rm -r -f testdir
+			<li>删除文件夹</li>
+			sudo rm -r -f testdir
 
-		<li>移动文件夹or重命名文件夹</li>
-		mv euler happy
+			<li>移动文件夹or重命名文件夹</li>
+			mv euler happy
 
-		<li>跨操作系统共享目录</li>
-		samba
-		sudo apt update
-		sudo apt install samba
+			<li>跨操作系统共享目录</li>
+			samba
+			sudo apt update
+			sudo apt install samba
 
-		sudo ufw allow samba
+			sudo ufw allow samba
 
-		设置密码，用户必须是系统用户名，密码与系统用户名登录密码不同
-		sudo smbpasswd -a username
-		sudo vim /etc/samba/smb.conf
-
-
-		sudo service smbd restart
-
-		<li><a href="https://www.vim.org/">vim编辑器</a></li>
-
-		<li>sql server </li>
-		SQL Server 2019
-		Enterprise：HMWJ3-KY3J2-NMVD7-KG4JR-X2G8G
-		Enterprise Core：2C9JR-K3RNG-QD4M4-JQ2HR-8468J
-		Strandard：PMBDC-FXVM3-T777P-N4FY8-PKFF4
-		Web：33QQK-WWQNB-G6T46-C86YB-TX2PH
+			设置密码，用户必须是系统用户名，密码与系统用户名登录密码不同
+			sudo smbpasswd -a username
+			sudo vim /etc/samba/smb.conf
 
 
-		SQL Server 2017
-		Enterprise：TDKQD-PKV44-PJT4N-TCJG2-3YJ6B
-		Enterprise Core：6GPYM-VHN83-PHDM2-Q9T2R-KBV83
-		Strandard：PHDV4-3VJWD-N7JVP-FGPKY-XBV89
-		Web：WV79P-7K6YG-T7QFN-M3WHF-37BXC
+			sudo service smbd restart
+
+			<li><a href="https://www.vim.org/">vim编辑器</a></li>
+
+			<li>sql server </li>
+			SQL Server 2019
+			Enterprise：HMWJ3-KY3J2-NMVD7-KG4JR-X2G8G
+			Enterprise Core：2C9JR-K3RNG-QD4M4-JQ2HR-8468J
+			Strandard：PMBDC-FXVM3-T777P-N4FY8-PKFF4
+			Web：33QQK-WWQNB-G6T46-C86YB-TX2PH
 
 
-		SQL Server 2016
-		Enterprise：MDCJV-3YX8N-WG89M-KV443-G8249
-		Enterprise Core：TBR8B-BXC4Y-298NV-PYTBY-G3BCP
-		Standard：B9GQY-GBG4J-282NY-QRG4X-KQBCR
-		Web：BXJTY-X3GNH-WHTHG-8V3XK-T8243
-	</ol>
+			SQL Server 2017
+			Enterprise：TDKQD-PKV44-PJT4N-TCJG2-3YJ6B
+			Enterprise Core：6GPYM-VHN83-PHDM2-Q9T2R-KBV83
+			Strandard：PHDV4-3VJWD-N7JVP-FGPKY-XBV89
+			Web：WV79P-7K6YG-T7QFN-M3WHF-37BXC
 
-	<hr />
-	<h1>dotnet core 的Task</h1>
-	<ol>
-		<li>异步特性：Task在线程池异步执行，而非主线程，这样就不会造成主线程阻塞</li>
-		<li>适用场合：I/O密集型、UI操作、CPU密集型</li>
-		<li>自实现Task方法</li>
-		<pre class="prettyprint">
+
+			SQL Server 2016
+			Enterprise：MDCJV-3YX8N-WG89M-KV443-G8249
+			Enterprise Core：TBR8B-BXC4Y-298NV-PYTBY-G3BCP
+			Standard：B9GQY-GBG4J-282NY-QRG4X-KQBCR
+			Web：BXJTY-X3GNH-WHTHG-8V3XK-T8243
+		</ol>
+
+		<hr />
+		<h1>dotnet core 的Task</h1>
+		<ol>
+			<li>异步特性：Task在线程池异步执行，而非主线程，这样就不会造成主线程阻塞</li>
+			<li>适用场合：I/O密集型、UI操作、CPU密集型</li>
+			<li>自实现Task方法</li>
+			<pre class="prettyprint">
 public static Task<int> ReadTask(this Stream stream, byte[] buffer, int offset, int count, object state)
 {
 	var tcs = new TaskCompletionSource<int>();
@@ -520,8 +550,8 @@ public static Task<int> ReadTask(this Stream stream, byte[] buffer, int offset, 
 	return tcs.Task;
 }
 		</pre>
-		<li>Task.Run cpu密集型</li>
-		<pre class="prettyprint">
+			<li>Task.Run cpu密集型</li>
+			<pre class="prettyprint">
 internal Task<Bitmap> RenderAsync(ImageData data, CancellationToken cancellationToken)
 {
 	  return Task.Run(() =>
@@ -539,8 +569,8 @@ internal Task<Bitmap> RenderAsync(ImageData data, CancellationToken cancellation
 	  }, cancellationToken);
 }
 </pre>
-		<li>I/O-bound tasks</li>
-		<pre class="prettyprint">
+			<li>I/O-bound tasks</li>
+			<pre class="prettyprint">
 public static Task<DateTimeOffset> Delay(int millisecondsTimeout)
 {
 	TaskCompletionSource<DateTimeOffset> tcs = null;
@@ -574,181 +604,201 @@ public static async Task Poll(Uri url, CancellationToken cancellationToken, IPro
 }
 </pre>
 
-		<li>cpu-bound: Task.Run 利用多核</li>
-		<pre class="prettyprint">
+			<li>cpu-bound: Task.Run 利用多核</li>
+			<pre class="prettyprint">
 			//This method is CPU-bound.
 			void DoWork();	
 
 			//You would call using Task.Run:
 			await Task.Run(() => DoWork());		
 		</pre>
-		<li>i/o-bound: await 避免主线程阻塞等待</li>
-	</ol>
+			<li>i/o-bound: await 避免主线程阻塞等待</li>
+		</ol>
 
-	<hr />
-	<h1>dotnet core 生成 windows service</h1>
-	适用于各种开机自启动服务进程
-	<ol>
-		<li>dotnet publish -c Release</li>
-		<li>sc.exe create servicecenter binPath=C:\servicecenter.exe</li>
-		<li>sc.exe start servicecenter</li>
-		<li>sc.exe stop servicecenter</li>
-		<li>sc.exe delete servicecenter</li>
-		<li>sc.exe query servicecenter</li>
-	</ol>
-	<hr />
-	<h1>重构服务器</h1>
-	主体思想：c++切换为c#；lib切换为进程；服务为所有区共享。
-	<ol>
-		<li>中心服，负责消息转发</li>
-		<li>网关服，负责客户端socket连接</li>
-		<li>聊天服</li>
-		<li>排行榜</li>
-		<li>日志服</li>
-		<li>邮件服</li>
-		<li>场景服</li>
-		<li>好友服</li>
-		<li>商店服</li>
-		<li>活动服</li>
-		<li>结婚服</li>
-		<li>组队服</li>
-		<li>数据服</li>
-	</ol>
-	<hr />
-	<h1>IIS下部署https</h1>
-	<ol>
-		<li>https: Hyper Text Transfer Protocol over SecureSocket Layer</li>
-		<li>TLS(Transport Layer Security)/SSL(Secure Socket Layer)</li>
-		<li>申请SSL证书，有免费和收费的两种，小公司用免费的即可</li>
-		本次在<a href="https://www.ucloud.cn/">uclound</a>申请免费ssl
-		<li>在<a href="https://myssl.com/cert_convert.html">转换页面</a>，导入公钥、私钥，格式从PEM转换为PKCS12，得到pfx后缀文件</li>
-		<li>web服务器，复制pfx文件到本地，命令行输入mmc，File菜单Add or Remove Snap-ins，左侧选择Certificates，点击Add，Computer account</li>
-		<li>左侧树形菜单，Certificates->Personal->Certificates，右键菜单 All Tasks->Import，选择pfx文件，password未填写，一路默认</li>
-		<li>IIS Manager -> 右键 Site -> Edit Bindings -> Add -> Type 选择https -> ssl certificates 选择上面安装的证书</li>
-		<li>记得开放https的端口，默认443，如同http的默认端口80</li>
-		<li>打开浏览器测试</li>
-	</ol>
+		<hr />
+		<h1>dotnet core 生成 windows service</h1>
+		适用于各种开机自启动服务进程
+		<ol>
+			<li>dotnet publish -c Release</li>
+			<li>sc.exe create servicecenter binPath=C:\servicecenter.exe</li>
+			<li>sc.exe start servicecenter</li>
+			<li>sc.exe stop servicecenter</li>
+			<li>sc.exe delete servicecenter</li>
+			<li>sc.exe query servicecenter</li>
+		</ol>
+		<hr />
+		<h1>重构服务器</h1>
+		主体思想：c++切换为c#；lib切换为进程；服务为所有区共享。
+		<ol>
+			<li>中心服，负责消息转发</li>
+			<li>网关服，负责客户端socket连接</li>
+			<li>聊天服</li>
+			<li>排行榜</li>
+			<li>日志服</li>
+			<li>邮件服</li>
+			<li>场景服</li>
+			<li>好友服</li>
+			<li>商店服</li>
+			<li>活动服</li>
+			<li>结婚服</li>
+			<li>组队服</li>
+			<li>数据服</li>
+		</ol>
+		<hr />
+		<h1>IIS下部署https</h1>
+		<ol>
+			<li>https: Hyper Text Transfer Protocol over SecureSocket Layer</li>
+			<li>TLS(Transport Layer Security)/SSL(Secure Socket Layer)</li>
+			<li>申请SSL证书，有免费和收费的两种，小公司用免费的即可</li>
+			本次在<a href="https://www.ucloud.cn/">uclound</a>申请免费ssl
+			<li>在<a href="https://myssl.com/cert_convert.html">转换页面</a>，导入公钥、私钥，格式从PEM转换为PKCS12，得到pfx后缀文件</li>
+			<li>web服务器，复制pfx文件到本地，命令行输入mmc，File菜单Add or Remove Snap-ins，左侧选择Certificates，点击Add，Computer account</li>
+			<li>左侧树形菜单，Certificates->Personal->Certificates，右键菜单 All Tasks->Import，选择pfx文件，password未填写，一路默认</li>
+			<li>IIS Manager -> 右键 Site -> Edit Bindings -> Add -> Type 选择https -> ssl certificates 选择上面安装的证书</li>
+			<li>记得开放https的端口，默认443，如同http的默认端口80</li>
+			<li>打开浏览器测试</li>
+		</ol>
 
-	<hr />
-	<h1>加密算法-对称加密</h1>
-	加密和解密，都是用的同一个密钥。
-	<ol>
-		<li>DES</li>
-		Data Encryption Standard
-		<li>AES</li>
-		<li>IDEA</li>
-	</ol>
+		<hr />
+		<h1>加密算法-对称加密</h1>
+		加密和解密，都是用的同一个密钥。
+		<ol>
+			<li>DES</li>
+			Data Encryption Standard
+			<li>AES</li>
+			<li>IDEA</li>
+		</ol>
 
-	<hr />
-	<h1>加密算法-非对称加密</h1>
-	加密和解密，需要用不同的密钥：公钥和私钥，二把钥匙都可以用于加密或者解密。
-	<ol>
-		<li>RSA</li>
-		<li>DSA</li>
-	</ol>
+		<hr />
+		<h1>加密算法-非对称加密</h1>
+		加密和解密，需要用不同的密钥：公钥和私钥，二把钥匙都可以用于加密或者解密。
+		<ol>
+			<li>RSA</li>
+			<li>DSA</li>
+		</ol>
 
-	<hr />
-	<h1>硬盘性能量化-Windows System Assessment Tool</h1>
-	winsat disk -drive d
+		<hr />
+		<h1>硬盘性能量化-Windows System Assessment Tool</h1>
+		winsat disk -drive d
 
-	<hr />
-	<h1>apk修改packagename</h1>
-	<ol>
-		<li>apktool</li>
-		https://ibotpeaches.github.io/Apktool/install/
+		<hr />
+		<h1>apk修改packagename</h1>
+		<ol>
+			<li>apktool</li>
+			https://ibotpeaches.github.io/Apktool/install/
 
-		<li>解apk</li>
-		java -jar apktool.jar d 仙境苍穹.apk -o huawei
+			<li>解apk</li>
+			java -jar apktool.jar d 仙境苍穹.apk -o huawei
 
-		<li>打apk</li>
-		java -jar apktool.jar b huawei -o ./仙境苍穹huawei.apk
+			<li>打apk</li>
+			java -jar apktool.jar b huawei -o ./仙境苍穹huawei.apk
 
-		<li>生成key</li>
-		uc huawei oppo vivo 可以采用以下key
-		./keytool.exe -genkey
-		密码 euler2019
-		名字 euler
+			<li>生成key</li>
+			uc huawei oppo vivo 可以采用以下key
+			./keytool.exe -genkey
+			密码 euler2019
+			名字 euler
 
-		应用宝需要以下key
-		./keytool.exe -genkey -alias myaliassha1 -sigalg SHA1withRSA -keyalg RSA
-
-
-		<li>查看alias</li>
-		./keytool.exe -keystore euler.keystore -list -v
-
-		<li>签名</li>
-		uc huawei oppo vivo
-		.\jarsigner.exe -verbose -keystore euler.keystore -signedjar 仙境苍穹huawei_s.apk 仙境苍穹huawei.apk mykey
-
-		应用宝
-		.\jarsigner.exe -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore euler2.keystore -storepass euler2019
-		tencent.apk myaliassha1
-	</ol>
-	<hr />
-	<h1>部署DB服务器</h1>
-	<ol>
-		<li>复制并安装SQLServer2016</li>
-		en_sql_server_2016_enterprise_with_service_pack_1_x64_dvd_9542382.iso
-		设置sa密码Euler2019
-		修改端口为38065
-		red gate sql compare 同步数据库
-		web 全局配置
-		collation Chinese_PRC_CI_AS
-
-		gd 策划配置
-
-		ds 玩家数据
-
-		dslog 玩家日志
-
-		gm 运维后台
+			应用宝需要以下key
+			./keytool.exe -genkey -alias myaliassha1 -sigalg SHA1withRSA -keyalg RSA
 
 
-		<li>TotalCommander</li>
-		<li>BeyondCompare</li>
-		<li>Server Manager - Add roles and features - Web Server(IIS)</li>
-		<li>Install the .NET Core Hosting Bundle</li>
-		dotnet-hosting-2.2.6-win.exe，安装成功之后，IIS的modules里，可以看到AspNetCoreModule
-		以及AspNetCoreModuleV2
-		<li>TortoiseSVN</li>
-		release
-		release
-		https://59.111.63.232/svn/deerdev/Web/bin
-		拉取游戏的web服务
-		<li>挨个配置Web服务，测试URL，如有报错，查看logs是否有日志输出</li>
-		monitor读取本机进程需要权限设置,IIS - Application Pools - Identity设置为LocalSystem
+			<li>查看alias</li>
+			./keytool.exe -keystore euler.keystore -list -v
 
-	</ol>
-	<hr />
-	<h1>svn提交注释字数限制</h1>
-	<pre class="prettyprint">
-@echo off  
-::      
-:: Stops commits that have empty log messages.  
-::  
-  
-@echo off  
-  
-setlocal  
-  
-rem Subversion sends through the path to the repository and transaction id  
-set REPOS=%1  
-set TXN=%2  
-  
-rem check for an empty log message, at least 6 characters
-svnlook log %REPOS% -t %TXN% | findstr "......" > nul
-if %errorlevel% gtr 0  (goto err) else exit 0  
-  
-:err  
-echo. 1>&2  
-echo 抱歉,由于您没有正确填写Log或者Log字数过少,系统拒绝提交！ 1>&2   
-exit 1	
-</pre>
+			<li>签名</li>
+			uc huawei oppo vivo
+			.\jarsigner.exe -verbose -keystore euler.keystore -signedjar 仙境苍穹huawei_s.apk 仙境苍穹huawei.apk mykey
+
+			应用宝
+			.\jarsigner.exe -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore euler2.keystore -storepass euler2019
+			tencent.apk myaliassha1
+		</ol>
+		<hr />
+		<h1>部署DB服务器</h1>
+		<ol>
+			<li>复制并安装SQLServer2016</li>
+			en_sql_server_2016_enterprise_with_service_pack_1_x64_dvd_9542382.iso
+			设置sa密码Euler2019
+			修改端口为38065
+			red gate sql compare 同步数据库
+			web 全局配置
+			collation Chinese_PRC_CI_AS
+
+			gd 策划配置
+
+			ds 玩家数据
+
+			dslog 玩家日志
+
+			gm 运维后台
 
 
-	<hr />
-	<h1>创建角色的人声</h1>
-	<pre class="prettyprint linenums">
+			<li>TotalCommander</li>
+			<li>BeyondCompare</li>
+			<li>Server Manager - Add roles and features - Web Server(IIS)</li>
+			<li>Install the .NET Core Hosting Bundle</li>
+			dotnet-hosting-2.2.6-win.exe，安装成功之后，IIS的modules里，可以看到AspNetCoreModule
+			以及AspNetCoreModuleV2
+			<li>TortoiseSVN</li>
+			release
+			release
+			https://59.111.63.232/svn/deerdev/Web/bin
+			拉取游戏的web服务
+			<li>挨个配置Web服务，测试URL，如有报错，查看logs是否有日志输出</li>
+			monitor读取本机进程需要权限设置,IIS - Application Pools - Identity设置为LocalSystem
+
+		</ol>
+		<hr />
+		<h1>svn</h1>
+		<ol>
+			<li>查看svn服务器是否正常运行</li>
+			ps -ef | grep svnserve
+			
+			<li>wndows迁移svn到linux</li>
+			<ol>
+				<li>导出dump文件</li>
+				windows下，运行cmd，千万别用powershell，有坑：
+				svnadmin dump d:\Repositories\deerdev > d:\deerdev_20200712.dump
+				
+				<li>复制dump文件到linux，并导入</li>
+				svnadmin load /svnreposities/deerdev < /root/deerdev_20200712.dump
+
+				<li>checkout</li>
+				svn://ubuntu/deerdev
+			</ol>
+
+			<li>svn提交注释字数限制</li>
+			<pre class="prettyprint">
+			@echo off  
+			::      
+			:: Stops commits that have empty log messages.  
+			::  
+			  
+			@echo off  
+			  
+			setlocal  
+			  
+			rem Subversion sends through the path to the repository and transaction id  
+			set REPOS=%1  
+			set TXN=%2  
+			  
+			rem check for an empty log message, at least 6 characters
+			svnlook log %REPOS% -t %TXN% | findstr "......" > nul
+			if %errorlevel% gtr 0  (goto err) else exit 0  
+			  
+			:err  
+			echo. 1>&2  
+			echo 抱歉,由于您没有正确填写Log或者Log字数过少,系统拒绝提交！ 1>&2   
+			exit 1	
+			</pre>
+
+		</ol>
+
+
+		<hr />
+		<h1>创建角色的人声</h1>
+		<pre class="prettyprint linenums">
 function UIActor:ShowModel(actorData)
 	local vocation = (UIActor.createActor.curVocation - 1) * 2 + UIActor.createActor.curSex
 	local vocationScheme = Schemes.SkillVocation.Get(vocation)
@@ -760,9 +810,9 @@ end
 
 	</pre>
 
-	<hr />
-	<h1>任务栏</h1>
-	<pre class="prettyprint linenums">
+		<hr />
+		<h1>任务栏</h1>
+		<pre class="prettyprint linenums">
 --UITaskShowItem.lua
 o.OnClickContentObj = function ( go1 )
 	local clientStatus = self.taskItem.GetClientStatus and self.taskItem:GetClientStatus() or ECTaskStatus.Null
@@ -920,9 +970,9 @@ function TaskNPC:TriggerEvent()
 end
 </pre>
 
-	<hr />
-	<h1>引导</h1>
-	<pre class="prettyprint">
+		<hr />
+		<h1>引导</h1>
+		<pre class="prettyprint">
 GuideManager.EventType =
 {
 	UpdateEvent             =           1,              --升级事件
@@ -1020,9 +1070,9 @@ end
 EventManager.Fire(EventID.CheckGuideEvent,5)
 
 </pre>
-	<hr />
-	<h1>NPC语音</h1>
-	<pre class="prettyprint">
+		<hr />
+		<h1>NPC语音</h1>
+		<pre class="prettyprint">
 NPCTaskTalkUI.Init = function (self, caller, task )
 	local npc = NPCManager.npcs[caller.npcScheme.ID]
 	local npcScheme = caller.npcScheme
@@ -1054,16 +1104,16 @@ function NPCTaskTalkUI.HeroHead( isNpc, fileStr, volume, str)
 end
 </pre>
 
-	<hr />
-	<h1>概率</h1>
-	<hr />
-	<h2>均匀概率</h2>
-	<hr />
-	<h2>正态概率</h2>
+		<hr />
+		<h1>概率</h1>
+		<hr />
+		<h2>均匀概率</h2>
+		<hr />
+		<h2>正态概率</h2>
 
-	<hr />
-	<h1>主线任务</h1>
-	<pre class="prettyprint">
+		<hr />
+		<h1>主线任务</h1>
+		<pre class="prettyprint">
 bool CTaskPart::Create(IEntity* pMaster, LPCSTR pContext, int nLen)
 {
 	IEventEngine* pEventEngine = Global->GetEventEngine();
@@ -1359,9 +1409,9 @@ function NewBranchTask(actorID, newTaskID, newRound, newStep, notSync )
 end
 
 </pre>
-	<hr />
-	<h2>第一个主线任务</h2>
-	<pre class="prettyprint">
+		<hr />
+		<h2>第一个主线任务</h2>
+		<pre class="prettyprint">
 function EntityModule.Handle(action, data)
 	if action == EntityMessage_pb.MSG_ENTITY_SYNCTASKITEM then
 			local m = EntityMessage_pb.SC_Entity_SyncTaskItem()
@@ -1479,9 +1529,9 @@ local function CommonWantToAccept( task )
 end
 
 </pre>
-	<hr />
-	<h1>角色出生副本</h1>
-	<pre class="prettyprint linenums">
+		<hr />
+		<h1>角色出生副本</h1>
+		<pre class="prettyprint linenums">
 bool CTerminalModule::Create()
 {
 	RegisterMessage(MSG_MODULEID_LOGIN, this);
@@ -1656,9 +1706,9 @@ function EnterEctype(actorID, ectypeID)
 end
 </pre>
 
-	<hr />
-	<h1>客户端热更机制</h1>
-	<pre class="prettyprint linenums">
+		<hr />
+		<h1>客户端热更机制</h1>
+		<pre class="prettyprint linenums">
 //Bootstrap.cs
 public class Bootstrap : MonoBehaviour
 {
@@ -1785,7 +1835,7 @@ public class Bootstrap : MonoBehaviour
 	}
 }
 </pre>
-	<pre class="prettyprint linenums">
+		<pre class="prettyprint linenums">
 public IEnumerator OnLoadAB()
 {
 	for (; ; )
@@ -1889,7 +1939,7 @@ private void Go()
 	gameObject.AddComponent<LuaMonoBehavior>().RunLuaFile("SceneManager");
 }
 </pre>
-	<pre class="prettyprint">
+		<pre class="prettyprint">
 --main.lua
 json = require("json")
 require "protobuf/protobuf"
@@ -1937,7 +1987,7 @@ require "OtherPlayerInfoDataCenter"
 require "OperatingActivityDataCenter"
 require "GlobalGameDataCenter"
 </pre>
-	<pre class="prettyprint linenums">
+		<pre class="prettyprint linenums">
 --SceneManager.lua
 --初始化 载入第一个场景
 function SceneManager.Awake()
@@ -1950,470 +2000,470 @@ function SceneManager.Awake()
 	end
 end
 </pre>
-	<hr />
-	<h1>运营</h1>
-	素材
-	icon
-	loading
-	logo
-	场景原画
-	角色原画
-	系统UI截图 例如 升星 坐骑 羽翼 宠物 等
-	特色截图 例如 国战 帮战 副本 boss战
-
-	<hr />
-	<h1 id="monster">数值</h1>
-	mmorpg的玩家追求的是价值，而非玩法
-	参考 张五常的《经济解释》，有假设，有验证，都归依于简单的假设
-	统一度量衡，以元宝diamond核算价值（物品，技能，玩法，活动）
-	<h2>战斗数值</h2>
-	另一个假设，以战力power来衡量战斗属性，假设 power/diamond = 1，此比例系数可变
-	\[
-	power = attack + defense
-	\]
-	攻击(attack)和防御(defense)对于战力的贡献，是否权重一致？即
-	\[
-	\frac{attack}{defense}系数是否为一？还是可变
-	\]
-	如何衡量基础战斗属性？
-	以伤害公式为黑盒子，每点战斗属性的变化，对攻击或者防御的贡献是多少？进而换算成战力，进而得到元宝
-
-	<h2>经济数值</h2>
-	道理一也！
-	物品（道具）对战斗数值的影响几何？进而可以换算为元宝！
-	计划经济也！是否可以实行市场经济，物价几何，交由玩家决定？
-	<ul>
-		<li>
-			元宝
-			<p>基本单位，1</p>
-		</li>
-		<li>
-			战力
-			<p>元宝战力比，可变，假设即可，例如1/6，即一元宝可以兑换6战力</p>
-		</li>
-		<li>
-			绑定元宝
-			<p>可变，假设即可，例如0.5</p>
-		</li>
-		<li>
-			经验
-			<p>
-				经验满了可以升级，战力会提升，基于<a id="#PlayerBaseProp">PlayerBaseProp.csv</a>，随着等级的提升，
-				需要的经验越来越多，呈指数级上升，而每升一级提升的战力几乎不变，所以经验的价值呈对数级下降
-			</p>
-		</li>
-		<li>
-			体力
-			<p>
-			</p>
-		</li>
-		<li>
-			银两
-			<p>
-			</p>
-		</li>
-		<li>
-			修为
-			<p>
-			</p>
-		</li>
-		<li>
-			帮贡
-			<p>
-			</p>
-		</li>
-		<li>
-			声望
-			<p>
-			</p>
-		</li>
-		<li>
-			升星石
-			<p>
-				升星石价值 = 每次升星增加的战力 x 概率 / 升星石数量 / 元宝战力比
-			</p>
-		</li>
-		<li>
-			强化石
-			<p>
-			</p>
-		</li>
-		<li>
-			神兵升星石
-			<p>
-			</p>
-		</li>
-		<li>
-			神兵进阶石
-			<p>
-			</p>
-		</li>
-		<li>
-			洗练石
-			<p>
-			</p>
-		</li>
-		<li>
-			精炼石
-			<p>
-			</p>
-		</li>
-		<li>
-			精炼石
-			<p>
-			</p>
-		</li>
-		<li>
-			坐骑进阶丹
-			<p>
-			</p>
-		</li>
-		<li>
-			仙器进阶丹
-			<p>
-			</p>
-		</li>
-		<li>
-			突破宝箱
-			<p>
-			</p>
-		</li>
-	</ul>
-	<h3>运营活动</h3>
-	<hr />
-	<h1 id="monster">摆怪</h1>
-	monster/*.csv
-	<ul>
-		<li>ID</li>
-		<li>MonsterID</li>
-		<li>Type</li>
-		<li>BirthDelay</li>
-		<li>BirthPositonX</li>
-		<li>BirthPositonY</li>
-		<li>BirthPositonZ</li>
-		<li>Face</li>
-	</ul>
-	<hr />
-	<h1 id="Skill">技能</h1>
-	Skill.csv
-	<ul>
-		<li>ID</li>
-		<li>Type</li>
-		<li>Name</li>
-		<li>Tips</li>
-		<li>AttackAnimation</li>
-		<li>BehitAnimation</li>
-		<li>ConditionParameter2</li>
-		<li>Probability</li>
-		<li>Frequency</li>
-		<li>Action</li>
-	</ul>
-	符文，加buff
-	SkillRune.csv
-	<ul>
-		<li>ID</li>
-		<li>Name</li>
-		<li>Tips</li>
-		<li>Level</li>
-		<li>BuffID</li>
-		<li>BuffLevel</li>
-		<li>BuffRate</li>
-		<li>LearnGoodsID</li>
-		<li>LearnGoodsNum</li>
-	</ul>
-	心法
-	SkillPassive.csv
-	<ul>
-		<li>ID</li>
-		<li>Type</li>
-		<li>Level</li>
-		<li>Tips</li>
-		<li>HP</li>
-		<li>Attack</li>
-		<li>Defense</li>
-		<li>PhysicsAttack</li>
-		<li>MagicAttack</li>
-		<li>PhysicsDefense </li>
-		<li>MagicDefense </li>
-		<li>CriticalStrike </li>
-		<li>AntiCriticalStrike </li>
-		<li>Parry </li>
-		<li>AntiParry </li>
-		<li>Dodge </li>
-		<li>Hit </li>
-		<li>Armor </li>
-		<li>AntiArmor </li>
-		<li>DamageReduction </li>
-		<li>DamageAdd </li>
-		<li>MoveSpeed </li>
-		<li>AttackDefense </li>
-	</ul>
-	天赋
-	SkillTalent.csv
-	<ul>
-		<li>ID</li>
-		<li>Type</li>
-		<li>Level</li>
-		<li>Tips</li>
-		<li>Name</li>
-		<li>HP</li>
-		<li>Attack</li>
-		<li>Defense</li>
-		<li>PhysicsAttack</li>
-		<li>MagicAttack</li>
-		<li>PhysicsDefense </li>
-		<li>MagicDefense </li>
-		<li>CriticalStrike </li>
-		<li>AntiCriticalStrike </li>
-		<li>Parry </li>
-		<li>AntiParry </li>
-		<li>Dodge </li>
-		<li>Hit </li>
-		<li>Armor </li>
-		<li>AntiArmor </li>
-		<li>DamageReduction </li>
-		<li>DamageAdd </li>
-		<li>MoveSpeed </li>
-		<li>AttackDefense </li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1 id="AIEvent">AI</h1>
-	AIEvent.csv
-	<ul>
-		<li>ID</li>
-		<li>Tips</li>
-		<li>Event</li>
-		<li>EventParameter</li>
-		<li>Condition</li>
-		<li>ConditionParameter1</li>
-		<li>ConditionParameter2</li>
-		<li>Probability</li>
-		<li>Frequency</li>
-		<li>Action</li>
-	</ul>
-	AIConfig.csv
-	<ul>
-		<li>ID</li>
-		<li>Tips</li>
-		<li>Skillid</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1 id="Creature">采集</h1>
-	SCollecteCoor.csv
-	SCollectPb.csv
-	SCollecteRe.csv
-	ActivityCollect.csv
-	EquipCollect.csv
-	<ul>
-		<li>ID</li>
-		<li>Name</li>
-		<li>Prefab</li>
-		<li>Scale</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1 id="Creature">生物表</h1>
-	Creature.csv
-	<ul>
-		<li>ID</li>
-		<li>Name</li>
-		<li>Prefab</li>
-		<li>Scale</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1 id="SceneNpc">Npc</h1>
-	SceneNpc.csv
-	<ul>
-		<li>ID</li>
-		<li>Name</li>
-		<li>MapID</li>
-		<li>
-			CreatureID
-			<a href="#Creature">
-				生物表Id
-			</a>
-		</li>
-		<li>PosX</li>
-		<li>PosY</li>
-		<li>PosZ</li>
-		<li>Angle</li>
-		<li>Talk</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1 id="GameScene">场景</h1>
-	GameScene.csv
-	<ul>
-		<li>ID</li>
-		<li>MapName</li>
-		<li>
-			MapRes
-			<p>
-				Unity的场景文件
-			</p>
-		</li>
-		<li>
-			MusicID
-			<p>
-				<a href="#Sound">音效</a>
-			</p>
-		</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1 id="Sound">音效</h1>
-	Sound.csv
-	<ul>
-		<li>ID</li>
-		<li>
-			File
-			<p>
-				Unity的音效文件
-			</p>
-		</li>
-		<li>Tips</li>
-		<li>
-			Volume
-			<p>
-				音量
-			</p>
-		</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1 id="BroadCast">广播</h1>
-	BroadCast.csv
-	<ul>
-		<li>
-			BroadID
-		</li>
-		<li>
-			Tips
-		</li>
-		<li>
-			BroadcastTips
-			<p>
-				内容#!%UI界面ID;%等级设置;%mapID;%X坐标;%Y坐标;%Z坐标!#
-			</p>
-		</li>
-		<li>
-			Channel
-			<p>
-				频道(0:无(系统);1:系统广播;2:系统;3:小喇叭;4:世界;5:帮会;6:阵营;7:队伍)
-			</p>
-		</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1>定时活动</h1>
-	ActivityTime.csv
-	<ul>
-		<li>
-			ActvID
-		</li>
-		<li>
-			Name
-		</li>
-		<li>
-			LoopType
-			<p>
-				循环类型（0:手动开启;1:每天;2:每周;3:每月;4:指定日期;5:开服活动;6:开服第几天开本活动;7:合服第几天开本活动）
-			</p>
-		</li>
-		<li><a href="#BroadCast">Broadcast</a></li>
-		<li>
-			ActType
-			<p>
-				活动类型(1:开服;2:合服;3:精彩活动;4:普通节日活动，5节日活动-国庆活动，6节日活动-圣诞活动，7全民冲榜，8元旦活动，9春节活动)
-			</p>
-		</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1>押镖</h1>
-	<hr />
-
-
-
-
-
-
-
-	<h1>充值</h1>
-	<h2>充值卡</h2>
-	玩家充值额度不是随意的，由N个固定的额度，不同的专服不同，在数据库DS.dbo.RechargeCard里配置，充值单位是分，充值额度记作rmb，例如6块钱会记作rmb=600
-	<h2>元宝</h2>
-	充值获得元宝，换算比例
-	\[
-	diamond = \frac{rmb}{10}
-	\]
-	<p>充值并非一定会给元宝，也可以给物品，或者某个活动的参与权。</p>
-	<h2>VIP积分</h2>
-	充值获得VIP积分，换算比例
-	\[
-	vipscore = \frac{rmb}{10}
-	\]
-	<p>充值并非一定会给VIP积分，例如<a href="#CountryFund">建国基金</a>。</p>
-	<h2>VIP等级</h2>
-	由VIP积分确定，换算由表格 VipValue.csv 控制
-	<pre class="prettyprint">
+		<hr />
+		<h1>运营</h1>
+		素材
+		icon
+		loading
+		logo
+		场景原画
+		角色原画
+		系统UI截图 例如 升星 坐骑 羽翼 宠物 等
+		特色截图 例如 国战 帮战 副本 boss战
+
+		<hr />
+		<h1 id="monster">数值</h1>
+		mmorpg的玩家追求的是价值，而非玩法
+		参考 张五常的《经济解释》，有假设，有验证，都归依于简单的假设
+		统一度量衡，以元宝diamond核算价值（物品，技能，玩法，活动）
+		<h2>战斗数值</h2>
+		另一个假设，以战力power来衡量战斗属性，假设 power/diamond = 1，此比例系数可变
+		\[
+		power = attack + defense
+		\]
+		攻击(attack)和防御(defense)对于战力的贡献，是否权重一致？即
+		\[
+		\frac{attack}{defense}系数是否为一？还是可变
+		\]
+		如何衡量基础战斗属性？
+		以伤害公式为黑盒子，每点战斗属性的变化，对攻击或者防御的贡献是多少？进而换算成战力，进而得到元宝
+
+		<h2>经济数值</h2>
+		道理一也！
+		物品（道具）对战斗数值的影响几何？进而可以换算为元宝！
+		计划经济也！是否可以实行市场经济，物价几何，交由玩家决定？
+		<ul>
+			<li>
+				元宝
+				<p>基本单位，1</p>
+			</li>
+			<li>
+				战力
+				<p>元宝战力比，可变，假设即可，例如1/6，即一元宝可以兑换6战力</p>
+			</li>
+			<li>
+				绑定元宝
+				<p>可变，假设即可，例如0.5</p>
+			</li>
+			<li>
+				经验
+				<p>
+					经验满了可以升级，战力会提升，基于<a id="#PlayerBaseProp">PlayerBaseProp.csv</a>，随着等级的提升，
+					需要的经验越来越多，呈指数级上升，而每升一级提升的战力几乎不变，所以经验的价值呈对数级下降
+				</p>
+			</li>
+			<li>
+				体力
+				<p>
+				</p>
+			</li>
+			<li>
+				银两
+				<p>
+				</p>
+			</li>
+			<li>
+				修为
+				<p>
+				</p>
+			</li>
+			<li>
+				帮贡
+				<p>
+				</p>
+			</li>
+			<li>
+				声望
+				<p>
+				</p>
+			</li>
+			<li>
+				升星石
+				<p>
+					升星石价值 = 每次升星增加的战力 x 概率 / 升星石数量 / 元宝战力比
+				</p>
+			</li>
+			<li>
+				强化石
+				<p>
+				</p>
+			</li>
+			<li>
+				神兵升星石
+				<p>
+				</p>
+			</li>
+			<li>
+				神兵进阶石
+				<p>
+				</p>
+			</li>
+			<li>
+				洗练石
+				<p>
+				</p>
+			</li>
+			<li>
+				精炼石
+				<p>
+				</p>
+			</li>
+			<li>
+				精炼石
+				<p>
+				</p>
+			</li>
+			<li>
+				坐骑进阶丹
+				<p>
+				</p>
+			</li>
+			<li>
+				仙器进阶丹
+				<p>
+				</p>
+			</li>
+			<li>
+				突破宝箱
+				<p>
+				</p>
+			</li>
+		</ul>
+		<h3>运营活动</h3>
+		<hr />
+		<h1 id="monster">摆怪</h1>
+		monster/*.csv
+		<ul>
+			<li>ID</li>
+			<li>MonsterID</li>
+			<li>Type</li>
+			<li>BirthDelay</li>
+			<li>BirthPositonX</li>
+			<li>BirthPositonY</li>
+			<li>BirthPositonZ</li>
+			<li>Face</li>
+		</ul>
+		<hr />
+		<h1 id="Skill">技能</h1>
+		Skill.csv
+		<ul>
+			<li>ID</li>
+			<li>Type</li>
+			<li>Name</li>
+			<li>Tips</li>
+			<li>AttackAnimation</li>
+			<li>BehitAnimation</li>
+			<li>ConditionParameter2</li>
+			<li>Probability</li>
+			<li>Frequency</li>
+			<li>Action</li>
+		</ul>
+		符文，加buff
+		SkillRune.csv
+		<ul>
+			<li>ID</li>
+			<li>Name</li>
+			<li>Tips</li>
+			<li>Level</li>
+			<li>BuffID</li>
+			<li>BuffLevel</li>
+			<li>BuffRate</li>
+			<li>LearnGoodsID</li>
+			<li>LearnGoodsNum</li>
+		</ul>
+		心法
+		SkillPassive.csv
+		<ul>
+			<li>ID</li>
+			<li>Type</li>
+			<li>Level</li>
+			<li>Tips</li>
+			<li>HP</li>
+			<li>Attack</li>
+			<li>Defense</li>
+			<li>PhysicsAttack</li>
+			<li>MagicAttack</li>
+			<li>PhysicsDefense </li>
+			<li>MagicDefense </li>
+			<li>CriticalStrike </li>
+			<li>AntiCriticalStrike </li>
+			<li>Parry </li>
+			<li>AntiParry </li>
+			<li>Dodge </li>
+			<li>Hit </li>
+			<li>Armor </li>
+			<li>AntiArmor </li>
+			<li>DamageReduction </li>
+			<li>DamageAdd </li>
+			<li>MoveSpeed </li>
+			<li>AttackDefense </li>
+		</ul>
+		天赋
+		SkillTalent.csv
+		<ul>
+			<li>ID</li>
+			<li>Type</li>
+			<li>Level</li>
+			<li>Tips</li>
+			<li>Name</li>
+			<li>HP</li>
+			<li>Attack</li>
+			<li>Defense</li>
+			<li>PhysicsAttack</li>
+			<li>MagicAttack</li>
+			<li>PhysicsDefense </li>
+			<li>MagicDefense </li>
+			<li>CriticalStrike </li>
+			<li>AntiCriticalStrike </li>
+			<li>Parry </li>
+			<li>AntiParry </li>
+			<li>Dodge </li>
+			<li>Hit </li>
+			<li>Armor </li>
+			<li>AntiArmor </li>
+			<li>DamageReduction </li>
+			<li>DamageAdd </li>
+			<li>MoveSpeed </li>
+			<li>AttackDefense </li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1 id="AIEvent">AI</h1>
+		AIEvent.csv
+		<ul>
+			<li>ID</li>
+			<li>Tips</li>
+			<li>Event</li>
+			<li>EventParameter</li>
+			<li>Condition</li>
+			<li>ConditionParameter1</li>
+			<li>ConditionParameter2</li>
+			<li>Probability</li>
+			<li>Frequency</li>
+			<li>Action</li>
+		</ul>
+		AIConfig.csv
+		<ul>
+			<li>ID</li>
+			<li>Tips</li>
+			<li>Skillid</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1 id="Creature">采集</h1>
+		SCollecteCoor.csv
+		SCollectPb.csv
+		SCollecteRe.csv
+		ActivityCollect.csv
+		EquipCollect.csv
+		<ul>
+			<li>ID</li>
+			<li>Name</li>
+			<li>Prefab</li>
+			<li>Scale</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1 id="Creature">生物表</h1>
+		Creature.csv
+		<ul>
+			<li>ID</li>
+			<li>Name</li>
+			<li>Prefab</li>
+			<li>Scale</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1 id="SceneNpc">Npc</h1>
+		SceneNpc.csv
+		<ul>
+			<li>ID</li>
+			<li>Name</li>
+			<li>MapID</li>
+			<li>
+				CreatureID
+				<a href="#Creature">
+					生物表Id
+				</a>
+			</li>
+			<li>PosX</li>
+			<li>PosY</li>
+			<li>PosZ</li>
+			<li>Angle</li>
+			<li>Talk</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1 id="GameScene">场景</h1>
+		GameScene.csv
+		<ul>
+			<li>ID</li>
+			<li>MapName</li>
+			<li>
+				MapRes
+				<p>
+					Unity的场景文件
+				</p>
+			</li>
+			<li>
+				MusicID
+				<p>
+					<a href="#Sound">音效</a>
+				</p>
+			</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1 id="Sound">音效</h1>
+		Sound.csv
+		<ul>
+			<li>ID</li>
+			<li>
+				File
+				<p>
+					Unity的音效文件
+				</p>
+			</li>
+			<li>Tips</li>
+			<li>
+				Volume
+				<p>
+					音量
+				</p>
+			</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1 id="BroadCast">广播</h1>
+		BroadCast.csv
+		<ul>
+			<li>
+				BroadID
+			</li>
+			<li>
+				Tips
+			</li>
+			<li>
+				BroadcastTips
+				<p>
+					内容#!%UI界面ID;%等级设置;%mapID;%X坐标;%Y坐标;%Z坐标!#
+				</p>
+			</li>
+			<li>
+				Channel
+				<p>
+					频道(0:无(系统);1:系统广播;2:系统;3:小喇叭;4:世界;5:帮会;6:阵营;7:队伍)
+				</p>
+			</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1>定时活动</h1>
+		ActivityTime.csv
+		<ul>
+			<li>
+				ActvID
+			</li>
+			<li>
+				Name
+			</li>
+			<li>
+				LoopType
+				<p>
+					循环类型（0:手动开启;1:每天;2:每周;3:每月;4:指定日期;5:开服活动;6:开服第几天开本活动;7:合服第几天开本活动）
+				</p>
+			</li>
+			<li><a href="#BroadCast">Broadcast</a></li>
+			<li>
+				ActType
+				<p>
+					活动类型(1:开服;2:合服;3:精彩活动;4:普通节日活动，5节日活动-国庆活动，6节日活动-圣诞活动，7全民冲榜，8元旦活动，9春节活动)
+				</p>
+			</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1>押镖</h1>
+		<hr />
+
+
+
+
+
+
+
+		<h1>充值</h1>
+		<h2>充值卡</h2>
+		玩家充值额度不是随意的，由N个固定的额度，不同的专服不同，在数据库DS.dbo.RechargeCard里配置，充值单位是分，充值额度记作rmb，例如6块钱会记作rmb=600
+		<h2>元宝</h2>
+		充值获得元宝，换算比例
+		\[
+		diamond = \frac{rmb}{10}
+		\]
+		<p>充值并非一定会给元宝，也可以给物品，或者某个活动的参与权。</p>
+		<h2>VIP积分</h2>
+		充值获得VIP积分，换算比例
+		\[
+		vipscore = \frac{rmb}{10}
+		\]
+		<p>充值并非一定会给VIP积分，例如<a href="#CountryFund">建国基金</a>。</p>
+		<h2>VIP等级</h2>
+		由VIP积分确定，换算由表格 VipValue.csv 控制
+		<pre class="prettyprint">
  // 设置Vip积分
 void CPlayer::SetVipScore(DWORD dwPropID, int nValue)
 {
@@ -2499,9 +2549,9 @@ enum VIPID
 	VIPID_VALUE_MAXID,
 };
 </pre>
-	<h2>充值活动</h2>
-	<p>充值增加VIP积分，VIP等级由VIP积分确定</p>
-	<hr />
+		<h2>充值活动</h2>
+		<p>充值增加VIP积分，VIP等级由VIP积分确定</p>
+		<hr />
 
 
 
@@ -2509,8 +2559,8 @@ enum VIPID
 
 
 
-	<h1 id="CountryFund">建国基金</h1>
-	<hr />
+		<h1 id="CountryFund">建国基金</h1>
+		<hr />
 
 
 
@@ -2518,9 +2568,9 @@ enum VIPID
 
 
 
-	<h1>常量定义</h1>
-	ConstValue.csv
-	<pre class="prettyprint">
+		<h1>常量定义</h1>
+		ConstValue.csv
+		<pre class="prettyprint">
 enum CONST_VALUE
 {
 	CONST_VALUE_NULL = 0,							// 空常数
@@ -2739,7 +2789,7 @@ enum CONST_VALUE
 	CONST_VALUE_MAXID,								// 最大常数ID
 };
 </pre>
-	<hr />
+		<hr />
 
 
 
@@ -2763,14 +2813,14 @@ enum CONST_VALUE
 
 
 
-	<h1>装备升星</h1>
-	装备的属性：quality[0] star[0,10]
-	每升星到10，品质会升一级，然后star归零，犹如十进制的十位与个位的关系
+		<h1>装备升星</h1>
+		装备的属性：quality[0] star[0,10]
+		每升星到10，品质会升一级，然后star归零，犹如十进制的十位与个位的关系
 
-	<ul>
-		<li>
-			客户端请求 UIStarUp.lua
-			<pre class="prettyprint">
+		<ul>
+			<li>
+				客户端请求 UIStarUp.lua
+				<pre class="prettyprint">
 				--升星按钮
 				self.upStarBtn = trans:Find("BtnStarUp").gameObject
 				...
@@ -2803,10 +2853,10 @@ enum CONST_VALUE
 					...
 				end
 			</pre>
-		</li>
-		<li>
-			服务器处理
-			<pre class="prettyprint">
+			</li>
+			<li>
+				服务器处理
+				<pre class="prettyprint">
 --EquipForge.lua
 --------------------------------------------------------------------
 -- 玩家请求升星装备
@@ -2892,16 +2942,16 @@ function LuaRequestEquipStarUp(actorID)
 	end
 end                
 			</pre>
-		</li>
-	</ul>
-	<h1>装备强化</h1>
-	装备的属性：quality[0] star[0,10]
-	每升星到10，品质会升一级，然后star归零，犹如十进制的十位与个位的关系
+			</li>
+		</ul>
+		<h1>装备强化</h1>
+		装备的属性：quality[0] star[0,10]
+		每升星到10，品质会升一级，然后star归零，犹如十进制的十位与个位的关系
 
-	<ul>
-		<li>
-			客户端请求
-			<pre class="prettyprint">
+		<ul>
+			<li>
+				客户端请求
+				<pre class="prettyprint">
 				--UIStrength.lua
 				--强化按钮
 				self.strengthBtn = trans:Find("BtnStrength").gameObject
@@ -2937,10 +2987,10 @@ end
 					...
 				end
 			</pre>
-		</li>
-		<li>
-			服务器处理
-			<pre class="prettyprint">
+			</li>
+			<li>
+				服务器处理
+				<pre class="prettyprint">
 			--EquipSmelt.lua
 --------------------------------------------------------------------
 -- 玩家请求强化装备
@@ -3034,14 +3084,14 @@ function PlayerRunSmeltEquip(actorID, equip,bindFlag,AutoBuy)
 	return RESULT_COMMON_SUCCEED
 end
 			</pre>
-		</li>
-	</ul>
-	<h1>装备开孔</h1>
-	先开孔，后镶嵌
-	<ul>
-		<li>
-			客户端请求
-			<pre class="prettyprint">
+			</li>
+		</ul>
+		<h1>装备开孔</h1>
+		先开孔，后镶嵌
+		<ul>
+			<li>
+				客户端请求
+				<pre class="prettyprint">
 	function UIInlay.SetStrengthItem(entity)
 		UIInlay:Init(entity)
 	end
@@ -3112,10 +3162,10 @@ end
 					...
 				end
 			</pre>
-		</li>
-		<li>
-			服务器处理
-			<pre class="prettyprint">
+			</li>
+			<li>
+				服务器处理
+				<pre class="prettyprint">
 			--GemLogic.lua
 --------------------------------------------------------------------
 -- 玩家请求激活宝石孔
@@ -3224,13 +3274,13 @@ BYTE CGemPart::GetEquipGemHoleNum(BYTE byEquipIndex, BYTE byHoleIndex)
 	return 0;
 }
 			</pre>
-		</li>
-	</ul>
-	<h1>装备镶嵌</h1>
-	<ul>
-		<li>
-			客户端请求
-			<pre class="prettyprint">
+			</li>
+		</ul>
+		<h1>装备镶嵌</h1>
+		<ul>
+			<li>
+				客户端请求
+				<pre class="prettyprint">
 --UIInlay.lua
 --镶嵌按钮
 self.InlayBtn = trans:Find("Container/InlayBtn").gameObject
@@ -3241,10 +3291,10 @@ UIEventListener.Get(self.InlayBtn).onClick = function()
 end
 
 			</pre>
-		</li>
-		<li>
-			服务器处理
-			<pre class="prettyprint">
+			</li>
+			<li>
+				服务器处理
+				<pre class="prettyprint">
 --GemLogic.lua
 --------------------------------------------------------------------
 -- 玩家请求镶嵌宝石
@@ -3275,13 +3325,13 @@ function LuaRequestPutOnGem(actorID)
 	return RESULT_COMMON_SUCCEED
 end
 			</pre>
-		</li>
-	</ul>
-	<h1>聊天</h1>
-	<ul>
-		<li>
-			客户端部分
-			<pre class="prettyprint">
+			</li>
+		</ul>
+		<h1>聊天</h1>
+		<ul>
+			<li>
+				客户端部分
+				<pre class="prettyprint">
 Premier.Instance:RegisterLuaModule(MSG_MODULEID.MSG_MODULEID_CHAT, 'ChatModule.Handle')
 
 function ChatModule.SendChatMsg(channel, inputStr, chatType)
@@ -3297,10 +3347,10 @@ function ChatModule.SendChatMsg(channel, inputStr, chatType)
 end
 
 </pre>
-		</li>
-		<li>
-			服务器部分
-			<pre class="prettyprint">
+			</li>
+			<li>
+				服务器部分
+				<pre class="prettyprint">
 // 创建聊天模块
 MODULE_API IServerModule* CreateChatModule(IGlobalProvider* pGlobalProvider)
 {
@@ -3484,18 +3534,18 @@ void CTerminalTunnel::SendData(void* lpBuf, int nLen)
 	g_pGlobalProvider->GetCenterClient()->SendData((LPCSTR)lpBuf, nLen);
 }
 				</pre>
-		</li>
-	</ul>
+			</li>
+		</ul>
 
-	<h1>改名卡</h1>
-	<ul>
-		<li>
-			配置物品
-			<p>Medicament.csv</p>
-		</li>
-		<li>
-			C++请求DB修改名字
-			<pre class="prettyprint">
+		<h1>改名卡</h1>
+		<ul>
+			<li>
+				配置物品
+				<p>Medicament.csv</p>
+			</li>
+			<li>
+				C++请求DB修改名字
+				<pre class="prettyprint">
 // 角色改名
 bool CPlayerManager::SetPlayerName(DWORD dwActorID, LPCSTR szName)
 {
@@ -3516,10 +3566,10 @@ bool CPlayerManager::SetPlayerName(DWORD dwActorID, LPCSTR szName)
 	return true;
 }
 				</pre>
-		</li>
-		DB请求回调
-		<li>
-			<pre class="prettyprint">
+			</li>
+			DB请求回调
+			<li>
+				<pre class="prettyprint">
 void CPlayerManager::OnReturn(DWORD dwSpID, int nRetCode, DBKey dbKey, LPCSTR pOutData, int nOutLen)
 {
 	switch (dwSpID)
@@ -3569,10 +3619,10 @@ void CPlayerManager::OnReturn(DWORD dwSpID, int nRetCode, DBKey dbKey, LPCSTR pO
 	}
 }
 			</pre>
-		</li>
-		<li>
-			封装接口，供lua调用
-			<pre class="prettyprint">
+			</li>
+			<li>
+				封装接口，供lua调用
+				<pre class="prettyprint">
 //LuaGameAPI.cpp
 // 角色改名
 bool Lua_SetPlayerName(DWORD dwActorID, char *szName)
@@ -3580,10 +3630,10 @@ bool Lua_SetPlayerName(DWORD dwActorID, char *szName)
 	return GPlayerManager()->SetPlayerName(dwActorID, szName);
 }
 				</pre>
-		</li>
-		服务器Lua处理客户端改名请求
-		<li>
-			<pre class="prettyprint">
+			</li>
+			服务器Lua处理客户端改名请求
+			<li>
+				<pre class="prettyprint">
 local playerChangeNameTime = {}
 --------------------------------------------------------------------
 -- 请求改名
@@ -3645,10 +3695,10 @@ function OnActorChangeNameReturn(actorID, result, newName)
 	end
 end
 				</pre>
-		</li>
-		<li>
-			客户端改名请求
-			<pre class="prettyprint">
+			</li>
+			<li>
+				客户端改名请求
+				<pre class="prettyprint">
 --====================================改名对话框起始--=============================================
 function MixUICenter.ShowChangeActorNameBox()
 	local callback = function(info)
@@ -3687,96 +3737,68 @@ function MixUICenter.ShowChangeActorNameBox()
 end
 --====================================改名对话框结束--=============================================
 				</pre>
-		</li>
-	</ul>
-	<hr />
-	<h1>任务</h1>
-	Task.csv
-	<ul>
-		<li>TaskID</li>
-		<li>Name</li>
-		<li>FollowTask</li>
-		<li>AcceptNPC</li>
-		<li>AcceptDialogue</li>
-		<li>GiveNPC</li>
-		<li>GiveDialogue</li>
-		<li>PrizeID</li>
-		<li>ChapterName</li>
-	</ul>
-	TaskBranch.csv
+			</li>
+		</ul>
+		<hr />
+		<h1>任务</h1>
+		Task.csv
+		<ul>
+			<li>TaskID</li>
+			<li>Name</li>
+			<li>FollowTask</li>
+			<li>AcceptNPC</li>
+			<li>AcceptDialogue</li>
+			<li>GiveNPC</li>
+			<li>GiveDialogue</li>
+			<li>PrizeID</li>
+			<li>ChapterName</li>
+		</ul>
+		TaskBranch.csv
 
-	<hr />
-	<h1>副本</h1>
-	Chapter.csv
-	章节（包含N个同类型副本，例如坐骑副本，升星副本）
-	<ul>
-		<li>ChapID</li>
-		<li>ChapName</li>
-		<li>ChapType</li>
-		<li>PrizeID</li>
-	</ul>
-	副本
-	<ul>
-		<li>EctypeID</li>
-		<li>MapID</li>
-		<li>EctypeTips</li>
-		<li>PrizeID</li>
-		<li>DropID</li>
-		<li>NeedLvMin</li>
-		<li>NeedLvMax</li>
-	</ul>
-	<h1>副本奖励</h1>
-	PrizeEctype.csv
-	<ul>
-		<li>DropID</li>
-		<li>Desc</li>
-		<li>PrizeID</li>
-	</ul>
-	<h1>物品-常规</h1>
-	Medicament.csv
-	<ul>
-		<li>
-			GoodsID
-			物品ID
-		</li>
-		<li>
-			GroupID
-			物品组ID
-		</li>
-		<li>
-			GoodsName
-			物品名称
-		</li>
-	</ul>
-	<hr />
-
-
-
-
-
-
-
-	<h1>物品-装备</h1>
-	Equipment.csv
-	<ul>
-		<li>
-			ID
-			<p>物品ID</p>
-		</li>
-		<li>
-			GoodsName
-			<p>物品名字</p>
-		</li>
-		<li>
-			PacketID
-			<p>可放入的<a href="#PacketPart">背包部件</a>ID</p>
-		</li>
-		<li>
-			IconID
-			<p>物品图标</p>
-		</li>
-	</ul>
-	<hr />
+		<hr />
+		<h1>副本</h1>
+		Chapter.csv
+		章节（包含N个同类型副本，例如坐骑副本，升星副本）
+		<ul>
+			<li>ChapID</li>
+			<li>ChapName</li>
+			<li>ChapType</li>
+			<li>PrizeID</li>
+		</ul>
+		副本
+		<ul>
+			<li>EctypeID</li>
+			<li>MapID</li>
+			<li>EctypeTips</li>
+			<li>PrizeID</li>
+			<li>DropID</li>
+			<li>NeedLvMin</li>
+			<li>NeedLvMax</li>
+		</ul>
+		<h1>副本奖励</h1>
+		PrizeEctype.csv
+		<ul>
+			<li>DropID</li>
+			<li>Desc</li>
+			<li>PrizeID</li>
+		</ul>
+		<h1>物品-常规</h1>
+		Medicament.csv
+		<ul>
+			<li>
+				GoodsID
+				物品ID
+			</li>
+			<li>
+				GroupID
+				物品组ID
+			</li>
+			<li>
+				GoodsName
+				物品名称
+			</li>
+		</ul>
+		<hr />
 
 
 
@@ -3784,38 +3806,66 @@ end
 
 
 
-	<h1>运营活动</h1>
-	<h1>定时奖励</h1>
-	<h1>激活码</h1>
-	<p></p>
-	<ul>
-		<li>
-			ActivitionCode
-			<p>激活码ID，唯一</p>
-		</li>
-		<li>
-			GiftID
-			<p>激活后，赠送的<a href="#ActivityGift">活动礼包</a>ID</p>
-		</li>
-		<li>
-			Activity
-			<p>活动分类，每个活动分类里，一个角色只能领取一次礼包，或者是，只能成功激活一个激活码</p>
-		</li>
-		<li>
-			ActorID
-			<p>成功激活这个激活码的玩家</p>
-		</li>
-		<li>
-			CrtTime
-			<p>激活码的创建时间</p>
-		</li>
-		<li>
-			ExpireTime
-			<p>激活码的过期时间</p>
-		</li>
-	</ul>
-	<p>ActivitiesReward.lua</p>
-	<pre class="prettyprint">
+		<h1>物品-装备</h1>
+		Equipment.csv
+		<ul>
+			<li>
+				ID
+				<p>物品ID</p>
+			</li>
+			<li>
+				GoodsName
+				<p>物品名字</p>
+			</li>
+			<li>
+				PacketID
+				<p>可放入的<a href="#PacketPart">背包部件</a>ID</p>
+			</li>
+			<li>
+				IconID
+				<p>物品图标</p>
+			</li>
+		</ul>
+		<hr />
+
+
+
+
+
+
+
+		<h1>运营活动</h1>
+		<h1>定时奖励</h1>
+		<h1>激活码</h1>
+		<p></p>
+		<ul>
+			<li>
+				ActivitionCode
+				<p>激活码ID，唯一</p>
+			</li>
+			<li>
+				GiftID
+				<p>激活后，赠送的<a href="#ActivityGift">活动礼包</a>ID</p>
+			</li>
+			<li>
+				Activity
+				<p>活动分类，每个活动分类里，一个角色只能领取一次礼包，或者是，只能成功激活一个激活码</p>
+			</li>
+			<li>
+				ActorID
+				<p>成功激活这个激活码的玩家</p>
+			</li>
+			<li>
+				CrtTime
+				<p>激活码的创建时间</p>
+			</li>
+			<li>
+				ExpireTime
+				<p>激活码的过期时间</p>
+			</li>
+		</ul>
+		<p>ActivitiesReward.lua</p>
+		<pre class="prettyprint">
 --客户端
 -- 领取激活码礼包按钮
 function UIActivities.GetActvCodePrize()
@@ -4278,32 +4328,32 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 	pGoods->SetNumProp(GOODS_FIELD_PLACE, (int)nPlace);
 }
 </pre>
-	<hr />
-	<h1 id="ActivityGift">活动礼包</h1>
-	ActivityGift.csv
-	<ul>
-		<li>
-			GiftID
-			<p>礼包ID</p>
-		</li>
-		<li>
-			GiftName
-			<p>礼包名字</p>
-		</li>
-		<li>
-			PrizeID
-			<p><a href="#PrizeTable">奖励</a>ID</p>
-		</li>
-		<li>
-			SaveBigID
-			<p>Logic部件的int</p>
-		</li>
-		<li>
-			SaveBitIndex
-			<p>Logic部件的int的bit</p>
-		</li>
-	</ul>
-	<hr />
+		<hr />
+		<h1 id="ActivityGift">活动礼包</h1>
+		ActivityGift.csv
+		<ul>
+			<li>
+				GiftID
+				<p>礼包ID</p>
+			</li>
+			<li>
+				GiftName
+				<p>礼包名字</p>
+			</li>
+			<li>
+				PrizeID
+				<p><a href="#PrizeTable">奖励</a>ID</p>
+			</li>
+			<li>
+				SaveBigID
+				<p>Logic部件的int</p>
+			</li>
+			<li>
+				SaveBitIndex
+				<p>Logic部件的int的bit</p>
+			</li>
+		</ul>
+		<hr />
 
 
 
@@ -4311,82 +4361,82 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 
 
 
-	<h1 id="PrizeTable">奖励</h1>
-	PrizeTable
-	<ul>
-		<li>
-			ID
-			<p>奖励ID</p>
-		</li>
-		<li>
-			Desc
-			<p>描述</p>
-		</li>
-		<li>
-			Goods
-			<a href="#Prize">奖励</a>ID
-		</li>
-	</ul>
+		<h1 id="PrizeTable">奖励</h1>
+		PrizeTable
+		<ul>
+			<li>
+				ID
+				<p>奖励ID</p>
+			</li>
+			<li>
+				Desc
+				<p>描述</p>
+			</li>
+			<li>
+				Goods
+				<a href="#Prize">奖励</a>ID
+			</li>
+		</ul>
 
-	<hr />
-	<h1 id="PlayerBaseProp">角色等级基础属性</h1>
-	PlayerBaseProp.csv
-	<ul>
-		<li>Level</li>
-		<li>LevelExp</li>
-		<li>VIP</li>
-		<li>战斗力</li>
-		<li>经验</li>
-	</ul>
-	<hr />
-	<h1>角色属性</h1>
-	<p>非战斗属性</p>
-	<ul>
-		<li>国家</li>
-		<li>等级</li>
-		<li>VIP</li>
-		<li>战斗力</li>
-		<li>经验</li>
-	</ul>
-	<p>战斗属性</p>
-	<ul>
-		<li>生命</li>
-		<li>攻击</li>
-		<li>防御</li>
-		<li>物攻</li>
-		<li>法攻</li>
-		<li>物防</li>
-		<li>法防</li>
-		<li>暴击</li>
-		<li>防爆</li>
-		<li>格挡</li>
-		<li>穿透</li>
-		<li>闪避</li>
-		<li>命中</li>
-		<li>破甲</li>
-		与伤害无关，用于击退
-		<li>护甲</li>
-		与伤害无关，用于击退
-		<li>减伤</li>
-		<li>加伤</li>
-		<li>移动速度</li>
-		<li>攻防全属性</li>
-		<li>伤害点数</li>
-		<li>攻击百分比</li>
-		<li>忽视防御</li>
-		<li>忽视防御百分比</li>
-	</ul>
-	<hr />
-
-
+		<hr />
+		<h1 id="PlayerBaseProp">角色等级基础属性</h1>
+		PlayerBaseProp.csv
+		<ul>
+			<li>Level</li>
+			<li>LevelExp</li>
+			<li>VIP</li>
+			<li>战斗力</li>
+			<li>经验</li>
+		</ul>
+		<hr />
+		<h1>角色属性</h1>
+		<p>非战斗属性</p>
+		<ul>
+			<li>国家</li>
+			<li>等级</li>
+			<li>VIP</li>
+			<li>战斗力</li>
+			<li>经验</li>
+		</ul>
+		<p>战斗属性</p>
+		<ul>
+			<li>生命</li>
+			<li>攻击</li>
+			<li>防御</li>
+			<li>物攻</li>
+			<li>法攻</li>
+			<li>物防</li>
+			<li>法防</li>
+			<li>暴击</li>
+			<li>防爆</li>
+			<li>格挡</li>
+			<li>穿透</li>
+			<li>闪避</li>
+			<li>命中</li>
+			<li>破甲</li>
+			与伤害无关，用于击退
+			<li>护甲</li>
+			与伤害无关，用于击退
+			<li>减伤</li>
+			<li>加伤</li>
+			<li>移动速度</li>
+			<li>攻防全属性</li>
+			<li>伤害点数</li>
+			<li>攻击百分比</li>
+			<li>忽视防御</li>
+			<li>忽视防御百分比</li>
+		</ul>
+		<hr />
 
 
 
 
 
-	<h1>战力</h1>
-	<h2>战力系数</h2>
-	<pre class="prettyprint">
+
+
+		<h1>战力</h1>
+		<h2>战力系数</h2>
+		<pre class="prettyprint">
 	enum POWER_COEF
 	{
 		POWER_COEF_HP = 5,				        // 每点生命上限增加战斗力
@@ -4412,9 +4462,9 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 	};
 	</pre>
 
-	<h2>战力构成</h2>
-	<p>由角色战斗属性乘以权重叠加而成</p>
-	<pre class="prettyprint">
+		<h2>战力构成</h2>
+		<p>由角色战斗属性乘以权重叠加而成</p>
+		<pre class="prettyprint">
 	int nPower =  m_nLevelPower + m_nEmblemPower + m_nMilitaryPower;
 	for (int i = PLAYER_PARTID_NULL+1; i < PLAYER_PARTID_MAXID; i++)
 	{
@@ -4424,10 +4474,10 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 	}
 	nPower += CalcSuitPower();
 	</pre>
-	<ul>
-		<li>
-			等级战力
-			<pre class="prettyprint">
+		<ul>
+			<li>
+				等级战力
+				<pre class="prettyprint">
 	m_nLevelPower =
 		( pBaseProp->dwBaseHP  * POWER_COEF_HP
 		+ pBaseProp->dwBasePATK * POWER_COEF_PATK
@@ -4446,10 +4496,10 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 		+ pBaseProp->dwDamageAdd * POWER_COEF_DAMAGE_ADD
 		+ pBaseProp->dwMoveSpeed * POWER_COEF_SPD ) / POWER_COEF_RATE;
 </pre>
-		</li>
-		<li>
-			成就战力
-			<pre class="prettyprint">
+			</li>
+			<li>
+				成就战力
+				<pre class="prettyprint">
 	m_nEmblemPower =
 		(pAchieve->hp()  * POWER_COEF_HP
 		+ pAchieve->attack() * POWER_COEF_ATK
@@ -4471,10 +4521,10 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 		+ pAchieve->movespeed() * POWER_COEF_SPD
 		+ pAchieve->attackdefense() * POWER_COEF_ATK_DEF) / POWER_COEF_RATE;
 </pre>
-		</li>
-		<li>
-			军衔战力
-			<pre class="prettyprint">
+			</li>
+			<li>
+				军衔战力
+				<pre class="prettyprint">
 	m_nMilitaryPower =
 		(pMilitary->hp()  * POWER_COEF_HP
 			+ pMilitary->attack() * POWER_COEF_ATK
@@ -4496,41 +4546,41 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 			+ pMilitary->movespeed() * POWER_COEF_SPD
 			+ pMilitary->attackdefense() * POWER_COEF_ATK_DEF) / POWER_COEF_RATE;
 </pre>
-		</li>
-		<li>
-			部件战力
-			<ul>
-				<li>背包部件 </li>
-				<li>装备技能部件</li>
-				<li>装备部件 </li>
-				<li>神兵部件 </li>
-				<li>逻辑部件 </li>
-				<li>副本部件 </li>
-				<li>技能部件 </li>
-				<li>商店部件 </li>
-				<li>帮会部件 </li>
-				<li>时装部件 </li>
-				<li>宝石部件 </li>
-				<li>任务部件 </li>
-				<li>仓库部件 </li>
-				<li>新神兵部件 </li>
-				<li>天赋部件 </li>
-				<li>结婚部件 </li>
-				<li>卡牌部件 </li>
-				<li>生活技能部件</li>
-				<li>坐骑部件 </li>
-				<li>翅膀部件 </li>
-				<li>buff部件 </li>
-				<li>称号部件 </li>
-				<li>特权卡部件 </li>
-				<li>新翅膀部件 </li>
-				<li>属性药部件 </li>
-				<li>属性激活部件</li>
-			</ul>
-		</li>
-		<li>套装战力</li>
-	</ul>
-	<hr />
+			</li>
+			<li>
+				部件战力
+				<ul>
+					<li>背包部件 </li>
+					<li>装备技能部件</li>
+					<li>装备部件 </li>
+					<li>神兵部件 </li>
+					<li>逻辑部件 </li>
+					<li>副本部件 </li>
+					<li>技能部件 </li>
+					<li>商店部件 </li>
+					<li>帮会部件 </li>
+					<li>时装部件 </li>
+					<li>宝石部件 </li>
+					<li>任务部件 </li>
+					<li>仓库部件 </li>
+					<li>新神兵部件 </li>
+					<li>天赋部件 </li>
+					<li>结婚部件 </li>
+					<li>卡牌部件 </li>
+					<li>生活技能部件</li>
+					<li>坐骑部件 </li>
+					<li>翅膀部件 </li>
+					<li>buff部件 </li>
+					<li>称号部件 </li>
+					<li>特权卡部件 </li>
+					<li>新翅膀部件 </li>
+					<li>属性药部件 </li>
+					<li>属性激活部件</li>
+				</ul>
+			</li>
+			<li>套装战力</li>
+		</ul>
+		<hr />
 
 
 
@@ -4538,8 +4588,8 @@ void CGoodsSkep::PutInGoods(UID uidGoods, int nPlace, bool bInit)
 
 
 
-	<h1 id="PacketPart">Packet部件</h1>
-	<pre class="prettyprint">
+		<h1 id="PacketPart">Packet部件</h1>
+		<pre class="prettyprint">
 		// 篮子ID
 enum SKEPID
 {
@@ -4583,8 +4633,8 @@ enum SKEP_ACCESS
 	SKEP_ACCESS_SELL = 0x0010,				// 出售权限
 };
 	</pre>
-	<h1>Logic部件</h1>
-	<pre class="prettyprint">
+		<h1>Logic部件</h1>
+		<pre class="prettyprint">
 enum LOGIC_DATA
 {
 	DATA_LAST_DAYRESET_TIME = 1,					// 最后每日清0时间(0)
@@ -4886,7 +4936,7 @@ enum LOGIC_DATA
 	DATA_LOGICDATA_MAXID = 384,
 };
 </pre>
-	<hr />
+		<hr />
 
 
 
@@ -5014,8 +5064,8 @@ enum LOGIC_DATA
 
 
 
-	<h1>流派</h1>
-	<pre class="prettyprint">
+		<h1>流派</h1>
+		<pre class="prettyprint">
 enum GENRE
 {
 	GENRE_NULL = 0,
@@ -5024,7 +5074,7 @@ enum GENRE
 	GENRE_MAX,
 };
 </pre>
-	<hr />
+		<hr />
 
 
 
@@ -5032,9 +5082,9 @@ enum GENRE
 
 
 
-	<h1>角色数据的加载</h1>
-	<p>三部分：角色数据、物品、任务</p>
-	<pre class="prettyprint">
+		<h1>角色数据的加载</h1>
+		<p>三部分：角色数据、物品、任务</p>
+		<pre class="prettyprint">
 DBINPUT_LOAD_ACTOR_COMMAND dbInputCommand;
 dbInputCommand.dwActorID = m_dwActorID;
 if (!CDBSinkSingleton::Instance().ExecuteSP(m_dwActorID, SPID_LOAD_ACTOR_COMMAND, (LPCSTR)&dbInputCommand, sizeof(dbInputCommand)))
@@ -5057,9 +5107,9 @@ if (!CDBSinkSingleton::Instance().ExecuteSP(m_dwActorID, SPID_LOAD_ACTOR_TASK, (
 	return false;
 }
 </pre>
-	<h1>篮子</h1>
-	<p>角色可以拥有这么多篮子</p>
-	<pre class="prettyprint">
+		<h1>篮子</h1>
+		<p>角色可以拥有这么多篮子</p>
+		<pre class="prettyprint">
 enum SKEPID
 {
 	SKEPID_UNKNOW = 0,
@@ -5092,23 +5142,23 @@ enum SKEPID
 	SKEPID_MAXID,
 };
 </pre>
-	<h1>技能</h1>
-	<h2>技能基础配置</h2>
-	<p>Skill.csv</p>
-	<ul>
-		<li>ID 技能id</li>
-		<li>Hit 命中</li>
-		<li>AttackPoint 攻击点数</li>
-		<li>AttackPercentage 攻击百分比</li>
-		<li>IgnoreDefensePoint 忽视防御</li>
-		<li>IgnoreDefensePercentage 忽视防御百分比</li>
-		<li>DamagePoint 附加伤害</li>
-		<li>DamagePercentage 附加伤害百分比</li>
-		<li>CriticalPoint 暴击</li>
-		<li>Pierce 穿透</li>
-		<li>PhysicsOrMagic 1物攻 2法攻</li>
-	</ul>
-	<hr />
+		<h1>技能</h1>
+		<h2>技能基础配置</h2>
+		<p>Skill.csv</p>
+		<ul>
+			<li>ID 技能id</li>
+			<li>Hit 命中</li>
+			<li>AttackPoint 攻击点数</li>
+			<li>AttackPercentage 攻击百分比</li>
+			<li>IgnoreDefensePoint 忽视防御</li>
+			<li>IgnoreDefensePercentage 忽视防御百分比</li>
+			<li>DamagePoint 附加伤害</li>
+			<li>DamagePercentage 附加伤害百分比</li>
+			<li>CriticalPoint 暴击</li>
+			<li>Pierce 穿透</li>
+			<li>PhysicsOrMagic 1物攻 2法攻</li>
+		</ul>
+		<hr />
 
 
 
@@ -5116,22 +5166,22 @@ enum SKEPID
 
 
 
-	<h2>技能等级配置</h2>
-	<p>SkillEffect.csv</p>
-	<ul>
-		<li>Level 等级</li>
-		<li>AttackPoint 攻击点数</li>
-		<li>AttackPercentage 攻击百分比</li>
-		<li>IgnoreDefensePoint 忽视防御</li>
-		<li>IgnoreDefensePercentage 忽视防御百分比</li>
-		<li>DamagePoint 附加伤害</li>
-		<li>DamagePercentage 附加伤害百分比</li>
-		<li>BreakPoint 破甲</li>
-		<li>CriticalPoint 暴击</li>
-		<li>Hit 命中</li>
-		<li>Pierce 穿透</li>
-	</ul>
-	<hr />
+		<h2>技能等级配置</h2>
+		<p>SkillEffect.csv</p>
+		<ul>
+			<li>Level 等级</li>
+			<li>AttackPoint 攻击点数</li>
+			<li>AttackPercentage 攻击百分比</li>
+			<li>IgnoreDefensePoint 忽视防御</li>
+			<li>IgnoreDefensePercentage 忽视防御百分比</li>
+			<li>DamagePoint 附加伤害</li>
+			<li>DamagePercentage 附加伤害百分比</li>
+			<li>BreakPoint 破甲</li>
+			<li>CriticalPoint 暴击</li>
+			<li>Hit 命中</li>
+			<li>Pierce 穿透</li>
+		</ul>
+		<hr />
 
 
 
@@ -5139,46 +5189,46 @@ enum SKEPID
 
 
 
-	<h1>伤害公式</h1>
-	<p>假设a打b</p>
-	\[\text{let} \quad csMillionRev = 0.0001\]
+		<h1>伤害公式</h1>
+		<p>假设a打b</p>
+		\[\text{let} \quad csMillionRev = 0.0001\]
 
-	<p>命中</p>
-	\[
-	\text{let} \quad fHit = a.Hit - b.Dodge + Skill.Hit \times SkillEffect.Hit \times csMillionRev\\
-	fHit=
-	\begin{cases}
-	fHit \times 0.1 + 95, & \quad fHit \gt -100\\
-	fHit \times 0.06 + 85, & \quad fHit \gt -300\\
-	fHit \times 0.01 + 73,& \quad \text{others}\\
-	\end{cases}
-	\\
-	fHit = \max(fHit, 60)\\
-	fHit = \min(fHit, 100)\\
-	\]
+		<p>命中</p>
+		\[
+		\text{let} \quad fHit = a.Hit - b.Dodge + Skill.Hit \times SkillEffect.Hit \times csMillionRev\\
+		fHit=
+		\begin{cases}
+		fHit \times 0.1 + 95, & \quad fHit \gt -100\\
+		fHit \times 0.06 + 85, & \quad fHit \gt -300\\
+		fHit \times 0.01 + 73,& \quad \text{others}\\
+		\end{cases}
+		\\
+		fHit = \max(fHit, 60)\\
+		fHit = \min(fHit, 100)\\
+		\]
 
-	<p>闪避</p>
-	\[\text{if} \quad random(0, 100) > fHit, \text{闪避成功，无伤害}\]
+		<p>闪避</p>
+		\[\text{if} \quad random(0, 100) > fHit, \text{闪避成功，无伤害}\]
 
-	<p>技能攻击</p>
-	\[
-	\text{let} \quad a1=
-	\begin{cases}
-	a.PhysicsAttack, & \quad Skill.PhysicsOrMagic == Physics\\
-	a.MagicAttack, & \quad \text{others}
-	\end{cases}\\
+		<p>技能攻击</p>
+		\[
+		\text{let} \quad a1=
+		\begin{cases}
+		a.PhysicsAttack, & \quad Skill.PhysicsOrMagic == Physics\\
+		a.MagicAttack, & \quad \text{others}
+		\end{cases}\\
 
-	\text{let} \quad A = (a1 + Skill.AttackPoint \times SkillEffect.AttackPoint \times csMillionRev) \times (1 +
-	Skill.AttackPercentage \times SkillEffect.AttackPercentage \times csMillionRev^2)\\
-	\]
+		\text{let} \quad A = (a1 + Skill.AttackPoint \times SkillEffect.AttackPoint \times csMillionRev) \times (1 +
+		Skill.AttackPercentage \times SkillEffect.AttackPercentage \times csMillionRev^2)\\
+		\]
 
-	<p>目标防御</p>
-	\[
-	\text{let} \quad b1=
-	\begin{cases}
-	b.PhysicsDefense, & \quad Skill.PhysicsOrMagic == Physics\\
-	b.MagicDefense, & \quad \text{others}
-	\end{cases}\\
+		<p>目标防御</p>
+		\[
+		\text{let} \quad b1=
+		\begin{cases}
+		b.PhysicsDefense, & \quad Skill.PhysicsOrMagic == Physics\\
+		b.MagicDefense, & \quad \text{others}
+		\end{cases}\\
 
 	\text{let} \quad B = b1 \times (1 - Skill.IgnoreDefensePercentage \times SkillEffect.IgnoreDefensePercentage \times
 	csMillionRev)
@@ -5196,145 +5246,143 @@ enum SKEPID
 	(Skill.DamagePercentage + SkillEffect.DamagePercentage) \times csMillionRev, & \quad \text{others}
 	\end{cases}\\
 
-	\text{let} \quad C = y5 + a.DamageAdd \times csMillionRev + y5\\
+		\text{let} \quad C = y5 + a.DamageAdd \times csMillionRev + y5\\
 
-	C = \max(0, C)
-	\]
+		C = \max(0, C)
+		\]
 
-	<p>附加伤害点数</p>
-	\[
-	\text{let} \quad D = Skill.DamagePoint \times SkillEffect.DamagePoint \times csMillionRev\\
-	\]
+		<p>附加伤害点数</p>
+		\[
+		\text{let} \quad D = Skill.DamagePoint \times SkillEffect.DamagePoint \times csMillionRev\\
+		\]
 
-	<p>暴击</p>
-	\[
-	\text{let} \quad S = a.CriticalStrike + Skill.CriticalPoint \times SkillEffect.CriticalPoint \times csMillionRev
-	- b.CriticalStrike\\
-	\text{let} \quad SRate=
-	\begin{cases}
-	0, & \quad S \le 0\\
-	S \times 0.001 + 0.06, & \quad S \le 100\\
-	(S - 100) \times 0.0004 + 0.16, & \quad S \le 300\\
-	(S - 300) \times 0.0002 + 0.24, & \quad S \le 1000\\
-	\min(0.5, (S - 1000) \times 0.0001 + 0.38, & \quad \text{others}
-	\end{cases}\\
-	\]
+		<p>暴击</p>
+		\[
+		\text{let} \quad S = a.CriticalStrike + Skill.CriticalPoint \times SkillEffect.CriticalPoint \times csMillionRev
+		- b.CriticalStrike\\
+		\text{let} \quad SRate=
+		\begin{cases}
+		0, & \quad S \le 0\\
+		S \times 0.001 + 0.06, & \quad S \le 100\\
+		(S - 100) \times 0.0004 + 0.16, & \quad S \le 300\\
+		(S - 300) \times 0.0002 + 0.24, & \quad S \le 1000\\
+		\min(0.5, (S - 1000) \times 0.0001 + 0.38, & \quad \text{others}
+		\end{cases}\\
+		\]
 
-	<p>格挡</p>
-	\[
-	\text{let} \quad P = b.Parry - Skill.Pierce \times SkillEffect.Pierce \times csMillionRev - a.AntiParry\\
-	\text{let} \quad PRate=
-	\begin{cases}
-	\max(0, P \times 0.0003 + 0.06), & \quad P \le 0\\
-	P \times 0.0012 + 0.06, & \quad P \le 100\\
-	(P - 100) \times 0.0004 + 0.18, & \quad P \le 300\\
-	(P - 300) \times 0.0002 + 0.26, & \quad P \le 1000\\
-	\min(0.5, (P - 1000) \times 0.0001 + 0.4, & \quad \text{others}
-	\end{cases}\\
-	\]
+		<p>格挡</p>
+		\[
+		\text{let} \quad P = b.Parry - Skill.Pierce \times SkillEffect.Pierce \times csMillionRev - a.AntiParry\\
+		\text{let} \quad PRate=
+		\begin{cases}
+		\max(0, P \times 0.0003 + 0.06), & \quad P \le 0\\
+		P \times 0.0012 + 0.06, & \quad P \le 100\\
+		(P - 100) \times 0.0004 + 0.18, & \quad P \le 300\\
+		(P - 300) \times 0.0002 + 0.26, & \quad P \le 1000\\
+		\min(0.5, (P - 1000) \times 0.0001 + 0.4, & \quad \text{others}
+		\end{cases}\\
+		\]
 
-	<p>伤害减免</p>
-	\[
-	\text{let} \quad E = C - b.DamageReduction \times csMillionRev - \min(1.5, P)\\
-	E = max(0, E)
-	\]
+		<p>伤害减免</p>
+		\[
+		\text{let} \quad E = C - b.DamageReduction \times csMillionRev - \min(1.5, P)\\
+		E = max(0, E)
+		\]
 
-	<p>暴击伤害加成</p>
-	\[
-	\\
-	\text{let} \quad G=1 + \max(S,0) \times 0.0002\\
-	G=\min(G, 2)
-	\\
+		<p>暴击伤害加成</p>
+		\[
+		\\
+		\text{let} \quad G=1 + \max(S,0) \times 0.0002\\
+		G=\min(G, 2)
+		\\
 
-	\text{let} \quad K=
-	\begin{cases}
-	A \times 1.5 - B, & \quad A \ge B\\
-	\frac{A^2}{A \times 1.7 + B \times 0.3},& \quad \text{others}\\
-	\end{cases}
-	\\
+		\text{let} \quad K=
+		\begin{cases}
+		A \times 1.5 - B, & \quad A \ge B\\
+		\frac{A^2}{A \times 1.7 + B \times 0.3},& \quad \text{others}\\
+		\end{cases}
+		\\
 
-	K = \max(0, K)
-	\\
-	\\
-	\text{let} \quad F=
-	\begin{cases}
-	K, & \quad K \lt 2000\\
-	2000 + (K - 2000) \times 0.5,& \quad K \lt 15000\\
-	8500 + (K - 15000) \times 0.45,& \quad K \lt 50000\\
-	26500 + (K - 50000) \times 0.35,& \quad K \lt 10000\\
-	44000 + (K - 100000) \times 0.2,& \quad \text{others}\\
-	\end{cases}
-	\\
-	\text{let} \quad H = \max((F+D) \times E \times G, 1) + \lfloor A \times 0.005 \times E \rfloor
-	\\
-	\text{let} \quad nDamAdd2 =
-	\begin{cases}
-	a.PlayerDamangeAdd, & \quad \text{a is player}\\
-	a.MonsterDamangeAdd,& \quad \text{others}
-	\end{cases}
-	\\
-	\text{if} \quad nDamAdd2 \gt 0, H = H \times (1 + nDamAdd2 \times csMillionRev)
-	\\
-	H=\min(H, 10000000)
-	\]
+		K = \max(0, K)
+		\\
+		\\
+		\text{let} \quad F=
+		\begin{cases}
+		K, & \quad K \lt 2000\\
+		2000 + (K - 2000) \times 0.5,& \quad K \lt 15000\\
+		8500 + (K - 15000) \times 0.45,& \quad K \lt 50000\\
+		26500 + (K - 50000) \times 0.35,& \quad K \lt 10000\\
+		44000 + (K - 100000) \times 0.2,& \quad \text{others}\\
+		\end{cases}
+		\\
+		\text{let} \quad H = \max((F+D) \times E \times G, 1) + \lfloor A \times 0.005 \times E \rfloor
+		\\
+		\text{let} \quad nDamAdd2 =
+		\begin{cases}
+		a.PlayerDamangeAdd, & \quad \text{a is player}\\
+		a.MonsterDamangeAdd,& \quad \text{others}
+		\end{cases}
+		\\
+		\text{if} \quad nDamAdd2 \gt 0, H = H \times (1 + nDamAdd2 \times csMillionRev)
+		\\
+		H=\min(H, 10000000)
+		\]
 
-	<p>暴击、格挡，随机</p>
-	<p>\(\text{if} \quad random(0,1) \lt srate + prate\)</p>
-	\[
-	H=
-	\begin{cases}
-	H \times 1.5, \quad \text{if} \quad random(0,srate + prate) \lt srate\\
-	H \times 0.5, \quad \text{others}
-	\end{cases}
-	\]
+		<p>暴击、格挡，随机</p>
+		<p>\(\text{if} \quad random(0,1) \lt srate + prate\)</p>
+		\[
+		H=
+		\begin{cases}
+		H \times 1.5, \quad \text{if} \quad random(0,srate + prate) \lt srate\\
+		H \times 0.5, \quad \text{others}
+		\end{cases}
+		\]
 
-	<p>如果B是玩家，A也是玩家，分段伤害</p>
-	\[H=
-	\begin{cases}
-	H \times 0.9 + 10, & \quad \frac{H}{b.MaxHP} \lt 0.12\\
-	b.MaxHP \times 0.08, & \quad \frac{H}{b.MaxHP} \lt 0.15\\
-	b.MaxHP \times 0.1, & \quad \frac{H}{b.MaxHP} \lt 0.3\\
-	b.MaxHP \times 0.17, & \quad \frac{H}{b.MaxHP} \lt 1\\
-	b.MaxHP \times 0.4, & \quad \frac{H}{b.MaxHP} \lt 3\\
-	b.MaxHP \times 0.9, & \quad \text{others}
-	\end{cases}
-	\]
-	\[H = H \times \min(1.25, \max(1, \frac{a.Power}{b.Power})) \]
+		<p>如果B是玩家，A也是玩家，分段伤害</p>
+		\[H=
+		\begin{cases}
+		H \times 0.9 + 10, & \quad \frac{H}{b.MaxHP} \lt 0.12\\
+		b.MaxHP \times 0.08, & \quad \frac{H}{b.MaxHP} \lt 0.15\\
+		b.MaxHP \times 0.1, & \quad \frac{H}{b.MaxHP} \lt 0.3\\
+		b.MaxHP \times 0.17, & \quad \frac{H}{b.MaxHP} \lt 1\\
+		b.MaxHP \times 0.4, & \quad \frac{H}{b.MaxHP} \lt 3\\
+		b.MaxHP \times 0.9, & \quad \text{others}
+		\end{cases}
+		\]
+		\[H = H \times \min(1.25, \max(1, \frac{a.Power}{b.Power})) \]
 
-	<p>如果B是玩家，A是怪物，秒杀保护</p>
-	\[H = \min(H, b.MaxHP \times 0.9 + 10) \]
+		<p>如果B是玩家，A是怪物，秒杀保护</p>
+		\[H = \min(H, b.MaxHP \times 0.9 + 10) \]
 
-	<p>伤害整体调低</p>
-	\[H = H \times 0.35 \]
+		<p>伤害整体调低</p>
+		\[H = H \times 0.35 \]
 
-	<p>浮动伤害</p>
-	\[H = H \times random(0.9,1.1) \]
+		<p>浮动伤害</p>
+		\[H = H \times random(0.9,1.1) \]
 
-	<p>如果受击方B是怪物，可以设置伤害上限</p>
-	\[H = \min(H,b.MaxHP \times monster.maxsinglehitdamange \times 0.0001) \]
+		<p>如果受击方B是怪物，可以设置伤害上限</p>
+		\[H = \min(H,b.MaxHP \times monster.maxsinglehitdamange \times 0.0001) \]
 
-	<p>最终伤害数值</p>
-	\[H = \max(1,H) \]
-
-
-	<hr />
+		<p>最终伤害数值</p>
+		\[H = \max(1,H) \]
 
 
+		<hr />
 
 
 
 
 
-	<h1>开服关服</h1>
-	<p>开服 Bin/Cluster/开服.bat</p>
-	<p>关服 Bin/Cluster/关服.bat</p>
-	<p class="explain">
-		*
-		AgentServer是网关服，客户端通过tcp与之通信；DBServer是数据服，负责缓存数据，与数据库交互；SceneServer场景服，游戏的业务逻辑都在这里。CenterServer是中心服，负责服务器之间的消息中转。
-	</p>
-	<hr />
 
 
+		<h1>开服关服</h1>
+		<p>开服 Bin/Cluster/开服.bat</p>
+		<p>关服 Bin/Cluster/关服.bat</p>
+		<p class="explain">
+			*
+			AgentServer是网关服，客户端通过tcp与之通信；DBServer是数据服，负责缓存数据，与数据库交互；SceneServer场景服，游戏的业务逻辑都在这里。CenterServer是中心服，负责服务器之间的消息中转。
+		</p>
+		<hr />
 
 
 
@@ -5348,36 +5396,29 @@ enum SKEPID
 
 
 
-	<h1>导航网格</h1>
-	<p>美术制作Unity场景test.unity</p>
-	<p>依据场景地表，用插件(NavMesh Exension)构建TerrainMesh</p>
-	<p class="explain">
-		* 美术制作的场景地表，与策划期望的寻路地表是有差异的，所以用该插件来构建更合理的TerrainMesh
-	</p>
-	<p>在插件(NavMesh Exension) Bake NavMesh，会生成该场景的导航文件test/NavMesh.asset</p>
-	<p class="explain">
-		* 根据该TerrainMesh，生成Unity的导航网格，用于引擎寻路
-	</p>
-	<p>点击Unity菜单->Zen->同步导航网格文件到服务器</p>
-	<p class="explain">
-		* 怪物AI的寻路，需要在服务器完成，根据Untiy的NavMesh生成tiles，用于服务器A*寻路（todo 服务器也需要改成NavMesh寻路）
-	</p>
-	<p>该场景的导航网格制作流程完毕，重启服务器，测试完毕后可提交svn</p>
-	<p class="explain">
-		* 先根据策划构建的TerrainMesh拾取顶点A，再NavMesh.SamplePosition将A变换到Navmesh上的顶点B，B就是Navigation
-		的Destination
-	</p>
-
-	<hr />
 
 
+		<h1>导航网格</h1>
+		<p>美术制作Unity场景test.unity</p>
+		<p>依据场景地表，用插件(NavMesh Exension)构建TerrainMesh</p>
+		<p class="explain">
+			* 美术制作的场景地表，与策划期望的寻路地表是有差异的，所以用该插件来构建更合理的TerrainMesh
+		</p>
+		<p>在插件(NavMesh Exension) Bake NavMesh，会生成该场景的导航文件test/NavMesh.asset</p>
+		<p class="explain">
+			* 根据该TerrainMesh，生成Unity的导航网格，用于引擎寻路
+		</p>
+		<p>点击Unity菜单->Zen->同步导航网格文件到服务器</p>
+		<p class="explain">
+			* 怪物AI的寻路，需要在服务器完成，根据Untiy的NavMesh生成tiles，用于服务器A*寻路（todo 服务器也需要改成NavMesh寻路）
+		</p>
+		<p>该场景的导航网格制作流程完毕，重启服务器，测试完毕后可提交svn</p>
+		<p class="explain">
+			* 先根据策划构建的TerrainMesh拾取顶点A，再NavMesh.SamplePosition将A变换到Navmesh上的顶点B，B就是Navigation
+			的Destination
+		</p>
 
-
-
-
-
-	<h1>怪物</h1>
-	<hr />
+		<hr />
 
 
 
@@ -5385,8 +5426,8 @@ enum SKEPID
 
 
 
-	<h1>AI</h1>
-	<hr />
+		<h1>怪物</h1>
+		<hr />
 
 
 
@@ -5394,41 +5435,50 @@ enum SKEPID
 
 
 
-	<h1>美术制作规范</h1>
-	<h2>3DMax</h2>
-	<p>system unit metric -> meters，基本长度单位是米，例如角色身高两米</p>
-	<p>骨骼动画的骨头(bone)尽可能的少</p>
+		<h1>AI</h1>
+		<hr />
 
-	<h2>角色</h2>
-	<p>纹理尺寸：512x512</p>
-	<h2>怪物</h2>
-	<h2>NPC</h2>
-	<h2>坐骑</h2>
-	<h2>UI</h2>
-	<h2>场景</h2>
-	unity在运行时加载的场景，有两种类型，一类是加入到File->Build Settings->Scenes In Build，出包前制作，不可热更；
-	另一类是AssetBundle，无须加入到File->Build Settings->Scenes In Build，可以热更
-	<h3>场景烘培Lighting</h3>
-	场景添加灯光，烘焙之后，生成多张LightMap，场景里的GameObject的MeshRenderer组件包含Lighting Section，其属性Lightmap Static
-	勾选，Lightmap Settings->Baked Lightmap
-	<ul>
-		<li>
-			Lightmap
-			<pre class="prettyprint">
+
+
+
+
+
+
+		<h1>美术制作规范</h1>
+		<h2>3DMax</h2>
+		<p>system unit metric -> meters，基本长度单位是米，例如角色身高两米</p>
+		<p>骨骼动画的骨头(bone)尽可能的少</p>
+
+		<h2>角色</h2>
+		<p>纹理尺寸：512x512</p>
+		<h2>怪物</h2>
+		<h2>NPC</h2>
+		<h2>坐骑</h2>
+		<h2>UI</h2>
+		<h2>场景</h2>
+		unity在运行时加载的场景，有两种类型，一类是加入到File->Build Settings->Scenes In Build，出包前制作，不可热更；
+		另一类是AssetBundle，无须加入到File->Build Settings->Scenes In Build，可以热更
+		<h3>场景烘培Lighting</h3>
+		场景添加灯光，烘焙之后，生成多张LightMap，场景里的GameObject的MeshRenderer组件包含Lighting Section，其属性Lightmap Static
+		勾选，Lightmap Settings->Baked Lightmap
+		<ul>
+			<li>
+				Lightmap
+				<pre class="prettyprint">
 class LightmapSettings{
 public static LightmapData[] lightmaps;
 }
 
 </pre>
-			<p>
-				一个场景里面，会有0-65533(0xFFFE)个Lightmap，可为场景里面的所有的GameObject的Renderer组件公用，
-				指定哪个Lightmap哪部分即可
-			</p>
-			<p></p>
-		</li>
-		<li>
-			LightmapData
-			<pre class="prettyprint">
+				<p>
+					一个场景里面，会有0-65533(0xFFFE)个Lightmap，可为场景里面的所有的GameObject的Renderer组件公用，
+					指定哪个Lightmap哪部分即可
+				</p>
+				<p></p>
+			</li>
+			<li>
+				LightmapData
+				<pre class="prettyprint">
 	public sealed class LightmapData
 	{
 		// Summary:
@@ -5444,10 +5494,10 @@ public static LightmapData[] lightmaps;
 		public Texture2D shadowMask { get; set; }
 	}
 </pre>
-			<p>
-				Lightmap存储了三张Texture，分别存储了光的颜色、方向、阴影遮罩信息
-			</p>
-			<pre class="prettyprint">
+				<p>
+					Lightmap存储了三张Texture，分别存储了光的颜色、方向、阴影遮罩信息
+				</p>
+				<pre class="prettyprint">
 // Decodes HDR textures
 // handles dLDR, RGBM formats
 inline half3 DecodeHDR (half4 data, half4 decodeInstructions)
@@ -5536,16 +5586,16 @@ CBUFFER_END
 // Transforms 2D UV by scale/bias property
 #define TRANSFORM_TEX(tex,name) (tex.xy * name##_ST.xy + name##_ST.zw) 
 </pre>
-			<p></p>
-		</li>
-		<li>
-			Lightmap Index
-			<p>多张LIghtMap的索引，16位的整数，0-65533(0xFFFE)，-1 (0xFFFF)表示无</p>
-			<p>GameObject.GetComponent<MeshRenderer>().lightmapIndex</p>
-		</li>
-	</ul>
-	<h2>颜色空间</h2>
-	<pre class="prettyprint">
+				<p></p>
+			</li>
+			<li>
+				Lightmap Index
+				<p>多张LIghtMap的索引，16位的整数，0-65533(0xFFFE)，-1 (0xFFFF)表示无</p>
+				<p>GameObject.GetComponent<MeshRenderer>().lightmapIndex</p>
+			</li>
+		</ul>
+		<h2>颜色空间</h2>
+		<pre class="prettyprint">
 	// From http://chilliant.blogspot.com.au/2012/08/srgb-approximations-for-hlsl.html?m=1
 inline half3 GammaToLinearSpace (half3 sRGB)
 {
@@ -5557,37 +5607,37 @@ inline half3 LinearToGammaSpace (half3 linRGB)
 	return max(1.055 * pow(linRGB, 0.416666667) - 0.055, 0);
 } 
 </pre>
-	<h2>Global Illumination</h2>
-	全局光照，direct light + indirect light，即不仅考虑了直接光照，也考虑了间接光照（A物体反射光照到了B物体）
-	间接光照非常耗时，仅可离线制作cg动画，或者静态烘焙，提前计算出间接光照，unity实现了此功能，称为Baked GI或者
-	Baked Lightmaps，此外，还生成了软阴影soft shadow
+		<h2>Global Illumination</h2>
+		全局光照，direct light + indirect light，即不仅考虑了直接光照，也考虑了间接光照（A物体反射光照到了B物体）
+		间接光照非常耗时，仅可离线制作cg动画，或者静态烘焙，提前计算出间接光照，unity实现了此功能，称为Baked GI或者
+		Baked Lightmaps，此外，还生成了软阴影soft shadow
 
-	Precomputed Realtime GI.是上述Baked GI技术的升级，仍是离线制作，仍是针对静态物体，不同之处在于，记录了直接光的反射路径，
-	光源的类型、位置、方向、颜色等参数在运行时皆可变。性能消耗也较高。
+		Precomputed Realtime GI.是上述Baked GI技术的升级，仍是离线制作，仍是针对静态物体，不同之处在于，记录了直接光的反射路径，
+		光源的类型、位置、方向、颜色等参数在运行时皆可变。性能消耗也较高。
 
-	<h2>Light Probe</h2>
-	光照探头
-	静态物体的反射光对运动物体的光照
+		<h2>Light Probe</h2>
+		光照探头
+		静态物体的反射光对运动物体的光照
 
-	<h2>Ambient Occlusion(AO)</h2>
-	渲染管线的光照模型，不论是phon-blin还是pbr，某物件渲染之时，只考虑光源与自身的几何关系，未考虑物件之间的遮挡
-	Ambient Occlusion就是考虑这个遮挡对ambient的影响，常用方法有二：
-	<h3>Screen Space Ambient Occlusion(SSAO)</h3>
-	蒙特卡洛积分
-	<img src="assets/image/ssao.png" />
-	<h3>Horizon Based Ambient Occlusion(HBAO)</h3>
-	<h2>phon</h2>
-	<h2>blin-phon</h2>
-	<h2>pbr</h2>
-	<h2>贴花decal</h2>
-	<h2>ICON</h2>
-	<h2>宣传图</h2>
-	<h2>特效</h2>
-	<h1>Unity</h1>
-	<h2>场景加载</h2>
-	游戏工程启动时，第一个加载的场景是File->Build Settings->Scenes In Build里的第一个scene.unity文件（index为0），
-	这个场景是自动加载的，完成热更和加载lua之后
-	<pre class="prettyprint">
+		<h2>Ambient Occlusion(AO)</h2>
+		渲染管线的光照模型，不论是phon-blin还是pbr，某物件渲染之时，只考虑光源与自身的几何关系，未考虑物件之间的遮挡
+		Ambient Occlusion就是考虑这个遮挡对ambient的影响，常用方法有二：
+		<h3>Screen Space Ambient Occlusion(SSAO)</h3>
+		蒙特卡洛积分
+		<img src="assets/image/ssao.png" />
+		<h3>Horizon Based Ambient Occlusion(HBAO)</h3>
+		<h2>phon</h2>
+		<h2>blin-phon</h2>
+		<h2>pbr</h2>
+		<h2>贴花decal</h2>
+		<h2>ICON</h2>
+		<h2>宣传图</h2>
+		<h2>特效</h2>
+		<h1>Unity</h1>
+		<h2>场景加载</h2>
+		游戏工程启动时，第一个加载的场景是File->Build Settings->Scenes In Build里的第一个scene.unity文件（index为0），
+		这个场景是自动加载的，完成热更和加载lua之后
+		<pre class="prettyprint">
 	--IWillAlwaysLoveYou
 	private void Go()
 	{
@@ -5620,20 +5670,20 @@ function SceneManager.OnUpdate()
 		SceneManager.asyncItem.allowSceneActivation = true
 end
 </pre>
-	<h2>Transform</h2>
-	transform组件的旋转是欧拉角，会产生万向锁，绕模型本地坐标系旋转
-	<h2>Gimbal Lock</h2>
-	万向节死锁
-	本质在于旋转的次序，例如YXZ，首先绕惯性坐标系Y轴旋转，然后绕本地坐标系的X轴旋转，最后绕本地坐标系的Z轴旋转，
-	如果本地坐标系的X轴或者Z轴与惯性坐标系的Y轴重合，那么绕本地坐标系X轴或者Z轴旋转等同于绕惯性坐标系Y轴旋转，即所谓的
-	本地坐标系的X轴或者Z轴旋转失灵。每一次旋转，都是从初始角度开始旋转的！！！
-	<h2>Quatation</h2>
-	四元素
-	<hr />
+		<h2>Transform</h2>
+		transform组件的旋转是欧拉角，会产生万向锁，绕模型本地坐标系旋转
+		<h2>Gimbal Lock</h2>
+		万向节死锁
+		本质在于旋转的次序，例如YXZ，首先绕惯性坐标系Y轴旋转，然后绕本地坐标系的X轴旋转，最后绕本地坐标系的Z轴旋转，
+		如果本地坐标系的X轴或者Z轴与惯性坐标系的Y轴重合，那么绕本地坐标系X轴或者Z轴旋转等同于绕惯性坐标系Y轴旋转，即所谓的
+		本地坐标系的X轴或者Z轴旋转失灵。每一次旋转，都是从初始角度开始旋转的！！！
+		<h2>Quatation</h2>
+		四元素
+		<hr />
 
-	<h1>LoginReward.csv</h1>
-	累计登录奖励
-	<pre class="prettyprint">
+		<h1>LoginReward.csv</h1>
+		累计登录奖励
+		<pre class="prettyprint">
 function LuaRequestGetLoginReward(actorID)
 	local id = GetRequestNumberParam("id")
 	local schemeItem = Schemes.LoginReward.Get(id)
@@ -5686,14 +5736,13 @@ void CLogicPart::SetLoginLogicData()
 	m_arrLogicData[DATA_LOGIN_TOTALDAYS] = byTotalDays;
 }
 </pre>
-	<footer>
-		<address>
-			written by LaoZhang.<br />
-			297191409@qq.com.<br />
-			ShenZhen<br />
-			China
-		</address>
-	</footer>
+		<footer>
+			<address>
+				written by LaoZhang.<br />
+				297191409@qq.com.<br />
+				ShenZhen<br />
+				China
+			</address>
+		</footer>
 </body>
-
 </html>
